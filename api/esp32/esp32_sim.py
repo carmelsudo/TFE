@@ -68,9 +68,5 @@ class ESP32Simulator:
 async def main():
     ESP32Simulator("esp_1") 
     await asyncio.gather(ESP32Simulator("esp_1").run())
-    # Simulez plusieurs ESP32 !
-    # simulators = [ESP32Simulator(f"sim_{i}") for i in range(3)]
-    # await asyncio.gather(*[sim.run() for sim in simulators])
-
 if __name__ == "__main__":
     asyncio.run(main())
