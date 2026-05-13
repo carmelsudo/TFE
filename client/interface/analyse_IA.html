@@ -5,7 +5,9 @@
     <meta charset="utf-8" />
     <title>Analyse IA</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="../../static/styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
       rel="stylesheet"
@@ -84,6 +86,25 @@
       };
     </script>
     <style>
+      .hour-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+.hour-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.hour-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.hour-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.hour-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+      
       .material-symbols-outlined {
         font-variation-settings:
           "FILL" 0,
@@ -139,7 +160,7 @@
         </a>
         <a
           class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="#"
+          href="/optimisation"
         >
           <span class="material-symbols-outlined">lightbulb</span>
           Optimisation
@@ -149,7 +170,7 @@
           href="#"
         >
           <span class="material-symbols-outlined">wb_sunny</span>
-          Weather
+          Météo
         </a>
       </nav>
       <div class="px-4 py-8 border-t border-slate-200/50">
@@ -186,39 +207,51 @@
     </aside>
     <!-- TopNavBar (Shared Component) -->
     <header
-      class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 ml-64 max-w-[calc(100%-16rem)] bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl transition-all"
-    >
-      <div class="flex items-center gap-4">
-        <h2 class="text-on-surface-variant font-headline font-semibold">
-          The Living Equilibrium
-        </h2>
-      </div>
-      <div class="flex items-center gap-6">
-        <div class="relative group">
-          <span
-            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant"
-            >search</span
-          >
-          <input
-            class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all"
-            placeholder="Search insights..."
-            type="text"
-          />
-        </div>
+        class="flex justify-between items-center w-full px-8 pl-[270px] py-4 sticky top-0 z-100 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none transition-all"
+      >
         <div class="flex items-center gap-4">
-          <button
-            class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-all"
+          <h2
+            class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight"
           >
-            notifications
-          </button>
-          <button
-            class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-all"
-          >
-            account_circle
-          </button>
+            The Living Equilibrium
+          </h2>
+          <div class="flex items-center gap-2">
+            <div
+              class="w-2 h-2 rounded-full bg-gray-400"
+              id="connectionIndicator"
+            ></div>
+            <span
+              class="text-xs font-medium text-gray-600"
+              id="connectionStatus"
+              >Connexion...</span
+            >
+          </div>
         </div>
-      </div>
-    </header>
+        <div class="flex items-center gap-6">
+          <div class="relative group">
+            <input
+              class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body"
+              placeholder="Search insights..."
+              type="text"
+            />
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
+              >search</span
+            >
+          </div>
+          <div class="flex items-center gap-4 text-on-surface-variant">
+            <button class="hover:opacity-80 transition-all relative">
+              <span class="material-symbols-outlined">notifications</span>
+              <span
+                class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"
+              ></span>
+            </button>
+            <button class="hover:opacity-80 transition-all">
+              <span class="material-symbols-outlined">account_circle</span>
+            </button>
+          </div>
+        </div>
+      </header>
     <main class="ml-64 p-8 max-w-7xl mx-auto space-y-8">
       <!-- Header & Range Selector -->
       <section
@@ -234,28 +267,136 @@
             Analyse IA
           </h2>
         </div>
-        <div class="flex p-1 bg-surface-container rounded-xl">
-          <button
-            class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant"
-          >
-            24h
-          </button>
-          <button
-            class="px-6 py-2 rounded-lg text-sm font-bold bg-surface-container-lowest text-primary shadow-sm"
-          >
-            7d
-          </button>
-          <button
-            class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant"
-          >
-            30d
-          </button>
-          <button
-            class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant"
-          >
-            Custom
-          </button>
-        </div>
+      </section>
+      <!-- Section 3: Raisonnement de l'IA Décisionnelle -->
+      <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+      <h3 class="headline-sm text-on-surface-variant font-semibold mb-8 flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary">analytics</span> Actions du Modèle
+          </h3>
+      <div class="relative space-y-8">
+      <!-- Timeline vertical line -->
+      <div class="absolute left-6 top-2 bottom-2 w-0.5 bg-surface-container-highest"></div>
+      <!-- Timeline Items -->
+      <div class="relative flex items-start gap-8 group">
+      <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+      <span class="material-symbols-outlined text-primary">energy_savings_leaf</span>
+      </div>
+      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold text-on-surface font-headline">Source Active :<span class="font-bold text-primary " id="activeSourceString"> Solaire privilégié</span> </h4>
+      <span class="text-[10px] font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-full uppercase tracking-tighter">Current Status</span>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed" id="activeSourceExp">
+       Le niveau de batterie est supérieur à 80% et l'ensoleillement actuel est optimal (&gt; 800W/m²). L'excédent de production est réinjecté pour compenser les pics de consommation futurs.
+                      </p>
+      </div>
+      </div>
+      <div class="relative flex items-start gap-8 group">
+      <div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+      <span class="material-symbols-outlined text-tertiary">battery_charging_80</span>
+      </div>
+      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold text-on-surface font-headline">État des batteries: <span class="font-bold text-secondary" id="battString"> Passage sur Réseau SBEE</span></h4>
+      <span class="text-[10px] font-bold text-tertiary px-2 py-0.5 bg-tertiary/10 rounded-full uppercase tracking-tighter">Forecast Alert</span>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed" id="battExp">
+       Prévu à 18h00. L'IA a détecté une baisse de production précoce. La batterie est préservée (Santé: 98.2%) pour la pointe domestique de 20h.
+                      </p>
+      </div>
+      </div>
+      <div class="relative flex items-start gap-8 group">
+      <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+      <span class="material-symbols-outlined text-secondary">settings_suggest</span>
+      </div>
+      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+      <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold text-on-surface font-headline">Mode de fonctionnement: <span class="font-bold text-tertiary" id="modeString"> Mode Économie active</span>.</h4>
+      <span class="text-[10px] font-bold text-secondary px-2 py-0.5 bg-secondary/10 rounded-full uppercase tracking-tighter">Logic Applied</span>
+      </div>
+      <p class="text-sm text-on-surface-variant leading-relaxed" id="modeExp">
+       L'algorithme Lumina privilégie une recharge lente pour maximiser la longévité des cellules et utilise l'arbitrage tarifaire pour réduire les coûts.
+                      </p>
+      </div>
+      </div>
+      </div>
+                <div class="hour-scroll flex p-1 bg-surface-container rounded-xl overflow-x-auto whitespace-nowrap mt-5">
+              <!-- Generate 24 hour slots: 0-1, 1-2, ..., 23-0 -->
+              <!-- We'll set the button for current hour (e.g., 14-15 as active example) -->
+              <!-- Replace with dynamic logic if needed -->
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                0-1
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                1-2
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                2-3
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                3-4
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                4-5
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                5-6
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                6-7
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                7-8
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                8-9
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                9-10
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                10-11
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-bold bg-surface-container-lowest text-primary shadow-sm">
+                11-12
+              </button> <!-- example active -->
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                12-13
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                13-14
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                14-15
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                15-16
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                16-17
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                17-18
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                18-19
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                19-20
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                20-21
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                21-22
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                22-23
+              </button>
+              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+                23-0
+              </button>
+          </div>
       </section>
       <!-- Section 1: Efficacité du Modèle de Production -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
@@ -286,90 +427,12 @@
             </div>
           </div>
         </div>
-        <div class="h-80 w-full relative">
-          <svg
-            class="w-full h-full overflow-visible"
-            preserveaspectratio="none"
-            viewbox="0 0 1000 300"
-          >
-            <defs>
-              <lineargradient
-                id="grad-prod-real"
-                x1="0%"
-                x2="0%"
-                y1="0%"
-                y2="100%"
-              >
-                <stop
-                  offset="0%"
-                  style="stop-color: var(--tw-primary); stop-opacity: 0.2"
-                ></stop>
-                <stop
-                  offset="100%"
-                  style="stop-color: var(--tw-primary); stop-opacity: 0"
-                ></stop>
-              </lineargradient>
-            </defs>
-            <!-- Grid Lines -->
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="50"
-              y2="50"
-            ></line>
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="150"
-              y2="150"
-            ></line>
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="250"
-              y2="250"
-            ></line>
-            <!-- Predicted Path (Dashed) -->
-            <path
-              d="M0,280 Q100,240 200,100 T400,60 T600,160 T800,260 T1000,240"
-              fill="none"
-              opacity="0.4"
-              stroke="#0d631b"
-              stroke-dasharray="8,8"
-              stroke-linecap="round"
-              stroke-width="2"
-            ></path>
-            <!-- Real Path (Solid) -->
-            <path
-              d="M0,280 Q120,220 200,110 T410,45 T590,145 T820,265 T1000,245 L1000,300 L0,300 Z"
-              fill="url(#grad-prod-real)"
-            ></path>
-            <path
-              d="M0,280 Q120,220 200,110 T410,45 T590,145 T820,265 T1000,245"
-              fill="none"
-              stroke="#0d631b"
-              stroke-linecap="round"
-              stroke-width="3"
-            ></path>
-          </svg>
-          <div
-            class="mt-6 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest"
-          >
-            <span>Lundi</span>
-            <span>Mardi</span>
-            <span>Mercredi</span>
-            <span>Jeudi</span>
-            <span>Vendredi</span>
-            <span>Samedi</span>
-            <span>Dimanche</span>
+        <!-- Chart Placeholder with Editorial Style -->
+          <div class="relative h-[450px] w-full mt-8">
+            <canvas width="950" height="380" id="consoProdGraph" ></canvas>
           </div>
         </div>
+        
       </section>
       <!-- Section 2: Précision de la Consommation IA -->
       <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
@@ -399,170 +462,12 @@
             </div>
           </div>
         </div>
-        <div class="h-80 w-full relative">
-          <svg
-            class="w-full h-full overflow-visible"
-            preserveaspectratio="none"
-            viewbox="0 0 1000 300"
-          >
-            <defs>
-              <lineargradient
-                id="grad-cons-real"
-                x1="0%"
-                x2="0%"
-                y1="0%"
-                y2="100%"
-              >
-                <stop
-                  offset="0%"
-                  style="stop-color: var(--tw-secondary); stop-opacity: 0.2"
-                ></stop>
-                <stop
-                  offset="100%"
-                  style="stop-color: var(--tw-secondary); stop-opacity: 0"
-                ></stop>
-              </lineargradient>
-            </defs>
-            <!-- Grid Lines -->
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="50"
-              y2="50"
-            ></line>
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="150"
-              y2="150"
-            ></line>
-            <line
-              stroke="#edeeef"
-              stroke-width="1"
-              x1="0"
-              x2="1000"
-              y1="250"
-              y2="250"
-            ></line>
-            <!-- Predicted Path (Dashed) -->
-            <path
-              d="M0,220 Q150,230 300,190 T500,160 T750,210 T1000,180"
-              fill="none"
-              opacity="0.4"
-              stroke="#795900"
-              stroke-dasharray="8,8"
-              stroke-linecap="round"
-              stroke-width="2"
-            ></path>
-            <!-- Real Path (Solid) -->
-            <path
-              d="M0,210 Q140,240 310,180 T510,170 T740,220 T1000,190 L1000,300 L0,300 Z"
-              fill="url(#grad-cons-real)"
-            ></path>
-            <path
-              d="M0,210 Q140,240 310,180 T510,170 T740,220 T1000,190"
-              fill="none"
-              stroke="#795900"
-              stroke-linecap="round"
-              stroke-width="3"
-            ></path>
-          </svg>
-          <div
-            class="mt-6 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest"
-          >
-            <span>Lundi</span>
-            <span>Mardi</span>
-            <span>Mercredi</span>
-            <span>Jeudi</span>
-            <span>Vendredi</span>
-            <span>Samedi</span>
-            <span>Dimanche</span>
-          </div>
+        <!-- Chart Placeholder for Consumption -->
+        <div class="relative h-[450px] w-full mt-8">
+          <canvas width="950" height="380" id="consoGraph" ></canvas>
         </div>
       </section>
-      <!-- Section 3: Raisonnement de l'IA Décisionnelle -->
-      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-12 bg-surface-container-low rounded-[2rem] p-8">
-          <h3
-            class="headline-sm text-on-surface-variant font-semibold mb-6 flex items-center gap-2"
-          >
-            <span class="material-symbols-outlined text-primary"
-              >analytics</span
-            >
-            Raisonnement de l'IA Décisionnelle
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Current Decision -->
-            <div
-              class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm"
-            >
-              <div class="flex items-center gap-3 mb-4">
-                <div
-                  class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"
-                >
-                  <span class="material-symbols-outlined text-primary"
-                    >wb_sunny</span
-                  >
-                </div>
-                <h4 class="font-bold text-on-surface">Source Actuelle</h4>
-              </div>
-              <p class="text-sm text-on-surface-variant leading-relaxed">
-                <span class="font-bold text-primary">Solaire privilégié</span>
-                car le niveau de batterie est supérieur à 80% et
-                l'ensoleillement actuel est optimal (&gt; 800W/m²). L'excédent
-                est réinjecté pour compenser les pics futurs.
-              </p>
-            </div>
-            <!-- Forecast Decision -->
-            <div
-              class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm"
-            >
-              <div class="flex items-center gap-3 mb-4">
-                <div
-                  class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center"
-                >
-                  <span class="material-symbols-outlined text-error">bolt</span>
-                </div>
-                <h4 class="font-bold text-on-surface">Action Planifiée</h4>
-              </div>
-              <p class="text-sm text-on-surface-variant leading-relaxed">
-                <span class="font-bold text-error"
-                  >Passage sur Réseau SBEE</span
-                >
-                prévu à 18h00. L'IA a détecté une baisse de production précoce
-                et anticipe une forte consommation domestique. Batterie
-                préservée pour la pointe de 20h.
-              </p>
-            </div>
-            <!-- Battery Strategy -->
-            <div
-              class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm"
-            >
-              <div class="flex items-center gap-3 mb-4">
-                <div
-                  class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center"
-                >
-                  <span class="material-symbols-outlined text-secondary"
-                    >battery_charging_full</span
-                  >
-                </div>
-                <h4 class="font-bold text-on-surface">Stratégie Stockage</h4>
-              </div>
-              <p class="text-sm text-on-surface-variant leading-relaxed">
-                <span class="font-bold text-secondary"
-                  >Mode Économie active</span
-                >. Recharge lente activée pour prolonger la durée de vie des
-                cellules. Cycle de décharge profonde évité grâce à l'arbitrage
-                tarifaire intelligent.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+
       <!-- New Section: Battery Charge Evolution -->
       <section
         class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm space-y-8"
@@ -584,95 +489,8 @@
               >
             </div>
           </div>
-          <div class="h-64 w-full relative">
-            <svg
-              class="w-full h-full overflow-visible"
-              preserveaspectratio="none"
-              viewbox="0 0 1000 200"
-            >
-              <defs>
-                <lineargradient
-                  id="grad-battery"
-                  x1="0%"
-                  x2="0%"
-                  y1="0%"
-                  y2="100%"
-                >
-                  <stop
-                    offset="0%"
-                    style="stop-color: var(--tw-tertiary); stop-opacity: 0.15"
-                  ></stop>
-                  <stop
-                    offset="100%"
-                    style="stop-color: var(--tw-tertiary); stop-opacity: 0"
-                  ></stop>
-                </lineargradient>
-              </defs>
-              <!-- Grid Lines -->
-              <line
-                stroke="#edeeef"
-                stroke-width="1"
-                x1="0"
-                x2="1000"
-                y1="0"
-                y2="0"
-              ></line>
-              <line
-                stroke="#edeeef"
-                stroke-width="1"
-                x1="0"
-                x2="1000"
-                y1="50"
-                y2="50"
-              ></line>
-              <line
-                stroke="#edeeef"
-                stroke-width="1"
-                x1="0"
-                x2="1000"
-                y1="100"
-                y2="100"
-              ></line>
-              <line
-                stroke="#edeeef"
-                stroke-width="1"
-                x1="0"
-                x2="1000"
-                y1="150"
-                y2="150"
-              ></line>
-              <line
-                stroke="#edeeef"
-                stroke-width="1"
-                x1="0"
-                x2="1000"
-                y1="200"
-                y2="200"
-              ></line>
-              <!-- Battery Curve -->
-              <path
-                d="M0,180 Q100,170 200,60 T400,20 T600,40 T800,120 T1000,160 L1000,200 L0,200 Z"
-                fill="url(#grad-battery)"
-              ></path>
-              <path
-                d="M0,180 Q100,170 200,60 T400,20 T600,40 T800,120 T1000,160"
-                fill="none"
-                stroke="#0054a7"
-                stroke-linecap="round"
-                stroke-width="3"
-              ></path>
-            </svg>
-            <div
-              class="mt-4 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest"
-            >
-              <span>00:00</span>
-              <span>04:00</span>
-              <span>08:00</span>
-              <span>12:00</span>
-              <span>16:00</span>
-              <span>20:00</span>
-              <span>23:59</span>
-            </div>
+          <div class="relative h-[450px] w-full mt-8">
+            <canvas width="950" height="380" id="battGraph" ></canvas>
           </div>
         </div>
         <!-- IA Longevity Impact Text Block -->
@@ -698,28 +516,26 @@
               <span class="font-bold text-tertiary">35%</span> par rapport à un
               cycle de gestion standard.
             </p>
-            <div class="flex gap-4">
-              <div
-                class="flex-1 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20"
-              >
-                <p class="text-[10px] font-bold text-outline uppercase mb-1">
-                  Cycle de vie estimé
-                </p>
-                <p class="text-2xl font-black text-on-surface font-headline">
-                  12.5 <span class="text-sm font-medium">ans</span>
-                </p>
-              </div>
-              <div
-                class="flex-1 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20"
-              >
-                <p class="text-[10px] font-bold text-outline uppercase mb-1">
-                  Santé Batterie
-                </p>
-                <p class="text-2xl font-black text-primary font-headline">
-                  98.2%
-                </p>
-              </div>
-            </div>
+            <div class="flex gap-4"><div class="flex flex-col gap-4 w-full">
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
+<span class="material-symbols-outlined text-tertiary">history</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-outline uppercase mb-1">Cycle de vie estimé</p>
+<p class="text-2xl font-black text-on-surface font-headline">12.5 <span class="text-sm font-medium">ans</span></p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
+<span class="material-symbols-outlined text-primary">favorite</span>
+</div>
+<div>
+<p class="text-[10px] font-bold text-outline uppercase mb-1">Santé Batterie</p>
+<p class="text-2xl font-black text-primary font-headline">98.2%</p>
+</div>
+</div>
+</div></div>
           </div>
         </div>
       </section>
@@ -760,7 +576,6 @@
                 <th class="pb-4 px-4">Date</th>
                 <th class="pb-4 px-4">Production</th>
                 <th class="pb-4 px-4">Consumption</th>
-                <th class="pb-4 px-4">Net Flow</th>
                 <th class="pb-4 px-4">Net Saving</th>
                 <th class="pb-4 px-4 text-right">Status</th>
               </tr>
@@ -772,14 +587,6 @@
                 <td class="py-6 px-4 font-medium">Oct 24, 2023</td>
                 <td class="py-6 px-4 text-secondary font-bold">24.5 kWh</td>
                 <td class="py-6 px-4 text-primary font-bold">12.1 kWh</td>
-                <td class="py-6 px-4">
-                  <div class="flex items-center gap-2 text-primary">
-                    <span class="material-symbols-outlined text-sm"
-                      >arrow_upward</span
-                    >
-                    12.4 kWh Surplus
-                  </div>
-                </td>
                 <td class="py-6 px-4 font-bold text-primary">$12.45</td>
                 <td class="py-6 px-4 text-right">
                   <span
@@ -794,14 +601,6 @@
                 <td class="py-6 px-4 font-medium">Oct 23, 2023</td>
                 <td class="py-6 px-4 text-secondary font-bold">18.2 kWh</td>
                 <td class="py-6 px-4 text-primary font-bold">15.8 kWh</td>
-                <td class="py-6 px-4">
-                  <div class="flex items-center gap-2 text-primary">
-                    <span class="material-symbols-outlined text-sm"
-                      >arrow_upward</span
-                    >
-                    2.4 kWh Surplus
-                  </div>
-                </td>
                 <td class="py-6 px-4 font-bold text-primary">$8.20</td>
                 <td class="py-6 px-4 text-right">
                   <span
@@ -816,14 +615,6 @@
                 <td class="py-6 px-4 font-medium">Oct 22, 2023</td>
                 <td class="py-6 px-4 text-secondary font-bold">5.4 kWh</td>
                 <td class="py-6 px-4 text-primary font-bold">19.2 kWh</td>
-                <td class="py-6 px-4">
-                  <div class="flex items-center gap-2 text-error">
-                    <span class="material-symbols-outlined text-sm"
-                      >arrow_downward</span
-                    >
-                    13.8 kWh Deficit
-                  </div>
-                </td>
                 <td class="py-6 px-4 font-bold text-outline-variant">-$2.10</td>
                 <td class="py-6 px-4 text-right">
                   <span
@@ -851,4 +642,615 @@
       </button>
     </div>
   </body>
+  <script>
+    let activeHourButton = null;
+    let currentWebSocketData = null;
+    
+    // Initialize with current hour at page load
+    function initializeCurrentHour() {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const container = document.querySelector('.flex.p-1.bg-surface-container');
+      const buttons = container.querySelectorAll('button');
+      
+      let currentButton = null;
+      buttons.forEach((btn, index) => {
+        if (index === currentHour) {
+          currentButton = btn;
+        }
+      });
+      
+      if (currentButton) {
+        // Remove active style from all buttons
+        buttons.forEach(button => {
+          button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+          button.classList.add('text-on-surface-variant', 'font-medium');
+        });
+        // Add active style to current hour
+        currentButton.classList.remove('text-on-surface-variant', 'font-medium');
+        currentButton.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+        activeHourButton = currentHour;
+      }
+    }
+    
+    //Make the hour buttons interactive: update active state on click
+    const container = document.querySelector('.flex.p-1.bg-surface-container');
+    container.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn || !container.contains(btn)) return;
+      // Remove active style from all children
+      container.querySelectorAll('button').forEach(button => {
+        button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+        button.classList.add('text-on-surface-variant', 'font-medium');
+      });
+      // Add active style to clicked button
+      btn.classList.remove('text-on-surface-variant', 'font-medium');
+      btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+      activeHourButton = parseInt(btn.textContent.trim().split("-")[0]);
+      
+      // Update display with selected hour data
+      if (currentWebSocketData) {
+        updateExp(currentWebSocketData, activeHourButton);
+      }
+    });
+
+    //connection au websocket
+    let ws;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectInterval = 3000; // 3 secondes
+    now = new Date();
+    //fonction pour tracer le graphe de la batterie
+      function graphic(){
+        const ctx = document.getElementById('battGraph').getContext('2d');
+        x_label = []
+        for(let i=0;i<=23;i++){
+          x_label.push(i)
+        }
+        globalThis.battGraphic =  new Chart(ctx, {
+            type: 'line', // type de graphique : bar, line, pie, etc.
+            data: {
+                  labels: x_label,
+                  datasets: [
+                    {
+                      label: 'Pourcentage',
+                      data: [],
+                      fill:true,
+                      tension: 0.5,
+                      pointRadius :0,
+                      gradient:{
+                        backgroundColor:{
+                          axis: 'x',
+                           colors: {
+                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
+                          }
+                        },
+                      },
+                      borderColor: '#5483F7',
+                      borderWidth: 3
+                    },
+                    ]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let valeur = parseFloat(context.raw).toFixed(2);
+                            return `${label}: ${valeur} %`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax:100,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return value + 'h';
+                        }
+                    }
+                }
+            }
+        }
+        });
+      }
+    graphic()
+    //traducteur du mode
+    function modeTrans(mode){
+      if(mode == "saving") return "Economie d'énergie";
+      else if(mode == "normal") return "Normal";
+      else return "Ultra economie d'énergie"
+    }
+    function activeSourceTrans(as){
+      if(as == 'solarPannel') return 'Panneaux solaires'
+      else if(as == 'sbee') return 'sbee'
+      else return 'batteries'
+    }
+    //fonction pour changer le contenu des explication
+    function updateExp(data, selectedHour = null){
+      const activeSourceString = document.getElementById("activeSourceString");
+      const activeSourceExp= document.getElementById("activeSourceExp");
+      const battString = document.getElementById("battString");
+      const battExp = document.getElementById("battExp");
+      const modeString = document.getElementById("modeString");
+      const modeExp = document.getElementById("modeExp");
+      
+      // Use selected hour if provided, otherwise use current hour
+      const now = new Date();
+      const hourToDisplay = selectedHour !== null ? selectedHour : now.getHours();
+      
+      activeSourceString.textContent = ` ${ activeSourceTrans(data["strategie"][hourToDisplay]["sourceActive"])}`.toUpperCase()
+      activeSourceExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["sourceActive"]
+      if(!data["activeSource"].includes('batt') && !data["strategie"][hourToDisplay]["chargerBatt"]){
+        //la source active n'est pas la batterie et la batterie ne se charge pas
+        battString.textContent = " INACTIVE";
+      }
+      else if(data["activeSource"].includes('batt')){
+        //la batterie est la source d'alimentation
+        battString.textContent = " DECHARGEMENT";
+      }
+      else if(data["strategie"][hourToDisplay]["chargerBatt"]){
+        battString.textContent = " CHARGEMENT";
+      }
+      battExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["chargerBatt"]
+
+      modeString.textContent =` ${modeTrans(data["strategie"][hourToDisplay]["mode"])}`.toUpperCase()
+      modeExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["mode"]
+    }
+    function updateConnectionStatus(status, message = "") {
+        const statusElement = document.getElementById("connectionStatus");
+        const indicatorElement = document.getElementById("connectionIndicator");
+
+        if (statusElement) {
+          statusElement.textContent = `${status}${message ? ": " + message : ""}`;
+        }
+
+        if (indicatorElement) {
+          // Supprimer toutes les classes de couleur
+          indicatorElement.classList.remove(
+            "bg-gray-400",
+            "bg-green-500",
+            "bg-yellow-500",
+            "bg-red-500",
+            "animate-pulse",
+          );
+
+          // Ajouter la couleur appropriée
+          if (status === "Connecté") {
+            indicatorElement.classList.add("bg-green-500");
+          } else if (status === "Connexion...") {
+            indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
+          } else {
+            indicatorElement.classList.add("bg-red-500");
+          }
+        }
+      }
+    //afficher les graphes
+  class displayGraphic{
+    constructor(canvasElement, dataReel, dataPred, graphicType = 'production', label1 = 'Réelle', label2 = 'Prédite'){
+      this.canvasElement = canvasElement;
+      this.dataReel = dataReel || [];
+      this.dataPred = dataPred || [];
+      this.graphicType = graphicType;
+      this.label1 = label1;
+      this.label2 = label2;
+      this.chart = null;
+    }
+  
+  // Conversion correcte hex -> RGB
+  hexToRgb(hex) {
+    const cleanHex = hex.replace('#', '');
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    return { r, g, b };
+  }
+  
+  // Générer les labels des heures (0-23)
+  generateHourLabels(){
+    return Array.from({length: 24}, (_, i) => i);
+  }
+  
+  // Assurer que les données ont 24 éléments (une valeur par heure)
+  ensureDataLength(data){
+    const dataArray = Array.isArray(data) ? data : [];
+    while(dataArray.length < 24){
+      dataArray.push(0);
+    }
+    return dataArray.slice(0, 24);
+  }
+  
+  // Afficher le graphe
+  display(){
+    if(!this.canvasElement){
+      console.error('Canvas element not found');
+      return;
+    }
+    
+    const ctx = this.canvasElement.getContext('2d');
+    const labels = this.generateHourLabels();
+    
+    // Assurer que les données ont la bonne taille
+    const data1 = this.dataReel;
+    const data2 = this.dataPred;
+    
+    // Déterminer les couleurs selon le type de graphe
+    let borderColor1, bgGradientColors1, borderColor2, bgGradientColors2;
+    
+    if(this.graphicType === 'production'){
+      borderColor1 = '#0d631b';  // Vert foncé
+      bgGradientColors1 = {
+        0: 'rgba(232, 235, 233, 0.1)',
+        50: 'rgba(149, 185, 154, 0.3)',
+        100: 'rgba(13, 99, 27, 0.4)'
+      };
+      borderColor2 = '#2e7d32';  // Vert moyen
+      bgGradientColors2 = {
+        0: 'rgba(232, 235, 233, 0.1)',
+        50: 'rgba(149, 185, 154, 0.3)',
+        100: 'rgba(13, 99, 27, 0.4)'
+      };
+    } else {
+      borderColor1 = '#795900';  // Marron (consommation réelle)
+      bgGradientColors1 = {
+        0: 'rgba(232, 235, 233, 0.1)',
+        50: 'rgba(149, 185, 154, 0.3)',
+        100: 'rgba(13, 99, 27, 0.4)'
+      };
+      borderColor2 = '#f8bd2a';  // Jaune (consommation prédite)
+      bgGradientColors2 = {
+        0: 'rgba(232, 235, 233, 0.1)',
+        50: 'rgba(149, 185, 154, 0.3)',
+        100: 'rgba(13, 99, 27, 0.4)'
+      };
+    }
+    
+    // Conversion RGB des couleurs
+    const rgb1 = this.hexToRgb(borderColor1);
+    const rgb2 = this.hexToRgb(borderColor2);
+    
+    // Supprimer l'ancien graphe s'il existe
+    if(this.chart){
+      this.chart.destroy();
+    }
+    
+    // Créer le nouveau graphe
+    this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+              {
+                label: `${this.label1}`,
+                data: data1,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                borderColor: borderColor1,
+                borderWidth: 3,
+                backgroundColor: `rgba(${rgb1.r}, ${rgb1.g}, ${rgb1.b}, 0.1)`,
+              },
+              {
+                label: `${this.label2}`,
+                data: data2,
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0,
+                borderColor: borderColor2,
+                borderWidth: 3,
+                borderDash: [5, 5],
+                backgroundColor: `rgba(${rgb2.r}, ${rgb2.g}, ${rgb2.b}, 0.05)`,
+              }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let valeur = parseFloat(context.raw).toFixed(2);
+                            return `${label}: ${valeur} kW`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return value + 'h';
+                        }
+                    }
+                }
+            }
+        }
+    });
+  }
+}
+    // Variables globales pour les instances des graphes
+    let productionChart = null;
+    let consumptionChart = null;
+    let lastGraphicData = { prod: [], conso: [], prodPred: [], consoPred: [] };
+    let lastBattGraphicData = []
+    // Fonction pour comparer deux tableaux (convertit aussi les données en nombres)
+    function areArraysEqual(arr1, arr2) {
+        // Convertir en tableaux s'il y a lieu
+        const data1 = Array.isArray(arr1) ? arr1 : [];
+        const data2 = Array.isArray(arr2) ? arr2 : [];
+        
+        if (data1.length !== data2.length) return false;
+        
+        // Comparer les valeurs avec une petite tolérance pour les nombres
+        return data1.every((val, idx) => {
+            const v1 = parseFloat(val) || 0;
+            const v2 = parseFloat(data2[idx]) || 0;
+            return Math.abs(v1 - v2) < 0.0001; // Tolérance pour les imprécisions flottantes
+        });
+    }
+    
+    // Fonction pour initialiser et mettre à jour les graphes
+    function updateGraphics(data) {
+        try {
+            // Extraire les données réelles du graphicData et les convertir en nombres
+            const graphicData = data.graphicData || { prod: [], conso: [] };
+            const prodReal = (Array.isArray(graphicData.prod) ? graphicData.prod : []).map(val => parseFloat(val) || 0);
+            const consoReal = (Array.isArray(graphicData.conso) ? graphicData.conso : []).map(val => parseFloat(val) || 0);
+            // Extraire les données prédites des prédictions
+            const prodPred = data.prediction?.production?.hourly_predictions?.map(p => parseFloat(p.prediction_wh) || 0) || [];
+            
+            // Gérer les données de consommation prédite - peuvent être tableau ou autre format
+            let consoPred = [];
+            consoPred = data.prediction.consommation.map(val => val["prediction de consommation"]);
+            
+            // Vérifier si les données ont changé
+            const prodChanged = !areArraysEqual(lastGraphicData.prod, prodReal) || !areArraysEqual(lastGraphicData.prodPred, prodPred);
+            const consoChanged = !areArraysEqual(lastGraphicData.conso, consoReal) || !areArraysEqual(lastGraphicData.consoPred, consoPred);
+            
+            // Mettre à jour le graphe de production si les données ont changé
+            if (prodChanged) {
+                const canvasProd = document.getElementById('consoProdGraph');
+                if (canvasProd) {
+                    if (!productionChart) {
+                        productionChart = new displayGraphic(
+                            canvasProd,
+                            prodReal,
+                            prodPred,
+                            'production',
+                            'Production Réelle',
+                            'Production Prédite'
+                        );
+                    } else {
+                        productionChart.dataReel = prodReal;
+                        productionChart.dataPred = prodPred;
+                    }
+                    productionChart.display();
+                }
+                lastGraphicData.prod = [...prodReal];
+                lastGraphicData.prodPred = [...prodPred];
+            }
+            
+            // Mettre à jour le graphe de consommation si les données ont changé
+            if (consoChanged) {
+                const canvasConso = document.getElementById('consoGraph');
+                if (canvasConso) {
+                    if (!consumptionChart) {
+                        consumptionChart = new displayGraphic(
+                            canvasConso,
+                            consoReal,
+                            consoPred,
+                            'consumption',
+                            'Consommation Réelle',
+                            'Consommation Prédite'
+                        );
+                    } else {
+                        consumptionChart.dataReel = consoReal;
+                        consumptionChart.dataPred = consoPred;
+                    }
+                    consumptionChart.display();
+                }
+                lastGraphicData.conso = [...consoReal];
+                lastGraphicData.consoPred = [...consoPred];
+            }
+        } catch (error) {
+            console.error('Erreur lors de la mise à jour des graphes:', error);
+        }
+    }
+    // fonction pour mettre a jours le graphe de la batterie
+    function updateBattGraph(data){
+      const now = new Date
+      graphicData = data["graphicData"]["batt"];
+      if(!areArraysEqual(lastBattGraphicData,graphicData)){
+          globalThis.battGraphic.data.datasets[0].data = graphicData;
+          globalThis.battGraphic.data.datasets[0].data.push(data['battPercentage']) 
+      }
+      if(data["battPercentage"] !== globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length-1]){
+        globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length-1] = data["battPercentage"]
+      }
+      globalThis.battGraphic.update()
+    }
+    
+    //connection websocket
+    function connectWebSocket() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          return; // Déjà connecté
+        }
+
+        console.log(
+          `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
+        );
+        ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
+
+        ws.onopen = () => {
+          console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
+          updateConnectionStatus("Connecté");
+          reconnectAttempts = 0; // Reset des tentatives en cas de succès
+        };
+        ws.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          console.log(data)
+          currentWebSocketData = data; // Store data for later use
+          updateExp(data, activeHourButton)
+          updateGraphics(data); // Mettre à jour les graphes avec les nouvelles données
+          updateBattGraph(data);
+        };
+
+        ws.onerror = (error) => {
+          console.error("WebSocket erreur:", error);
+        };
+
+        ws.onclose = (event) => {
+          console.warn("WebSocket fermé:", event);
+          updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
+          // Tentative de reconnexion automatique
+
+          if (reconnectAttempts < maxReconnectAttempts) {
+            reconnectAttempts++;
+            updateConnectionStatus(
+              "Connexion...",
+              `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
+            );
+            console.log(`Reconnexion dans ${reconnectInterval}ms...`);
+            setTimeout(connectWebSocket, reconnectInterval);
+          } else {
+            updateConnectionStatus(
+              "Échec",
+              "Nombre maximum de tentatives atteint",
+            );
+            console.error(
+              "Nombre maximum de tentatives de reconnexion atteint",
+            );
+          }
+        };
+      }
+      setInterval(() => {
+        if (
+          !ws ||
+          ws.readyState === WebSocket.CLOSED ||
+          ws.readyState === WebSocket.CLOSING
+        ) {
+          console.log(
+            "Connexion WebSocket perdue, tentative de reconnexion...",
+          );
+          connectWebSocket();
+        }
+      }, 10000); // Vérifier toutes les 10 secondes
+      
+      // Initialize current hour on page load
+      initializeCurrentHour();
+      
+      // Initialiser les graphes avec des données vides
+      const canvasProd = document.getElementById('consoProdGraph');
+      const canvasConso = document.getElementById('consoGraph');
+      
+      if (canvasProd) {
+        productionChart = new displayGraphic(
+            canvasProd,
+            Array(24).fill(0),
+            Array(24).fill(0),
+            'production',
+            'Production Réelle',
+            'Production Prédite'
+        );
+        productionChart.display();
+      }
+      
+      if (canvasConso) {
+        consumptionChart = new displayGraphic(
+            canvasConso,
+            Array(24).fill(0),
+            Array(24).fill(0),
+            'consumption',
+            'Consommation Réelle',
+            'Consommation Prédite'
+        );
+        consumptionChart.display();
+      }
+      
+      connectWebSocket()
+  </script>
 </html>

@@ -5,8 +5,11 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Acceuil</title>
+    <link href="../../static/styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.6.1/dist/chartjs-plugin-gradient.min.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
       rel="stylesheet"
@@ -116,6 +119,24 @@
       #liveFlowSvg {
         transition: transform 0.3s ease-in-out;
       }
+
+      /* Animation de balayage pour la batterie */
+      .battery-circle-charging {
+        animation: sweepCharge 5s linear infinite;
+      }
+
+      @keyframes sweepCharge {
+        0% {
+          stroke-dashoffset: 552.92;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .battery-svg-charging {
+        filter: drop-shadow(0 0 6px rgba(214, 227, 255, 0.5));
+      }
     </style>
   </head>
 
@@ -170,10 +191,10 @@
           </a>
           <a
             class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="#"
+            href="/optimisation"
           >
             <span class="material-symbols-outlined">lightbulb</span>
-            <span>Optimization</span>
+            <span>Optimisation</span>
           </a>
           <a
             class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
@@ -226,8 +247,15 @@
             The Living Equilibrium
           </h2>
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-gray-400" id="connectionIndicator"></div>
-            <span class="text-xs font-medium text-gray-600" id="connectionStatus">Connexion...</span>
+            <div
+              class="w-2 h-2 rounded-full bg-gray-400"
+              id="connectionIndicator"
+            ></div>
+            <span
+              class="text-xs font-medium text-gray-600"
+              id="connectionStatus"
+              >Connexion...</span
+            >
           </div>
         </div>
         <div class="flex items-center gap-6">
@@ -272,14 +300,14 @@
               >
                 Source Active
               </h2>
-
             </div>
             <div class="space-y-3">
               <div
-                id="SPSource" class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low "
+                id="SPSource"
+                class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low"
               >
                 <div
-                   class="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center"
+                  class="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center"
                 >
                   <span
                     class="material-symbols-outlined text-2xl text-on-primary-container bg-primary-container px-2 py-1 rounded-xl opacity-70"
@@ -288,30 +316,31 @@
                   >
                 </div>
                 <div>
-                  <p class="font-manrope font-bold text-sm text-black">Panneaux Solaire</p>
-                  <p class="text-[10px] opacity-80 uppercase font-bold ">
-                    <span class="liveProductionValue">50</span><span> kW</span>
+                  <p class="font-manrope font-bold text-sm text-black">
+                    Panneaux Solaire
+                  </p>
+                  <p class="text-[10px] opacity-80 uppercase font-bold">
+                    <span class="liveProductionValue">50</span><span> W</span>
                   </p>
                 </div>
               </div>
               <!-- source : batterie -->
               <div
-                 id="sourceBatt" class="flex items-center gap-4 p-4 rounded-2xl bg-orange-50 border border-orange-300 shadow-md shadow-orange-200"
+                id="sourceBatt"
+                class="flex items-center gap-4 p-4 rounded-2xl bg-orange-50 border border-orange-300 shadow-md shadow-orange-200"
               >
                 <div
                   class="h-10 w-10 rounded-xl bg-orange-200/60 flex items-center justify-center"
                 >
                   <span
-                    class="material-symbols-outlined text-2xl text-orange-700"
+                    class="battIcon material-symbols-outlined text-2xl text-orange-700"
                     style="font-variation-settings: &quot;FILL&quot; 1"
-                    >battery_charging_80</span
+                    >battery_80</span
                   >
                 </div>
                 <div>
-                  <p class="font-manrope font-bold text-sm text-orange-800 ">
-                    Batteries
-                  </p>
-                  <p class="text-[10px] text-orange-600 font-bold uppercase ">
+                  <p class="font-manrope font-bold text-sm">Batteries</p>
+                  <p class="text-[10px] font-bold uppercase">
                     <span class="battValue">100</span><span> %</span>
                   </p>
                 </div>
@@ -320,10 +349,11 @@
             </div>
             <!-- sbee -->
             <div
-              id="SBEESource" class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 "
+              id="SBEESource"
+              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30"
             >
               <div
-                class="h-10 w-10 rounded-xl bg-secondary-container/20 flex items-center justify-center"
+                class="h-10 w-10 rounded-xl bg-red-300 flex items-center justify-center"
               >
                 <img
                   src="https://imgs.search.brave.com/b28Pwr6hhQfHZT6e2ZDjXR7JOfUktdARkmBib0Q1il8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzY1ZWU3OGE2/ODM5Y2Y3Mzk3YjUw/ZTM0OTc0ZTQ0NGY5/YzczNjQ2ODFjNWE1/N2Y4OWE0MmY3MWY5/NTQ5ZTI1Yi9zYmVl/LmJqLw"
@@ -332,10 +362,19 @@
                 />
               </div>
               <div>
-                <p class="font-manrope font-bold text-sm text-black ">Compteur SBEE</p>
+                <p class="font-manrope font-bold text-sm text-black">
+                  Compteur SBEE
+                </p>
                 <div class="flex items-center gap-2">
-                  <div class="w-2 h-2 rounded-full bg-gray-400" id="sbeeIndicator"></div>
-                  <span class="text-xs font-medium text-gray-600" id="sbeeStatus">Connexion...</span>
+                  <div
+                    class="w-2 h-2 rounded-full bg-gray-400"
+                    id="sbeeIndicator"
+                  ></div>
+                  <span
+                    class="text-xs font-medium text-gray-600"
+                    id="sbeeStatus"
+                    >Connexion...</span
+                  >
                 </div>
               </div>
             </div>
@@ -387,7 +426,7 @@
               <span
                 id="liveFlowText"
                 class="text-[10px] font-extrabold text-primary uppercase tracking-widest"
-                >Live Flow: 3.8 kW</span
+                >Live Flow: 3.8 W</span
               >
             </div>
           </div>
@@ -411,7 +450,7 @@
               >
                 <div class="text-left">
                   <p class="text-white font-manrope font-bold text-sm">
-                   Installation électrique
+                    Installation électrique
                   </p>
                   <p class="text-white/80 text-[10px] uppercase font-bold">
                     Maintained
@@ -424,89 +463,95 @@
                 >
               </div>
             </div>
-            
           </div>
         </section>
         <!-- Hero Section / Main Metrics -->
         <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
           <!-- Solar Production (Secondary Brand Color) -->
           <div
-  class="md:col-span-8 rounded-[2rem] p-8 relative overflow-hidden flex flex-col justify-between h-[400px] bg-[url('https://media.istockphoto.com/id/1209968427/photo/solar-panels-on-the-roof-3d-illustration.jpg?s=612x612&w=0&k=20&c=cBi2wBFo9wzpvKRNIUd6fzkxyMa7H6juq3VExDcO4vU=')] bg-cover bg-no-repeat"
->
-  <!-- Overlay plus opaque pour meilleur contraste -->
-  <div class="absolute inset-0 bg-black/70"></div>
-
-  <div class="relative z-10">
-    <div class="flex justify-between items-start">
-      <div>
-        <span
-          class="bg-secondary-container backdrop-blur-sm text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest font-label mb-4 inline-block"
-          >Production des panneaux solaire</span
-        >
-        <div>
-          <h3
-            class="font-manrope text-5xl font-extrabold text-white tracking-tighter mt-2"
+            class="md:col-span-8 rounded-[2rem] p-8 relative overflow-hidden flex flex-col justify-between h-[400px] bg-[url('https://media.istockphoto.com/id/1209968427/photo/solar-panels-on-the-roof-3d-illustration.jpg?s=612x612&w=0&k=20&c=cBi2wBFo9wzpvKRNIUd6fzkxyMa7H6juq3VExDcO4vU=')] bg-cover bg-no-repeat"
           >
-            <span class="liveProductionValue text-7xl">8.42</span
-            ><span class="text-2xl font-medium text-white/80"> kW</span>
-          </h3>
-        </div>
-        <p class="text-white/80 font-body mt-2">
-          Current Solar Yield • +12% from yesterday
-        </p>
-      </div>
-      <div class="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-        <span
-          class="material-symbols-outlined text-white text-4xl"
-          style="font-variation-settings: 'FILL' 1"
-          >solar_power</span
-        >
-      </div>
-    </div>
-  </div>
+            <!-- Overlay plus opaque pour meilleur contraste -->
+            <div class="absolute inset-0 bg-black/60"></div>
 
-  <!-- Decorative Graphic - Representing flow (opacité réduite) -->
-  <div class="absolute bottom-0 left-0 w-full h-48 opacity-5">
-    <svg class="w-full h-full preserve-3d" viewbox="0 0 800 200">
-      <path
-        class="text-white"
-        d="M0,100 C150,150 350,50 500,100 C650,150 800,100 800,100 L800,200 L0,200 Z"
-        fill="currentColor"
-      ></path>
-    </svg>
-  </div>
+            <div class="relative z-10">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span
+                    class="bg-secondary-container backdrop-blur-sm text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest font-label mb-4 inline-block"
+                    >Production des panneaux solaire</span
+                  >
+                  <div>
+                    <h3
+                      class="font-manrope text-5xl font-extrabold text-white tracking-tighter mt-2"
+                    >
+                      <span class="liveProductionValue text-7xl">8.42</span
+                      ><span class="text-2xl font-medium text-white/80">
+                        W</span
+                      >
+                    </h3>
+                  </div>
+                  <p class="text-white/80 font-body mt-2">
+                    Current Solar Yield • +12% from yesterday
+                  </p>
+                </div>
+                <div class="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
+                  <span
+                    class="material-symbols-outlined text-white text-4xl"
+                    style="font-variation-settings: &quot;FILL&quot; 1"
+                    >solar_power</span
+                  >
+                </div>
+              </div>
+            </div>
 
-  <!-- Mini Data points -->
-  <div
-    class="relative z-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-6"
-  >
-    <div>
-      <p class="text-[10px] uppercase font-bold text-white/60 mb-1" >
-        Pic de Production
-      </p>
-      <p class="font-manrope font-bold text-lg text-white"><span id="maxProdValue">9.1</span><span> kW</span></p>
-    </div>
-    <div>
-      <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
-        Production totale
-      </p>
-      <p class="font-manrope font-bold text-lg text-white" ><span id="totalProdValue">4.8</span><span> KW</span></p>
-    </div>
-    <div>
-      <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
-        CO2 Saved
-      </p>
-      <p class="font-manrope font-bold text-lg text-white">12.4 kg</p>
-    </div>
-  </div>
-</div>
+            <!-- Decorative Graphic - Representing flow (opacité réduite) -->
+            <div class="absolute bottom-0 left-0 w-full h-48 opacity-5">
+              
+            </div>
+
+            <!-- Mini Data points -->
+            <div>
+              <span class="text-[20px] uppercase font-bold text-white mb-1" p-50
+                >Statistique du jours</span
+              >
+              <div
+                class="relative z-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-6"
+              >
+                <div>
+                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                    Pic de Production
+                  </p>
+                  <p class="font-manrope font-bold text-lg text-white">
+                    <span id="maxProdValue">9.1</span><span> W</span>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                    Production totale
+                  </p>
+                  <p class="font-manrope font-bold text-lg text-white">
+                    <span id="totalProdValue">4.8</span><span> W</span>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                    CO2 Saved
+                  </p>
+                  <p class="font-manrope font-bold text-lg text-white">
+                    12.4 kg
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Circular Battery Gauge (Tertiary Brand Color) -->
           <div
             class="md:col-span-4 bg-surface-container-lowest rounded-[2rem] p-8 flex flex-col items-center justify-center text-center space-y-6"
           >
             <div class="relative w-48 h-48 flex items-center justify-center">
               <!-- Progress Ring -->
-              <svg class="w-full h-full -rotate-90">
+              <svg class="battery-svg w-full h-full -rotate-90">
                 <circle
                   class="text-surface-container-low"
                   cx="96"
@@ -517,7 +562,7 @@
                   stroke-width="12"
                 ></circle>
                 <circle
-                  class="text-tertiary-container"
+                  class="battery-circle text-tertiary-container"
                   cx="96"
                   cy="96"
                   fill="transparent"
@@ -533,21 +578,23 @@
                 class="absolute inset-0 flex flex-col items-center justify-center"
               >
                 <span
-                  class="material-symbols-outlined text-tertiary text-3xl mb-1"
-                  >battery_charging_80</span
+                  class="battIcon material-symbols-outlined text-tertiary text-3xl mb-1"
+                  >battery_80</span
                 >
-                <span class="battValue font-manrope text-4xl font-extrabold tracking-tighter" >
-                  100 
-                </span><span> %</span>
-                
+                <span
+                  class="battValue font-manrope text-4xl font-extrabold tracking-tighter"
+                >
+                  100 </span
+                ><span> %</span>
               </div>
             </div>
             <div>
               <h4 class="font-manrope font-bold text-lg">Etat des batteries</h4>
-              <span id="battStatus"
-                  class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest"
-                  >Chargé</span
-                >
+              <span
+                id="battStatus"
+                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest"
+                >Inactives</span
+              >
             </div>
             <div
               class="w-full bg-surface-container-low rounded-2xl p-4 flex justify-between items-center"
@@ -578,14 +625,14 @@
               <p
                 class="text-[10px] uppercase font-bold text-on-surface-variant mb-1 tracking-widest"
               >
-                 Consommation Energetique
+                Consommation Energetique
               </p>
               <h3
                 class="font-manrope text-3xl font-extrabold text-on-surface tracking-tight"
               >
                 <span id="liveConsumptionValue">8.42</span
-                ><span class="text-lg font-medium text-on-surface-variant"
-                  > kW</span
+                ><span class="text-lg font-medium text-on-surface-variant">
+                  W</span
                 >
               </h3>
             </div>
@@ -593,9 +640,9 @@
               <div
                 class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden"
               >
-                <div class="h-full bg-primary w-[35%]"></div>
+                <div id="consoBar" class="h-full bg-primary w-[35%]"></div>
               </div>
-              <p class="text-[10px] text-on-surface-variant mt-2">
+              <p id="consoPercentage" class="text-[10px] text-on-surface-variant mt-2">
                 35% de la prédiction totale
               </p>
             </div>
@@ -618,7 +665,12 @@
             >
               <div class="flex justify-between items-start">
                 <div>
-                  <h4 class="font-manrope font-bold text-xl" id="weatherDescription">Cloudy Skies</h4>
+                  <h4
+                    class="font-manrope font-bold text-xl"
+                    id="weatherDescription"
+                  >
+                    Cloudy Skies
+                  </h4>
                   <p class="text-xs opacity-80">Lokossa, BENIN</p>
                 </div>
                 <span
@@ -631,9 +683,10 @@
               <div class="flex items-end justify-between">
                 <div>
                   <span
-                  class="font-manrope text-5xl font-extrabold tracking-tighter"
-                  id="weatherTempValue"
-                  >24</span >
+                    class="font-manrope text-5xl font-extrabold tracking-tighter"
+                    id="weatherTempValue"
+                    >24</span
+                  >
                   <span>°C</span>
                 </div>
                 <div class="text-right">
@@ -660,26 +713,15 @@
               <p
                 class="text-[10px] uppercase font-bold text-primary-fixed mb-1 tracking-widest"
               >
-                Total Savings Today
+                Economies réalisée aujourd'hui
               </p>
-              <h3 class="font-manrope text-3xl font-extrabold tracking-tight">
-                $12.45
+              <h3 id="totalSaving" class="font-manrope text-3xl font-extrabold tracking-tight">
+                12.45 FCFA 
               </h3>
             </div>
             <div class="mt-8 flex items-center gap-3">
-              <div class="flex -space-x-2">
-                <div
-                  class="w-6 h-6 rounded-full border-2 border-primary bg-primary-fixed"
-                ></div>
-                <div
-                  class="w-6 h-6 rounded-full border-2 border-primary bg-secondary-fixed"
-                ></div>
-                <div
-                  class="w-6 h-6 rounded-full border-2 border-primary bg-tertiary-fixed"
-                ></div>
-              </div>
-              <p class="text-[10px] text-primary-fixed font-medium">
-                Joined 4k users in grid stabilization
+              <p  class="text-[10px] text-primary-fixed font-medium">
+                Kw/h : 150 FCFA<br> TVA : 18%
               </p>
             </div>
           </div>
@@ -691,227 +733,114 @@
           >
             <div>
               <h2 class="font-manrope text-2xl font-bold tracking-tight">
-                Energy Flow History
+                Flux d'énergie
               </h2>
               <p class="text-on-surface-variant font-body">
                 Production vs Consumption for the last 24 hours
               </p>
             </div>
-            <div class="flex gap-2 bg-surface-container-low p-1.5 rounded-2xl">
-              <button
-                class="px-5 py-2 rounded-xl text-xs font-bold bg-surface-container-lowest shadow-sm"
-              >
-                Daily
-              </button>
-              <button
-                class="px-5 py-2 rounded-xl text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors"
-              >
-                Weekly
-              </button>
-              <button
-                class="px-5 py-2 rounded-xl text-xs font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors"
-              >
-                Monthly
-              </button>
-            </div>
           </div>
           <!-- Chart Placeholder with Editorial Style -->
-          <div class="relative h-[300px] w-full mt-8">
-            <!-- Grid Lines -->
-            <div class="absolute inset-0 flex flex-col justify-between">
-              <div class="border-b border-outline-variant/10 w-full h-0"></div>
-              <div class="border-b border-outline-variant/10 w-full h-0"></div>
-              <div class="border-b border-outline-variant/10 w-full h-0"></div>
-              <div class="border-b border-outline-variant/10 w-full h-0"></div>
-            </div>
-            <!-- Decorative Chart SVG -->
-            <svg
-              class="absolute inset-0 w-full h-full preserve-3d"
-              preserveaspectratio="none"
-              viewbox="0 0 1000 300"
-            >
-              <!-- Consumption (Primary) -->
-              <path
-                class="text-primary opacity-30"
-                d="M0,250 Q100,240 200,260 T400,230 T600,250 T800,220 T1000,240"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-              ></path>
-              <path
-                class="text-primary opacity-5"
-                d="M0,250 Q100,240 200,260 T400,230 T600,250 T800,220 T1000,240 L1000,300 L0,300 Z"
-                fill="currentColor"
-              ></path>
-              <!-- Production (Secondary) -->
-              <path
-                class="text-secondary"
-                d="M0,280 Q150,250 300,150 T500,80 T700,140 T900,220 T1000,260"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="4"
-              ></path>
-              <path
-                class="opacity-10"
-                d="M0,280 Q150,250 300,150 T500,80 T700,140 T900,220 T1000,260 L1000,300 L0,300 Z"
-                fill="url(#grad1)"
-              ></path>
-              <defs>
-                <lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
-                  <stop
-                    offset="0%"
-                    style="stop-color: var(--secondary); stop-opacity: 1"
-                  ></stop>
-                  <stop
-                    offset="100%"
-                    style="stop-color: var(--secondary); stop-opacity: 0"
-                  ></stop>
-                </lineargradient>
-              </defs>
-            </svg>
-            <!-- Chart Labels -->
-            <div
-              class="absolute -bottom-8 left-0 w-full flex justify-between px-2"
-            >
-              <span class="text-[10px] font-bold text-on-surface-variant"
-                >00:00</span
-              >
-              <span class="text-[10px] font-bold text-on-surface-variant"
-                >06:00</span
-              >
-              <span class="text-[10px] font-bold text-on-surface-variant"
-                >12:00</span
-              >
-              <span class="text-[10px] font-bold text-on-surface-variant"
-                >18:00</span
-              >
-              <span class="text-[10px] font-bold text-on-surface-variant"
-                >23:59</span
-              >
-            </div>
+          <div class="relative h-[450px] w-full mt-8">
+            <canvas width="950" height="380" id="consoProdGraph" ></canvas>
+            
           </div>
-          <div class="mt-16 flex flex-wrap gap-8">
-            <div class="flex items-center gap-3">
-              <div class="w-3 h-3 rounded-full bg-secondary"></div>
-              <div>
-                <p
-                  class="text-[10px] uppercase font-bold text-on-surface-variant"
-                >
-                  Production
-                </p>
-                <p class="font-bold text-sm">Solar +8.2%</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-3 h-3 rounded-full bg-primary"></div>
-              <div>
-                <p
-                  class="text-[10px] uppercase font-bold text-on-surface-variant"
-                >
-                  Consumption
-                </p>
-                <p class="font-bold text-sm">Household -2.1%</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-3 h-3 rounded-full bg-tertiary"></div>
-              <div>
-                <p
-                  class="text-[10px] uppercase font-bold text-on-surface-variant"
-                >
-                  Grid Exchange
-                </p>
-                <p class="font-bold text-sm">Feed-in Active</p>
-              </div>
-            </div>
-          </div>
+
         </section>
       </div>
     </main>
 
     <script>
+      const gradientPlugin = window['chartjs-plugin-gradient'];
+      Chart.register(gradientPlugin);
       const liveProductionValue = document.querySelectorAll(
         ".liveProductionValue",
       );
       const liveConsumptionValue = document.getElementById(
         "liveConsumptionValue",
       );
-      const battSource = document.getElementById(
-        "sourceBatt",
-      );
-      const SBEESource = document.getElementById(
-        "SBEESource",
-      );
-       const SPSource = document.getElementById(
-        "SPSource",
-      );
-      const battValue = document.querySelectorAll(
-        ".battValue"
-      );
-      const battStatus= document.getElementById(
-        "battStatus",
-      );
+      const battSource = document.getElementById("sourceBatt");
+      const SBEESource = document.getElementById("SBEESource");
+      const SPSource = document.getElementById("SPSource");
+      const battValue = document.querySelectorAll(".battValue");
+      const battStatus = document.getElementById("battStatus");
+      const battIcon = document.querySelectorAll(".battIcon");
       const totalProdValue = document.getElementById("totalProdValue");
       const maxProdValue = document.getElementById("maxProdValue");
       const weatherDescription = document.getElementById("weatherDescription");
       const weatherIcon = document.getElementById("weatherIcon");
-      const weatherTempValue= document.getElementById("weatherTempValue");
+      const weatherTempValue = document.getElementById("weatherTempValue");
       const weatherImage = document.getElementById("weatherImage");
       const weatherBackgroundImageLink = {
-          "overcast" : "https://media.gettyimages.com/id/157770236/photo/good-and-evil.jpg?s=612x612&w=0&k=20&c=V0dsQZ3n5Yi2RaJKPqkxmEYb56cZGdb86pzRryuIyVo=",
-          "sunny" : 'https://cdn.vectorstock.com/i/500p/01/18/sun-in-clouds-3d-sunny-weather-elements-white-vector-45910118.jpg',
-          "partly_cloudy" : 'https://thumbs.dreamstime.com/b/partly-cloudy-afternoon-painted-style-9354276.jpg',
-          "cloudy" : 'https://thumbs.dreamstime.com/b/village-summer-cloudy-weather-village-summer-cloudy-weather-432626274.jpg',
-          "fog" : 'https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-          'rain_light' : 'https://media.istockphoto.com/id/1458311785/photo/rain-rainy-season-sky.jpg?s=612x612&w=0&k=20&c=ziOrrkUkb4apJyoT2TN3Uuilzb58MboEER-Y-RAVQCQ=',
-          'rain_heavy' : 'https://static.vecteezy.com/system/resources/thumbnails/070/223/697/small/heavy-rain-falls-at-night-near-trees-photo.jpg',
-          'thunderstorm' :"https://static.vecteezy.com/system/resources/thumbnails/022/382/256/small/lightning-thunderstorm-flash-over-the-night-sky-concept-on-topic-weather-cataclysms-photo.jpg",
-
-
-      }
+        overcast:
+          "https://media.gettyimages.com/id/157770236/photo/good-and-evil.jpg?s=612x612&w=0&k=20&c=V0dsQZ3n5Yi2RaJKPqkxmEYb56cZGdb86pzRryuIyVo=",
+        sunny:
+          "https://cdn.vectorstock.com/i/500p/01/18/sun-in-clouds-3d-sunny-weather-elements-white-vector-45910118.jpg",
+        partly_cloudy:
+          "https://thumbs.dreamstime.com/b/partly-cloudy-afternoon-painted-style-9354276.jpg",
+        cloudy:
+          "https://thumbs.dreamstime.com/b/village-summer-cloudy-weather-village-summer-cloudy-weather-432626274.jpg",
+        fog: "https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        rain_light:
+          "https://media.istockphoto.com/id/1458311785/photo/rain-rainy-season-sky.jpg?s=612x612&w=0&k=20&c=ziOrrkUkb4apJyoT2TN3Uuilzb58MboEER-Y-RAVQCQ=",
+        rain_heavy:
+          "https://static.vecteezy.com/system/resources/thumbnails/070/223/697/small/heavy-rain-falls-at-night-near-trees-photo.jpg",
+        thunderstorm:
+          "https://static.vecteezy.com/system/resources/thumbnails/022/382/256/small/lightning-thunderstorm-flash-over-the-night-sky-concept-on-topic-weather-cataclysms-photo.jpg",
+      };
       /*Récupérer les données depuis la connexion web socket*/
       let ws;
       let reconnectAttempts = 0;
       const maxReconnectAttempts = 5;
       const reconnectInterval = 3000; // 3 secondes
-      const availableSource = ["batt","solarPannel","sbee"]
+      const availableSource = ["batt", "solarPannel", "sbee"];
       const sbeeIndicator = document.getElementById("sbeeIndicator");
       const sbeeStatus = document.getElementById("sbeeStatus");
+      const consoBar  = document.getElementById("consoBar");
+      let previousData = {"conso" : [],"prod":[]}
+
       function connectWebSocket() {
         if (ws && ws.readyState === WebSocket.OPEN) {
           return; // Déjà connecté
         }
 
-        console.log(`Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`);
+        console.log(
+          `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
+        );
         ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
 
         ws.onopen = () => {
           console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
-          updateConnectionStatus('Connecté');
+          updateConnectionStatus("Connecté");
           reconnectAttempts = 0; // Reset des tentatives en cas de succès
         };
-
         ws.onmessage = (event) => {
           const data = JSON.parse(event.data);
           //insertion des données dans l'interface
-          
-          battValue.forEach((batt)=>{
+          battValue.forEach((batt) => {
             batt.textContent = data["battPercentage"];
-          })
-          liveProductionValue.forEach((live)=>{
+          });
+          liveProductionValue.forEach((live) => {
             live.textContent = data["production"];
           });
           updateBatteryGauge();
-          liveConsumptionValue.textContent = data["consommation"];
+          liveConsumptionValue.textContent = data["consommation_24h"];
           console.log("WebSocket message:", data);
           toggleActiveSource(data["activeSource"]);
-          battStatus.textContent =`${data["activeSource"] == "batt"? 'Décharge':'chargé'}`;
+          batterieStatusString(
+            data["strategie"][now.getHours()]["chargerBatt"],
+            data["activeSource"]
+          );
           totalProdValue.textContent = data["production_24h"];
           maxProdValue.textContent = data["maxProd"];
           /* mise a jour  de l'état de la sbee*/
           updateSbeeState(data["sbee"]);
-          
-          
+          //mise a jour de la barre de progression et du texte de la consommation
+          updateConsumptionData(data["consommation_h"],data["prediction"]["consommation"][now.getHours()]["prediction de consommation"])
+          // economie du jour
+          document.getElementById("totalSaving").textContent = `${Math.round(data["epargne"])} FCFA`
+          // mettre a jour ou pas le graphe 
+          updateGraph(data["graphicData"])
         };
 
         ws.onerror = (error) => {
@@ -920,118 +849,294 @@
 
         ws.onclose = (event) => {
           console.warn("WebSocket fermé:", event);
-          updateConnectionStatus('Déconnecté', `Code: ${event.code}`);
+          updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
           // Tentative de reconnexion automatique
-          
+
           if (reconnectAttempts < maxReconnectAttempts) {
             reconnectAttempts++;
-            updateConnectionStatus('Connexion...', `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`);
+            updateConnectionStatus(
+              "Connexion...",
+              `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
+            );
             console.log(`Reconnexion dans ${reconnectInterval}ms...`);
             setTimeout(connectWebSocket, reconnectInterval);
           } else {
-            updateConnectionStatus('Échec', 'Nombre maximum de tentatives atteint');
-            console.error("Nombre maximum de tentatives de reconnexion atteint");
+            updateConnectionStatus(
+              "Échec",
+              "Nombre maximum de tentatives atteint",
+            );
+            console.error(
+              "Nombre maximum de tentatives de reconnexion atteint",
+            );
           }
         };
       }
-      //fonction pour mettre a jour l'indicateur du status de la sbee
-      function updateSbeeState(sbee){
-          if(sbee){
-            sbeeIndicator.classList.remove('bg-gray-400', 'bg-red-500');
-            sbeeIndicator.classList.add('bg-green-500');
-            sbeeStatus.textContent = "actif" 
+      //fonction pour mettre a jours le graphe ou pas
+      function updateGraph(data){
+        if(data["prod"] !== previousData["prod"]){
+          previousData["prod"] == data["prod"]
+            globalThis.graphe.data.datasets[0].data = data["prod"]
+            globalThis.graphe.update()
           }
-          else{
-            sbeeIndicator.classList.remove('bg-gray-400', 'bg-green-500');
-            sbeeIndicator.classList.add('bg-red-500');
-            sbeeStatus.textContent ="coupure détectée"
+          if(data["conso"] !== previousData["conso"]){
+            previousData["conso"] = data["conso"]
+            graphe.data.datasets[1].data= data["conso"]
+            globalThis.graphe.update()
           }
       }
+      //fonction pour mettre a jour la barre de progression du niveau de consommation
+      function updateConsumptionData(currentConsumption,maxConsumption){
+        percentage = Math.round((currentConsumption/maxConsumption)*100)
+        consoBar.style.width = `${percentage}%`;
+        document.getElementById("consoPercentage").textContent = `${percentage}% de la prédiction totale`
+      }
+      //fonction pour indiquer le status des batterie dans le grand container
+      function batterieStatusString(status,activeSource) {
+        const battSvg = document.querySelector(".battery-svg");
+        const battCircle = document.querySelector("circle.battery-circle");
+
+        if (status) {
+          battStatus.textContent = "Chargement";
+          battIcon.forEach((b) => {
+            b.textContent = `battery_charging_80`;
+          });
+          // Ajouter les animations de balayage
+          battCircle?.classList.add("battery-circle-charging");
+          battSvg?.classList.add("battery-svg-charging");
+        } else {
+            if(activeSource == 'batt'){
+              battStatus.textContent = "Déchargement pour alimenter la maison";
+              battIcon.forEach((b) => {
+                b.textContent = `battery_80`;
+              });
+            }
+            else{
+               battStatus.textContent = "Batteries inactives pour sauvegarder la durée de vie";
+            }
+            // Retirer les animations de balayage
+            battCircle?.classList.remove("battery-circle-charging");
+            battSvg?.classList.remove("battery-svg-charging");
+            // Mettre à jour l'offset en fonction du pourcentage
+            updateBatteryGauge();
+          }
+      }
+      //fonction pour tracer le graphique
+      function graphic(){
+         const ctx = document.getElementById('consoProdGraph').getContext('2d');
+        x_label = []
+        for(let i=0;i<=23;i++){
+          x_label.push(i)
+        }
+        globalThis.graphe =  new Chart(ctx, {
+            type: 'line', // type de graphique : bar, line, pie, etc.
+            data: {
+                  labels: x_label,
+                  datasets: [
+                    {
+                      label: 'Production',
+                      data: [0.5,0.60,0.7,0.8,0.9,1,0.2,0.1,1,0],
+                      fill:true,
+                      tension: 0.5,
+                      pointRadius :0,
+                      gradient:{
+                        backgroundColor:{
+                          axis: 'x',
+                           colors: {
+                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
+                          }
+                        },
+                      },
+                      borderColor: '#0d631b',
+                      borderWidth: 3
+                    },
+                    {
+                      label: 'Consommation',
+                      data: [5,6,7,8,5,1,4],
+                      borderColor: '#f8bd2a',
+                      borderWidth: 3,
+                      fill:true,
+                      tension: 0.5,
+                      pointRadius :0,
+                      gradient:{
+                        backgroundColor:{
+                          axis: 'x',
+                           colors: {
+                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
+                          }
+                        },
+                      },
+                    }
+                ]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            let valeur = parseFloat(context.raw).toFixed(2);
+                            return `${label}: ${valeur} kW`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return value + 'h';
+                        }
+                    }
+                }
+            }
+        }
+        });
+      }
+      graphic()
+      //fonction pour mettre a jour l'indicateur du status de la sbee
+      function updateSbeeState(sbee) {
+        if (sbee) {
+          sbeeIndicator.classList.remove("bg-gray-400", "bg-red-500");
+          sbeeIndicator.classList.add("bg-green-500");
+          sbeeStatus.textContent = "actif";
+        } else {
+          sbeeIndicator.classList.remove("bg-gray-400", "bg-green-500");
+          sbeeIndicator.classList.add("bg-red-500");
+          sbeeStatus.textContent = "coupure détectée";
+        }
+      }
       //fonction pour activer une source et désactiver les autres
-      function toggleActiveSource(activeSource){
+      function toggleActiveSource(activeSource) {
         /* desactivation de toute les sources */
         toggleBattState(false);
         toggleSBEEState(false);
         toggleSolarPannelState(false);
         /* activation de ou des source(s) active sur l'interface */
-        activeSource.forEach((source)=>{
-            if(source == "solarPannel"){
-              toggleSolarPannelState(true);
-            }
-            else if(source == "batt"){
-              toggleBattState(true)
-            }
-            else if(source == "sbee"){
-              toggleSBEEState(true)
-            }
+        activeSource.forEach((source) => {
+          if (source == "solarPannel") {
+            toggleSolarPannelState(true);
+          } else if (source == "batt") {
+            toggleBattState(true);
+          } else if (source == "sbee") {
+            toggleSBEEState(true);
+          }
         });
-        if(activeSource.length>1){
-          liveFlowText.textContent = activeSource.join(' + ');
-        }
-        else{
+        if (activeSource.length > 1) {
+          liveFlowText.textContent = activeSource.join(" + ");
+        } else {
           updateLiveFlowStyle(activeSource.join(""));
         }
       }
       // Fonction pour afficher l'état de la connexion WebSocket
-      function updateConnectionStatus(status, message = '') {
-        const statusElement = document.getElementById('connectionStatus');
-        const indicatorElement = document.getElementById('connectionIndicator');
+      function updateConnectionStatus(status, message = "") {
+        const statusElement = document.getElementById("connectionStatus");
+        const indicatorElement = document.getElementById("connectionIndicator");
 
         if (statusElement) {
-          statusElement.textContent = `${status}${message ? ': ' + message : ''}`;
+          statusElement.textContent = `${status}${message ? ": " + message : ""}`;
         }
 
         if (indicatorElement) {
           // Supprimer toutes les classes de couleur
-          indicatorElement.classList.remove('bg-gray-400', 'bg-green-500', 'bg-yellow-500', 'bg-red-500', 'animate-pulse');
+          indicatorElement.classList.remove(
+            "bg-gray-400",
+            "bg-green-500",
+            "bg-yellow-500",
+            "bg-red-500",
+            "animate-pulse",
+          );
 
           // Ajouter la couleur appropriée
-          if (status === 'Connecté') {
-            indicatorElement.classList.add('bg-green-500');
-          } else if (status === 'Connexion...') {
-            indicatorElement.classList.add('bg-yellow-500', 'animate-pulse');
+          if (status === "Connecté") {
+            indicatorElement.classList.add("bg-green-500");
+          } else if (status === "Connexion...") {
+            indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
           } else {
-            indicatorElement.classList.add('bg-red-500');
+            indicatorElement.classList.add("bg-red-500");
           }
         }
       }
 
       // Fonction pour mettre à jour le style du SVG liveflow en fonction de la source active
       function updateLiveFlowStyle(activeSource) {
-        const liveFlowPath = document.getElementById('liveFlowPath');
-        const liveFlowCircle = document.getElementById('liveFlowCircle');
-        const liveFlowDot = document.getElementById('liveFlowDot');
-        const liveFlowInfo = document.getElementById('liveFlowInfo');
-        const liveFlowText = document.getElementById('liveFlowText');
-        const liveFlowSvg = document.getElementById('liveFlowSvg');
-        let strokeColor = '#0d631b';
-        let sourceLabel = '';
-        let dotColor = 'bg-primary';
-        let infoBgClass = 'bg-primary-container/10 border-primary/20';
-        let textColor = 'text-primary';
+        const liveFlowPath = document.getElementById("liveFlowPath");
+        const liveFlowCircle = document.getElementById("liveFlowCircle");
+        const liveFlowDot = document.getElementById("liveFlowDot");
+        const liveFlowInfo = document.getElementById("liveFlowInfo");
+        const liveFlowText = document.getElementById("liveFlowText");
+        const liveFlowSvg = document.getElementById("liveFlowSvg");
+        let strokeColor = "#0d631b";
+        let sourceLabel = "";
+        let dotColor = "bg-primary";
+        let infoBgClass = "bg-primary-container/10 border-primary/20";
+        let textColor = "text-primary";
 
-        if (activeSource === 'batt') {
-          strokeColor = '#ea8c55'; // Orange pour batterie
-          sourceLabel = 'Batterie';
-          dotColor = 'bg-orange-500';
-          infoBgClass = 'bg-orange-100 border-orange-300';
-          textColor = 'text-orange-700';
-        } else if (activeSource === 'sbee') {
-          strokeColor = '#dc2626'; // Rouge pour SBEE
-          sourceLabel = 'SBEE';
-          dotColor = 'bg-red-500';
-          infoBgClass = 'bg-red-100 border-red-300';
-          textColor = 'text-red-700';
-        } else if (activeSource === 'solarPannel') {
-          strokeColor = '#16a34a'; // Vert pour panneaux solaires
-          sourceLabel = 'Panneaux Solaires';
-          dotColor = 'bg-green-500';
-          infoBgClass = 'bg-green-100 border-green-300';
-          textColor = 'text-green-700';
+        if (activeSource === "batt") {
+          strokeColor = "#ea8c55"; // Orange pour batterie
+          sourceLabel = "Batterie";
+          dotColor = "bg-orange-500";
+          infoBgClass = "bg-orange-100 border-orange-300";
+          textColor = "text-orange-700";
+        } else if (activeSource === "sbee") {
+          strokeColor = "#dc2626"; // Rouge pour SBEE
+          sourceLabel = "SBEE";
+          dotColor = "bg-red-500";
+          infoBgClass = "bg-red-100 border-red-300";
+          textColor = "text-red-700";
+        } else if (activeSource === "solarPannel") {
+          strokeColor = "#16a34a"; // Vert pour panneaux solaires
+          sourceLabel = "Panneaux Solaires";
+          dotColor = "bg-green-500";
+          infoBgClass = "bg-green-100 border-green-300";
+          textColor = "text-green-700";
         }
         // Mettre à jour le SVG
-        if (liveFlowPath) liveFlowPath.setAttribute('stroke', strokeColor);
-        if (liveFlowCircle) liveFlowCircle.setAttribute('fill', strokeColor);
+        if (liveFlowPath) liveFlowPath.setAttribute("stroke", strokeColor);
+        if (liveFlowCircle) liveFlowCircle.setAttribute("fill", strokeColor);
 
         // Mettre à jour le point animé
         if (liveFlowDot) {
@@ -1051,40 +1156,88 @@
       }
 
       // Démarrer la connexion WebSocket au chargement de la page
-      updateConnectionStatus('Connexion...', 'Initialisation');
+      updateConnectionStatus("Connexion...", "Initialisation");
       connectWebSocket();
-      function toggleBattState(state=false){
-          if(state){
-            battSource.classList.remove("bg-surface-container-low");
-            battSource.classList.add("bg-orange-50", "border", "border-orange-300", "shadow-md", "shadow-orange-200");
-          }
-          else{
-            battSource.classList.remove("bg-orange-50", "border", "border-orange-300", "shadow-md", "shadow-orange-200");
-            battSource.classList.toggle("bg-surface-container-low" ,"border", "border-outline-variant/30", "opacity-60");
-          }
+      function toggleBattState(state = false) {
+        if (state) {
+          battSource.classList.remove("bg-surface-container-low");
+          battSource.classList.add(
+            "bg-orange-50",
+            "border",
+            "border-orange-300",
+            "shadow-md",
+            "shadow-orange-200",
+          );
+        } else {
+          battSource.classList.remove(
+            "bg-orange-50",
+            "border",
+            "border-orange-300",
+            "shadow-md",
+            "shadow-orange-200",
+          );
+          battSource.classList.toggle(
+            "bg-surface-container-low",
+            "border",
+            "border-outline-variant/30",
+            "opacity-60",
+          );
+        }
       }
-      function toggleSBEEState(state=false){
-          if(state){
-            SBEESource.classList.remove("bg-surface-container-low");
-            SBEESource.classList.add("bg-red-100", "border", "border-red-300", "shadow-md", "shadow-red-200");
-          }
-          else{
-            SBEESource.classList.remove("bg-red-100", "border", "border-red-300", "shadow-md", "shadow-red-200");
-            SBEESource.classList.toggle("bg-surface-container-low" ,"border", "border-outline-variant/30", "opacity-60");
-          }
+      function toggleSBEEState(state = false) {
+        if (state) {
+          SBEESource.classList.remove("bg-surface-container-low");
+          SBEESource.classList.add(
+            "bg-red-100",
+            "border",
+            "border-red-300",
+            "shadow-md",
+            "shadow-red-200",
+          );
+        } else {
+          SBEESource.classList.remove(
+            "bg-red-100",
+            "border",
+            "border-red-300",
+            "shadow-md",
+            "shadow-red-200",
+          );
+          SBEESource.classList.toggle(
+            "bg-surface-container-low",
+            "border",
+            "border-outline-variant/30",
+            "opacity-60",
+          );
+        }
       }
-      function toggleSolarPannelState(state=false){
-          if(state){
-            SPSource.classList.remove("bg-surface-container-low");
-            SPSource.classList.add("bg-green-100", "border", "border-green-300", "shadow-md", "shadow-green-200");
-          }
-          else{
-            SPSource.classList.remove("bg-green-100", "border", "border-green-300", "shadow-md", "shadow-green-200");
-            SPSource.classList.toggle("bg-surface-container-low" ,"border", "border-outline-variant/30", "opacity-60");
-          }
+      function toggleSolarPannelState(state = false) {
+        if (state) {
+          SPSource.classList.remove("bg-surface-container-low");
+          SPSource.classList.add(
+            "bg-green-100",
+            "border",
+            "border-green-300",
+            "shadow-md",
+            "shadow-green-200",
+          );
+        } else {
+          SPSource.classList.remove(
+            "bg-green-100",
+            "border",
+            "border-green-300",
+            "shadow-md",
+            "shadow-green-200",
+          );
+          SPSource.classList.toggle(
+            "bg-surface-container-low",
+            "border",
+            "border-outline-variant/30",
+            "opacity-60",
+          );
+        }
       }
       // Nettoyer la connexion WebSocket quand la page se ferme
-      window.addEventListener('beforeunload', () => {
+      window.addEventListener("beforeunload", () => {
         if (ws && ws.readyState === WebSocket.OPEN) {
           ws.close();
         }
@@ -1092,12 +1245,18 @@
 
       // Vérifier périodiquement l'état de la connexion WebSocket
       setInterval(() => {
-        if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
-          console.log('Connexion WebSocket perdue, tentative de reconnexion...');
+        if (
+          !ws ||
+          ws.readyState === WebSocket.CLOSED ||
+          ws.readyState === WebSocket.CLOSING
+        ) {
+          console.log(
+            "Connexion WebSocket perdue, tentative de reconnexion...",
+          );
           connectWebSocket();
         }
       }, 10000); // Vérifier toutes les 10 secondes
-      const now = new Date()
+      const now = new Date();
       function updateBatteryGauge() {
         const battValue = document.querySelector(".battValue");
         if (!battValue) return;
@@ -1107,9 +1266,12 @@
         const offset = circumference * (1 - percentage / 100);
 
         // Mettre à jour le stroke-dashoffset du cercle
-        const circle = document.querySelector("circle.text-tertiary-container");
+        const circle = document.querySelector("circle.battery-circle");
         if (circle) {
-          circle.setAttribute("stroke-dashoffset", offset.toFixed(2));
+          // Ne pas appliquer l'offset si l'animation de balayage est active
+          if (!circle.classList.contains("battery-circle-charging")) {
+            circle.setAttribute("stroke-dashoffset", offset.toFixed(2));
+          }
           if (
             Number(battValue.textContent) >= 0 &&
             Number(battValue.textContent) < 40
@@ -1128,92 +1290,158 @@
           }
         }
       }
-      
+
       /* fonction pour récupérer les informations météorologiques  */
-      const fastAPiUrl = '/weather'
+      const fastAPiUrl = "/weather";
       async function getWeatherDataFromFastAPi(hour = now.getHours()) {
         try {
-            const request = await fetch(fastAPiUrl);
-            const response = await request.json();
+          const request = await fetch(fastAPiUrl);
+          const response = await request.json();
 
-            const weatherInfo = getWeatherInfo(response["weatherCode"][hour]);
-            weatherDescription.textContent = weatherInfo["description"];
-            weatherIcon.textContent = weatherInfo["image"];
-            weatherTempValue.textContent = response["AirTemperature"][hour];
+          const weatherInfo = getWeatherInfo(response["weatherCode"][hour]);
+          weatherDescription.textContent = weatherInfo["description"];
+          weatherIcon.textContent = weatherInfo["image"];
+          weatherTempValue.textContent = response["AirTemperature"][hour];
 
-            const backgroundImage = weatherBackgroundImageLink[weatherInfo["image"]];
-            const newImage = new Image();
-            newImage.src = weatherBackgroundImageLink[getWeatherInfo(response['weatherCode'][hour],false)["image"]];
-            newImage.onload = () => { weatherImage.src = newImage.src; };
+          const backgroundImage =
+            weatherBackgroundImageLink[weatherInfo["image"]];
+          const newImage = new Image();
+          newImage.src =
+            weatherBackgroundImageLink[
+              getWeatherInfo(response["weatherCode"][hour], false)["image"]
+            ];
+          newImage.onload = () => {
+            weatherImage.src = newImage.src;
+          };
         } catch (error) {
-            console.error("Erreur météo :", error);
+          console.error("Erreur météo :", error);
         }
-}
+      }
 
-// Lancement immédiat
-getWeatherDataFromFastAPi();
+      // Lancement immédiat
+      getWeatherDataFromFastAPi();
 
-// Puis mise à jour toutes les heures (3 600 000 ms)
-setInterval(() => getWeatherDataFromFastAPi(), 3600000);      
+      // Puis mise à jour toutes les heures (3 600 000 ms)
+      setInterval(() => getWeatherDataFromFastAPi(), 3600000);
       function getWeatherInfo(code, useEmoji = true) {
         // Mapping basé sur les codes WMO d'Open-Meteo
         const weatherMap = {
           // Groupe 0-9 : Ciel clair / partiellement nuageux
-          0: { emoji: '☀️', url: 'sunny', desc: 'Ciel dégagé' },
-          1: { emoji: '🌤️', url: 'mainly_clear', desc: 'Principalement dégagé' },
-          2: { emoji: '⛅', url: 'partly_cloudy', desc: 'Partiellement nuageux' },
-          3: { emoji: '☁️', url: 'overcast', desc: 'Nuageux' },
-          
+          0: { emoji: "☀️", url: "sunny", desc: "Ciel dégagé" },
+          1: {
+            emoji: "🌤️",
+            url: "mainly_clear",
+            desc: "Principalement dégagé",
+          },
+          2: {
+            emoji: "⛅",
+            url: "partly_cloudy",
+            desc: "Partiellement nuageux",
+          },
+          3: { emoji: "☁️", url: "overcast", desc: "Nuageux" },
+
           // Brouillard : 45, 48
-          45: { emoji: '🌫️', url: 'fog', desc: 'Brouillard' },
-          48: { emoji: '🌫️❄️', url: 'depositing_rime_fog', desc: 'Brouillard givrant' },
-          
+          45: { emoji: "🌫️", url: "fog", desc: "Brouillard" },
+          48: {
+            emoji: "🌫️❄️",
+            url: "depositing_rime_fog",
+            desc: "Brouillard givrant",
+          },
+
           // Pluie fine / bruine : 51, 53, 55
-          51: { emoji: '🌦️', url: 'light_drizzle', desc: 'Bruine légère' },
-          53: { emoji: '🌧️', url: 'moderate_drizzle', desc: 'Bruine modérée' },
-          55: { emoji: '🌧️💧', url: 'dense_drizzle', desc: 'Bruine dense' },
-          
+          51: { emoji: "🌦️", url: "light_drizzle", desc: "Bruine légère" },
+          53: { emoji: "🌧️", url: "moderate_drizzle", desc: "Bruine modérée" },
+          55: { emoji: "🌧️💧", url: "dense_drizzle", desc: "Bruine dense" },
+
           // Pluie verglaçante : 56, 57
-          56: { emoji: '🌨️❄️', url: 'freezing_drizzle_light', desc: 'Bruine verglaçante légère' },
-          57: { emoji: '🌨️❄️💧', url: 'freezing_drizzle_dense', desc: 'Bruine verglaçante dense' },
-          
+          56: {
+            emoji: "🌨️❄️",
+            url: "freezing_drizzle_light",
+            desc: "Bruine verglaçante légère",
+          },
+          57: {
+            emoji: "🌨️❄️💧",
+            url: "freezing_drizzle_dense",
+            desc: "Bruine verglaçante dense",
+          },
+
           // Pluie : 61, 63, 65
-          61: { emoji: '🌦️', url: 'light_rain', desc: 'Pluie légère' },
-          63: { emoji: '🌧️', url: 'moderate_rain', desc: 'Pluie modérée' },
-          65: { emoji: '🌧️💧💧', url: 'heavy_rain', desc: 'Pluie forte' },
-          
+          61: { emoji: "🌦️", url: "light_rain", desc: "Pluie légère" },
+          63: { emoji: "🌧️", url: "moderate_rain", desc: "Pluie modérée" },
+          65: { emoji: "🌧️💧💧", url: "heavy_rain", desc: "Pluie forte" },
+
           // Pluie verglaçante : 66, 67
-          66: { emoji: '🌨️❄️💧', url: 'freezing_rain_light', desc: 'Pluie verglaçante légère' },
-          67: { emoji: '🌨️❄️💧💧', url: 'freezing_rain_heavy', desc: 'Pluie verglaçante forte' },
-          
+          66: {
+            emoji: "🌨️❄️💧",
+            url: "freezing_rain_light",
+            desc: "Pluie verglaçante légère",
+          },
+          67: {
+            emoji: "🌨️❄️💧💧",
+            url: "freezing_rain_heavy",
+            desc: "Pluie verglaçante forte",
+          },
+
           // Neige : 71, 73, 75
-          71: { emoji: '🌨️', url: 'light_snow', desc: 'Neige légère' },
-          73: { emoji: '❄️🌨️', url: 'moderate_snow', desc: 'Neige modérée' },
-          75: { emoji: '❄️❄️🌨️', url: 'heavy_snow', desc: 'Neige forte' },
-          
+          71: { emoji: "🌨️", url: "light_snow", desc: "Neige légère" },
+          73: { emoji: "❄️🌨️", url: "moderate_snow", desc: "Neige modérée" },
+          75: { emoji: "❄️❄️🌨️", url: "heavy_snow", desc: "Neige forte" },
+
           // Grains de neige : 77
-          77: { emoji: '🌨️💨', url: 'snow_grains', desc: 'Grains de neige' },
-          
+          77: { emoji: "🌨️💨", url: "snow_grains", desc: "Grains de neige" },
+
           // Averses de pluie : 80, 81, 82
-          80: { emoji: '☔', url: 'rain_showers_light', desc: 'Averses légères' },
-          81: { emoji: '☔☔', url: 'rain_showers_moderate', desc: 'Averses modérées' },
-          82: { emoji: '☔☔☔', url: 'rain_showers_violent', desc: 'Averses violentes' },
-          
+          80: {
+            emoji: "☔",
+            url: "rain_showers_light",
+            desc: "Averses légères",
+          },
+          81: {
+            emoji: "☔☔",
+            url: "rain_showers_moderate",
+            desc: "Averses modérées",
+          },
+          82: {
+            emoji: "☔☔☔",
+            url: "rain_showers_violent",
+            desc: "Averses violentes",
+          },
+
           // Averses de neige : 85, 86
-          85: { emoji: '❄️☔', url: 'snow_showers_light', desc: 'Averses de neige légères' },
-          86: { emoji: '❄️❄️☔', url: 'snow_showers_heavy', desc: 'Averses de neige fortes' },
-          
+          85: {
+            emoji: "❄️☔",
+            url: "snow_showers_light",
+            desc: "Averses de neige légères",
+          },
+          86: {
+            emoji: "❄️❄️☔",
+            url: "snow_showers_heavy",
+            desc: "Averses de neige fortes",
+          },
+
           // Orages : 95, 96, 99
-          95: { emoji: '⛈️', url: 'thunderstorm', desc: 'Orage modéré' },
-          96: { emoji: '⛈️🌨️', url: 'thunderstorm_hail_light', desc: 'Orage avec grêle légère' },
-          99: { emoji: '⛈️🌨️🌨️', url: 'thunderstorm_hail_heavy', desc: 'Orage avec grêle forte' }
+          95: { emoji: "⛈️", url: "thunderstorm", desc: "Orage modéré" },
+          96: {
+            emoji: "⛈️🌨️",
+            url: "thunderstorm_hail_light",
+            desc: "Orage avec grêle légère",
+          },
+          99: {
+            emoji: "⛈️🌨️🌨️",
+            url: "thunderstorm_hail_heavy",
+            desc: "Orage avec grêle forte",
+          },
         };
         // Valeur par défaut si code inconnu
-        const defaultWeather = { emoji: '❓', url: 'unknown', desc: 'Code météo inconnu' };
+        const defaultWeather = {
+          emoji: "❓",
+          url: "unknown",
+          desc: "Code météo inconnu",
+        };
         const weather = weatherMap[code] || defaultWeather;
         return {
           image: useEmoji ? weather.emoji : weather.url,
-          description: weather.desc
+          description: weather.desc,
         };
       }
 
@@ -1223,7 +1451,7 @@ setInterval(() => getWeatherDataFromFastAPi(), 3600000);
       document.addEventListener("DOMContentLoaded", () => {
         updateBatteryGauge();
         // Initialiser le liveflow avec la source par défaut (panneaux solaires)
-        updateLiveFlowStyle('solarPannel', 0);
+        updateLiveFlowStyle("solarPannel", 0);
       });
       /* Écouter les mises à jour HTMX du conteneur metricsContainer */
     </script>
