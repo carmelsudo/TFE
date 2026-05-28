@@ -1,1459 +1,1241 @@
 <!doctype html>
 
 <html class="light" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Acceuil</title>
-    <link href="../../static/styles.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.6.1/dist/chartjs-plugin-gradient.min.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "surface-container-high": "#e7e8e9",
-              "inverse-surface": "#2e3132",
-              "tertiary-container": "#246dc8",
-              "tertiary-fixed": "#d6e3ff",
-              "surface-container-lowest": "#ffffff",
-              "secondary-fixed-dim": "#f8bd2a",
-              "inverse-on-surface": "#f0f1f2",
-              outline: "#707a6c",
-              "on-tertiary-fixed": "#001b3d",
-              "surface-dim": "#d9dadb",
-              "on-primary-fixed": "#002204",
-              "on-secondary-container": "#6f5100",
-              "primary-fixed": "#a3f69c",
-              "on-surface": "#191c1d",
-              "on-secondary": "#ffffff",
-              "surface-container": "#edeeef",
-              "inverse-primary": "#88d982",
-              "surface-container-highest": "#e1e3e4",
-              "primary-container": "#2e7d32",
-              background: "#f8f9fa",
-              error: "#ba1a1a",
-              "on-secondary-fixed-variant": "#5c4300",
-              "surface-variant": "#e1e3e4",
-              "surface-container-low": "#f3f4f5",
-              "on-primary-container": "#cbffc2",
-              "on-error": "#ffffff",
-              "on-secondary-fixed": "#261a00",
-              "primary-fixed-dim": "#88d982",
-              "on-primary-fixed-variant": "#005312",
-              "on-primary": "#ffffff",
-              "outline-variant": "#bfcaba",
-              "surface-bright": "#f8f9fa",
-              surface: "#f8f9fa",
-              "error-container": "#ffdad6",
-              secondary: "#795900",
-              primary: "#0d631b",
-              "tertiary-fixed-dim": "#a9c7ff",
-              "on-background": "#191c1d",
-              "on-surface-variant": "#40493d",
-              "on-tertiary-container": "#edf1ff",
-              "on-error-container": "#93000a",
-              "secondary-fixed": "#ffdfa0",
-              tertiary: "#0054a7",
-              "on-tertiary": "#ffffff",
-              "secondary-container": "#fec330",
-              "on-tertiary-fixed-variant": "#00468c",
-              "surface-tint": "#1b6d24",
-            },
-            borderRadius: {
-              DEFAULT: "0.5rem",
-              lg: "0.5rem",
-              xl: "0.75rem",
-              full: "9999px",
-            },
-            fontFamily: {
-              headline: ["Manrope"],
-              body: ["Inter"],
-              label: ["Inter"],
-            },
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Acceuil</title>
+  <link href="../../static/styles.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient@0.6.1/dist/chartjs-plugin-gradient.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e7e8e9",
+            "inverse-surface": "#2e3132",
+            "tertiary-container": "#246dc8",
+            "tertiary-fixed": "#d6e3ff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#f8bd2a",
+            "inverse-on-surface": "#f0f1f2",
+            outline: "#707a6c",
+            "on-tertiary-fixed": "#001b3d",
+            "surface-dim": "#d9dadb",
+            "on-primary-fixed": "#002204",
+            "on-secondary-container": "#6f5100",
+            "primary-fixed": "#a3f69c",
+            "on-surface": "#191c1d",
+            "on-secondary": "#ffffff",
+            "surface-container": "#edeeef",
+            "inverse-primary": "#88d982",
+            "surface-container-highest": "#e1e3e4",
+            "primary-container": "#2e7d32",
+            background: "#f8f9fa",
+            error: "#ba1a1a",
+            "on-secondary-fixed-variant": "#5c4300",
+            "surface-variant": "#e1e3e4",
+            "surface-container-low": "#f3f4f5",
+            "on-primary-container": "#cbffc2",
+            "on-error": "#ffffff",
+            "on-secondary-fixed": "#261a00",
+            "primary-fixed-dim": "#88d982",
+            "on-primary-fixed-variant": "#005312",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bfcaba",
+            "surface-bright": "#f8f9fa",
+            surface: "#f8f9fa",
+            "error-container": "#ffdad6",
+            secondary: "#795900",
+            primary: "#0d631b",
+            "tertiary-fixed-dim": "#a9c7ff",
+            "on-background": "#191c1d",
+            "on-surface-variant": "#40493d",
+            "on-tertiary-container": "#edf1ff",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#ffdfa0",
+            tertiary: "#0054a7",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#fec330",
+            "on-tertiary-fixed-variant": "#00468c",
+            "surface-tint": "#1b6d24",
+          },
+          borderRadius: {
+            DEFAULT: "0.5rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px",
+          },
+          fontFamily: {
+            headline: ["Manrope"],
+            body: ["Inter"],
+            label: ["Inter"],
           },
         },
-      };
-    </script>
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        background-color: #f8f9fa;
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .font-manrope {
+      font-family: "Manrope", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+        "FILL" 0,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+    }
+
+    .energy-path {
+      stroke-dasharray: 8;
+      animation: dash 1s linear infinite;
+    }
+
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -16;
+      }
+    }
+
+    #liveFlowSvg {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    /* Animation de balayage pour la batterie */
+    .battery-circle-charging {
+      animation: sweepCharge 5s linear infinite;
+    }
+
+    @keyframes sweepCharge {
+      0% {
+        stroke-dashoffset: 552.92;
       }
 
-      .font-manrope {
-        font-family: "Manrope", sans-serif;
+      100% {
+        stroke-dashoffset: 0;
       }
+    }
 
-      .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
-      }
+    .battery-svg-charging {
+      filter: drop-shadow(0 0 6px rgba(214, 227, 255, 0.5));
+    }
+  </style>
+</head>
 
-      .energy-path {
-        stroke-dasharray: 8;
-        animation: dash 1s linear infinite;
-      }
-
-      @keyframes dash {
-        to {
-          stroke-dashoffset: -16;
-        }
-      }
-
-      #liveFlowSvg {
-        transition: transform 0.3s ease-in-out;
-      }
-
-      /* Animation de balayage pour la batterie */
-      .battery-circle-charging {
-        animation: sweepCharge 5s linear infinite;
-      }
-
-      @keyframes sweepCharge {
-        0% {
-          stroke-dashoffset: 552.92;
-        }
-        100% {
-          stroke-dashoffset: 0;
-        }
-      }
-
-      .battery-svg-charging {
-        filter: drop-shadow(0 0 6px rgba(214, 227, 255, 0.5));
-      }
-    </style>
-  </head>
-
-  <body class="text-on-surface">
-    <!-- SideNavBar Shell -->
-    <aside
-      class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50"
-    >
-      <div class="px-6 py-8">
-        <div class="flex items-center gap-3 mb-10">
-          <div
-            class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center"
-          >
-            <span
-              class="material-symbols-outlined text-on-primary-container"
-              style="font-variation-settings: &quot;FILL&quot; 1"
-              >wb_sunny</span
-            >
-          </div>
-          <div>
-            <h1
-              class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope"
-            >
-              Luminous
-            </h1>
-            <p
-              class="text-[10px] uppercase tracking-widest text-slate-400 font-bold"
-            >
-              Energy Intelligence
-            </p>
-          </div>
+<body class="text-on-surface">
+  <!-- SideNavBar Shell -->
+  <aside class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+    <div class="px-6 py-8">
+      <div class="flex items-center gap-3 mb-10">
+        <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-on-primary-container"
+            style="font-variation-settings: &quot;FILL&quot; 1">wb_sunny</span>
         </div>
-        <nav class="space-y-1">
-          <!-- Overview is Active -->
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-100 dark:bg-slate-800"
-            href="#"
-          >
-            <span
-              class="material-symbols-outlined"
-              style="font-variation-settings: &quot;FILL&quot; 1"
-              >dashboard</span
-            >
-            <span>Acceuil</span>
-          </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="/analyse_ia"
-          >
-            <span class="material-symbols-outlined">psychology</span>
-            <span>Analytics</span>
-          </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="/optimisation"
-          >
-            <span class="material-symbols-outlined">lightbulb</span>
-            <span>Optimisation</span>
-          </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="#"
-          >
-            <span class="material-symbols-outlined">wb_sunny</span>
-            <span>Weather</span>
-          </a>
-        </nav>
-      </div>
-      <div class="mt-auto px-6 py-8 space-y-1">
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="#"
-        >
-          <span class="material-symbols-outlined">settings</span>
-          <span>Settings</span>
-        </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="#"
-        >
-          <span class="material-symbols-outlined">help_outline</span>
-          <span>Support</span>
-        </a>
-        <div class="pt-6 flex items-center gap-3 px-4">
-          <img
-            alt="User profile photo"
-            class="w-8 h-8 rounded-full bg-slate-200"
-            data-alt="close-up portrait of a professional man in his 40s with a warm smile, soft natural lighting, high-end photography style"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcY82qrDtve7UVfBGfwdCyWSPc8YQZwyhwuf9th_GHh9ITcqacRofSvFrMitT_kCX0MOb1LyzY1IurTjFYPsgYjcLSKDVPyFugzKLqVXcqy7dyWDorDIIOhBnRjEYinzq8ofbyz6GNzZFz22uezcK6s6kIxZMSfonKSHGe9CGx95NTlsPfkG5GhaSNWF7K0BurjLY_21mJBcljQB_6XHoOy0cPE9K6cA6A9ncMR2jG63Mz9sn_zBkN--CpEnqw5osMkcBkM_jSFhnw"
-          />
-          <div class="overflow-hidden">
-            <p class="text-xs font-bold truncate">Alex Sterling</p>
-            <p class="text-[10px] text-slate-400 truncate">Premium Plan</p>
-          </div>
+        <div>
+          <h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">
+            Luminous
+          </h1>
+          <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+            Gestion intelligente de l'energie
+          </p>
         </div>
       </div>
-    </aside>
-    <!-- Main Content Area -->
-    <main class="ml-64 min-h-screen bg-background">
-      <!-- TopNavBar Shell -->
-      <header
-        class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none transition-all"
-      >
-        <div class="flex items-center gap-4">
-          <h2
-            class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight"
-          >
-            The Living Equilibrium
-          </h2>
-          <div class="flex items-center gap-2">
-            <div
-              class="w-2 h-2 rounded-full bg-gray-400"
-              id="connectionIndicator"
-            ></div>
-            <span
-              class="text-xs font-medium text-gray-600"
-              id="connectionStatus"
-              >Connexion...</span
-            >
-          </div>
+      <nav class="space-y-1">
+        <!-- Overview is Active -->
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-100 dark:bg-slate-800"
+          href="#">
+          <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1">dashboard</span>
+          <span>Acceuil</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+          href="/analyse_ia">
+          <span class="material-symbols-outlined">psychology</span>
+          <span>Analyse IA</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+          href="/optimisation">
+          <span class="material-symbols-outlined">lightbulb</span>
+          <span>Optimisation</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+          href="/meteo">
+          <span class="material-symbols-outlined">wb_sunny</span>
+          <span>Météo</span>
+        </a>
+      </nav>
+    </div>
+    <div class="mt-auto px-6 py-8 space-y-1">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+        href="#">
+        <span class="material-symbols-outlined">help_outline</span>
+        <span>Support</span>
+      </a>
+
+    </div>
+  </aside>
+  <!-- Main Content Area -->
+  <main class="ml-64 min-h-screen bg-background">
+    <!-- TopNavBar Shell -->
+    <header
+      class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none transition-all">
+      <div class="flex items-center gap-4">
+        <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">
+          Luminous AI
+        </h2>
+        <div class="flex items-center gap-2">
+          <div class="w-2 h-2 rounded-full bg-gray-400" id="connectionIndicator"></div>
+          <span class="text-xs font-medium text-gray-600" id="connectionStatus">Connexion...</span>
         </div>
-        <div class="flex items-center gap-6">
-          <div class="relative group">
-            <input
-              class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body"
-              placeholder="Search insights..."
-              type="text"
-            />
-            <span
-              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
-              >search</span
-            >
-          </div>
-          <div class="flex items-center gap-4 text-on-surface-variant">
-            <button class="hover:opacity-80 transition-all relative">
-              <span class="material-symbols-outlined">notifications</span>
-              <span
-                class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"
-              ></span>
-            </button>
-            <button class="hover:opacity-80 transition-all">
-              <span class="material-symbols-outlined">account_circle</span>
-            </button>
-          </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div class="relative group">
+          <input
+            class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body"
+            placeholder="Search insights..." type="text" />
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
         </div>
-      </header>
-      <div class="p-8 max-w-7xl mx-auto space-y-8">
-        <!-- New Full-Width Energy Flow Container -->
-        <section
-          class="w-full bg-surface-container-lowest rounded-[2.5rem] p-10 relative overflow-hidden flex items-center justify-between shadow-sm"
-        >
-          <!-- Background decorative element -->
-          <div
-            class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle_at_50%_50%,_#2E7D32,_transparent)]"
-          ></div>
-          <!-- Left: Source Selection -->
-          <div class="relative z-10 w-1/3 flex flex-col gap-6">
-            <div class="space-y-1">
-              <h2
-                class="font-manrope text-2xl font-extrabold text-on-surface tracking-tight"
-              >
-                Source Active
-              </h2>
-            </div>
-            <div class="space-y-3">
-              <div
-                id="SPSource"
-                class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low"
-              >
-                <div
-                  class="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center"
-                >
-                  <span
-                    class="material-symbols-outlined text-2xl text-on-primary-container bg-primary-container px-2 py-1 rounded-xl opacity-70"
-                    style="font-variation-settings: &quot;FILL&quot; 1"
-                    >solar_power</span
-                  >
-                </div>
-                <div>
-                  <p class="font-manrope font-bold text-sm text-black">
-                    Panneaux Solaire
-                  </p>
-                  <p class="text-[10px] opacity-80 uppercase font-bold">
-                    <span class="liveProductionValue">50</span><span> W</span>
-                  </p>
-                </div>
-              </div>
-              <!-- source : batterie -->
-              <div
-                id="sourceBatt"
-                class="flex items-center gap-4 p-4 rounded-2xl bg-orange-50 border border-orange-300 shadow-md shadow-orange-200"
-              >
-                <div
-                  class="h-10 w-10 rounded-xl bg-orange-200/60 flex items-center justify-center"
-                >
-                  <span
-                    class="battIcon material-symbols-outlined text-2xl text-orange-700"
-                    style="font-variation-settings: &quot;FILL&quot; 1"
-                    >battery_80</span
-                  >
-                </div>
-                <div>
-                  <p class="font-manrope font-bold text-sm">Batteries</p>
-                  <p class="text-[10px] font-bold uppercase">
-                    <span class="battValue">100</span><span> %</span>
-                  </p>
-                </div>
-              </div>
-              <!-- source : batterie -->
-            </div>
-            <!-- sbee -->
-            <div
-              id="SBEESource"
-              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30"
-            >
-              <div
-                class="h-10 w-10 rounded-xl bg-red-300 flex items-center justify-center"
-              >
-                <img
-                  src="https://imgs.search.brave.com/b28Pwr6hhQfHZT6e2ZDjXR7JOfUktdARkmBib0Q1il8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzY1ZWU3OGE2/ODM5Y2Y3Mzk3YjUw/ZTM0OTc0ZTQ0NGY5/YzczNjQ2ODFjNWE1/N2Y4OWE0MmY3MWY5/NTQ5ZTI1Yi9zYmVl/LmJqLw"
-                  alt=""
-                  srcset=""
-                />
+        <div class="flex items-center gap-4 text-on-surface-variant">
+          <button class="hover:opacity-80 transition-all relative">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+          </button>
+          <button class="hover:opacity-80 transition-all">
+            <span class="material-symbols-outlined">account_circle</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <div class="p-8 max-w-7xl mx-auto space-y-8">
+      <!-- New Full-Width Energy Flow Container -->
+      <section
+        class="w-full bg-surface-container-lowest rounded-[2.5rem] p-10 relative overflow-hidden flex items-center justify-between shadow-sm">
+        <!-- Background decorative element -->
+        <div
+          class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle_at_50%_50%,_#2E7D32,_transparent)]">
+        </div>
+        <!-- Left: Source Selection -->
+        <div class="relative z-10 w-1/3 flex flex-col gap-6">
+          <div class="space-y-1">
+            <h2 class="font-manrope text-2xl font-extrabold text-on-surface tracking-tight">
+              Source Active
+            </h2>
+          </div>
+          <div class="space-y-3">
+            <div id="SPSource" class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low">
+              <div class="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center">
+                <span
+                  class="material-symbols-outlined text-2xl text-on-primary-container bg-primary-container px-2 py-1 rounded-xl opacity-70"
+                  style="font-variation-settings: &quot;FILL&quot; 1">solar_power</span>
               </div>
               <div>
                 <p class="font-manrope font-bold text-sm text-black">
-                  Compteur SBEE
+                  Panneaux Solaire
                 </p>
-                <div class="flex items-center gap-2">
-                  <div
-                    class="w-2 h-2 rounded-full bg-gray-400"
-                    id="sbeeIndicator"
-                  ></div>
-                  <span
-                    class="text-xs font-medium text-gray-600"
-                    id="sbeeStatus"
-                    >Connexion...</span
-                  >
-                </div>
+                <p class="text-[10px] opacity-80 uppercase font-bold">
+                  <span class="liveProductionValue">50</span><span> W</span>
+                </p>
               </div>
             </div>
-            <!-- sbee -->
-          </div>
-          <!-- Center: Flow Animation -->
-          <div
-            class="flex-1 flex flex-col items-center justify-center px-8 relative"
-          >
-            <svg
-              id="liveFlowSvg"
-              class="w-full max-w-[280px]"
-              fill="none"
-              height="80"
-              viewbox="0 0 300 80"
-              width="100%"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 40 H300"
-                stroke="#bfcaba"
-                stroke-dasharray="8 8"
-                stroke-width="2"
-              ></path>
-              <path
-                id="liveFlowPath"
-                class="energy-path"
-                d="M0 40 H300"
-                stroke="#0d631b"
-                stroke-width="4"
-              ></path>
-              <circle
-                id="liveFlowCircle"
-                class="animate-pulse"
-                cx="150"
-                cy="40"
-                fill="#0d631b"
-                r="6"
-              ></circle>
-            </svg>
-            <div
-              id="liveFlowInfo"
-              class="mt-4 px-4 py-1.5 rounded-full bg-primary-container/10 border border-primary/20 flex items-center gap-2"
-            >
-              <span
-                id="liveFlowDot"
-                class="flex h-2 w-2 rounded-full bg-primary animate-ping"
-              ></span>
-              <span
-                id="liveFlowText"
-                class="text-[10px] font-extrabold text-primary uppercase tracking-widest"
-                >Live Flow: 3.8 W</span
-              >
+            <!-- source : batterie -->
+            <div id="sourceBatt"
+              class="flex items-center gap-4 p-4 rounded-2xl bg-orange-50 border border-orange-300 shadow-md shadow-orange-200">
+              <div class="h-10 w-10 rounded-xl bg-orange-200/60 flex items-center justify-center">
+                <span class="battIcon material-symbols-outlined text-2xl text-orange-700"
+                  style="font-variation-settings: &quot;FILL&quot; 1">battery_80</span>
+              </div>
+              <div>
+                <p class="font-manrope font-bold text-sm">Batteries</p>
+                <p class="text-[10px] font-bold uppercase">
+                  <span class="battValue">100</span><span> %</span>
+                </p>
+              </div>
             </div>
+            <!-- source : batterie -->
           </div>
-          <!-- Right: Destination -->
-          <div
-            class="relative z-10 w-1/3 flex flex-col items-end text-right gap-6"
-          >
-            <div
-              class="h-40 w-56 bg-surface-container rounded-3xl p-5 relative group overflow-hidden shadow-sm"
-            >
+          <!-- sbee -->
+          <div id="SBEESource"
+            class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+            <div class="h-10 w-10 rounded-xl bg-red-300 flex items-center justify-center">
               <img
-                alt="Modern Sustainable Home"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src="static/images/tiny_house.webp"
-              />
-              <div
-                class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"
-              ></div>
-              <div
-                class="absolute bottom-4 left-4 right-4 flex justify-between items-end"
-              >
-                <div class="text-left">
-                  <p class="text-white font-manrope font-bold text-sm">
-                    Installation électrique
-                  </p>
-                  <p class="text-white/80 text-[10px] uppercase font-bold">
-                    Maintained
-                  </p>
-                </div>
-                <span
-                  class="material-symbols-outlined text-white text-2xl"
-                  style="font-variation-settings: &quot;FILL&quot; 1"
-                  >home</span
-                >
+                src="https://imgs.search.brave.com/b28Pwr6hhQfHZT6e2ZDjXR7JOfUktdARkmBib0Q1il8/rs:fit:32:32:1:0/g:ce/aHR0cDovL2Zhdmlj/b25zLnNlYXJjaC5i/cmF2ZS5jb20vaWNv/bnMvYzY1ZWU3OGE2/ODM5Y2Y3Mzk3YjUw/ZTM0OTc0ZTQ0NGY5/YzczNjQ2ODFjNWE1/N2Y4OWE0MmY3MWY5/NTQ5ZTI1Yi9zYmVl/LmJqLw"
+                alt="" srcset="" />
+            </div>
+            <div>
+              <p class="font-manrope font-bold text-sm text-black">
+                Compteur SBEE
+              </p>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-gray-400" id="sbeeIndicator"></div>
+                <span class="text-xs font-medium text-gray-600" id="sbeeStatus">Connexion...</span>
               </div>
             </div>
           </div>
-        </section>
-        <!-- Hero Section / Main Metrics -->
-        <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <!-- Solar Production (Secondary Brand Color) -->
-          <div
-            class="md:col-span-8 rounded-[2rem] p-8 relative overflow-hidden flex flex-col justify-between h-[400px] bg-[url('https://media.istockphoto.com/id/1209968427/photo/solar-panels-on-the-roof-3d-illustration.jpg?s=612x612&w=0&k=20&c=cBi2wBFo9wzpvKRNIUd6fzkxyMa7H6juq3VExDcO4vU=')] bg-cover bg-no-repeat"
-          >
-            <!-- Overlay plus opaque pour meilleur contraste -->
-            <div class="absolute inset-0 bg-black/60"></div>
-
-            <div class="relative z-10">
-              <div class="flex justify-between items-start">
-                <div>
-                  <span
-                    class="bg-secondary-container backdrop-blur-sm text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest font-label mb-4 inline-block"
-                    >Production des panneaux solaire</span
-                  >
-                  <div>
-                    <h3
-                      class="font-manrope text-5xl font-extrabold text-white tracking-tighter mt-2"
-                    >
-                      <span class="liveProductionValue text-7xl">8.42</span
-                      ><span class="text-2xl font-medium text-white/80">
-                        W</span
-                      >
-                    </h3>
-                  </div>
-                  <p class="text-white/80 font-body mt-2">
-                    Current Solar Yield • +12% from yesterday
-                  </p>
-                </div>
-                <div class="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-                  <span
-                    class="material-symbols-outlined text-white text-4xl"
-                    style="font-variation-settings: &quot;FILL&quot; 1"
-                    >solar_power</span
-                  >
-                </div>
+          <!-- sbee -->
+        </div>
+        <!-- Center: Flow Animation -->
+        <div class="flex-1 flex flex-col items-center justify-center px-8 relative">
+          <svg id="liveFlowSvg" class="w-full max-w-[280px]" fill="none" height="80" viewbox="0 0 300 80" width="100%"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 40 H300" stroke="#bfcaba" stroke-dasharray="8 8" stroke-width="2"></path>
+            <path id="liveFlowPath" class="energy-path" d="M0 40 H300" stroke="#0d631b" stroke-width="4"></path>
+            <circle id="liveFlowCircle" class="animate-pulse" cx="150" cy="40" fill="#0d631b" r="6"></circle>
+          </svg>
+          <div id="liveFlowInfo"
+            class="mt-4 px-4 py-1.5 rounded-full bg-primary-container/10 border border-primary/20 flex items-center gap-2">
+            <span id="liveFlowDot" class="flex h-2 w-2 rounded-full bg-primary animate-ping"></span>
+            <span id="liveFlowText" class="text-[10px] font-extrabold text-primary uppercase tracking-widest">Live Flow:
+              3.8 W</span>
+          </div>
+        </div>
+        <!-- Right: Destination -->
+        <div class="relative z-10 w-1/3 flex flex-col items-end text-right gap-6">
+          <div class="h-40 w-56 bg-surface-container rounded-3xl p-5 relative group overflow-hidden shadow-sm">
+            <img alt="Modern Sustainable Home"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              src="static/images/tiny_house.webp" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+              <div class="text-left">
+                <p class="text-white font-manrope font-bold text-sm">
+                  Installation électrique
+                </p>
+                <p class="text-white/80 text-[10px] uppercase font-bold">
+                  Maintained
+                </p>
               </div>
+              <span class="material-symbols-outlined text-white text-2xl"
+                style="font-variation-settings: &quot;FILL&quot; 1">home</span>
             </div>
+          </div>
+        </div>
+      </section>
+      <!-- Hero Section / Main Metrics -->
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Solar Production (Secondary Brand Color) -->
+        <div
+          class="md:col-span-8 rounded-[2rem] p-8 relative overflow-hidden flex flex-col justify-between h-[400px] bg-[url('https://media.istockphoto.com/id/1209968427/photo/solar-panels-on-the-roof-3d-illustration.jpg?s=612x612&w=0&k=20&c=cBi2wBFo9wzpvKRNIUd6fzkxyMa7H6juq3VExDcO4vU=')] bg-cover bg-no-repeat">
+          <!-- Overlay plus opaque pour meilleur contraste -->
+          <div class="absolute inset-0 bg-black/60"></div>
 
-            <!-- Decorative Graphic - Representing flow (opacité réduite) -->
-            <div class="absolute bottom-0 left-0 w-full h-48 opacity-5">
-              
-            </div>
-
-            <!-- Mini Data points -->
-            <div>
-              <span class="text-[20px] uppercase font-bold text-white mb-1" p-50
-                >Statistique du jours</span
-              >
-              <div
-                class="relative z-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-6"
-              >
+          <div class="relative z-10">
+            <div class="flex justify-between items-start">
+              <div>
+                <span
+                  class="bg-secondary-container backdrop-blur-sm text-black px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest font-label mb-4 inline-block">Production
+                  des panneaux solaire</span>
                 <div>
-                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
-                    Pic de Production
-                  </p>
-                  <p class="font-manrope font-bold text-lg text-white">
-                    <span id="maxProdValue">9.1</span><span> W</span>
-                  </p>
+                  <h3 class="font-manrope text-5xl font-extrabold text-white tracking-tighter mt-2">
+                    <span class="liveProductionValue text-7xl">8.42</span><span
+                      class="text-2xl font-medium text-white/80">
+                      W</span>
+                  </h3>
                 </div>
-                <div>
-                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
-                    Production totale
-                  </p>
-                  <p class="font-manrope font-bold text-lg text-white">
-                    <span id="totalProdValue">4.8</span><span> W</span>
-                  </p>
-                </div>
-                <div>
-                  <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
-                    CO2 Saved
-                  </p>
-                  <p class="font-manrope font-bold text-lg text-white">
-                    12.4 kg
-                  </p>
-                </div>
+                <p class="text-white/80 font-body mt-2">
+                  Current Solar Yield • +12% from yesterday
+                </p>
+              </div>
+              <div class="p-4 bg-white/10 backdrop-blur-sm rounded-2xl">
+                <span class="material-symbols-outlined text-white text-4xl"
+                  style="font-variation-settings: &quot;FILL&quot; 1">solar_power</span>
               </div>
             </div>
           </div>
-          <!-- Circular Battery Gauge (Tertiary Brand Color) -->
-          <div
-            class="md:col-span-4 bg-surface-container-lowest rounded-[2rem] p-8 flex flex-col items-center justify-center text-center space-y-6"
-          >
-            <div class="relative w-48 h-48 flex items-center justify-center">
-              <!-- Progress Ring -->
-              <svg class="battery-svg w-full h-full -rotate-90">
-                <circle
-                  class="text-surface-container-low"
-                  cx="96"
-                  cy="96"
-                  fill="transparent"
-                  r="88"
-                  stroke="currentColor"
-                  stroke-width="12"
-                ></circle>
-                <circle
-                  class="battery-circle text-tertiary-container"
-                  cx="96"
-                  cy="96"
-                  fill="transparent"
-                  r="88"
-                  stroke="currentColor"
-                  stroke-dasharray="552.92"
-                  stroke-dashoffset="110.58"
-                  stroke-linecap="round"
-                  stroke-width="12"
-                ></circle>
-              </svg>
-              <div
-                class="absolute inset-0 flex flex-col items-center justify-center"
-              >
-                <span
-                  class="battIcon material-symbols-outlined text-tertiary text-3xl mb-1"
-                  >battery_80</span
-                >
-                <span
-                  class="battValue font-manrope text-4xl font-extrabold tracking-tighter"
-                >
-                  100 </span
-                ><span> %</span>
+
+          <!-- Decorative Graphic - Representing flow (opacité réduite) -->
+          <div class="absolute bottom-0 left-0 w-full h-48 opacity-5">
+
+          </div>
+
+          <!-- Mini Data points -->
+          <div>
+            <span class="text-[20px] uppercase font-bold text-white mb-1" p-50>Statistique du jours</span>
+            <div class="relative z-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-6">
+              <div>
+                <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                  Pic de Production
+                </p>
+                <p class="font-manrope font-bold text-lg text-white">
+                  <span id="maxProdValue">9.1</span><span> W</span>
+                </p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                  Production totale
+                </p>
+                <p class="font-manrope font-bold text-lg text-white">
+                  <span id="totalProdValue">4.8</span><span> W</span>
+                </p>
+              </div>
+              <div>
+                <p class="text-[10px] uppercase font-bold text-white/60 mb-1">
+                  CO2 Saved
+                </p>
+                <p class="font-manrope font-bold text-lg text-white">
+                  12.4 kg
+                </p>
               </div>
             </div>
-            <div>
-              <h4 class="font-manrope font-bold text-lg">Etat des batteries</h4>
+          </div>
+        </div>
+        <!-- Circular Battery Gauge (Tertiary Brand Color) -->
+        <div
+          class="md:col-span-4 bg-surface-container-lowest rounded-[2rem] p-8 flex flex-col items-center justify-center text-center space-y-6">
+          <div class="relative w-48 h-48 flex items-center justify-center">
+            <!-- Progress Ring -->
+            <svg class="battery-svg w-full h-full -rotate-90">
+              <circle class="text-surface-container-low" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor"
+                stroke-width="12"></circle>
+              <circle class="battery-circle text-tertiary-container" cx="96" cy="96" fill="transparent" r="88"
+                stroke="currentColor" stroke-dasharray="552.92" stroke-dashoffset="110.58" stroke-linecap="round"
+                stroke-width="12"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="battIcon material-symbols-outlined text-tertiary text-3xl mb-1">battery_80</span>
+              <span class="battValue font-manrope text-4xl font-extrabold tracking-tighter">
+                100 </span><span> %</span>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-manrope font-bold text-lg">Etat des batteries</h4>
+            <span id="battStatus"
+              class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Inactives</span>
+          </div>
+          <div class="w-full bg-surface-container-low rounded-2xl p-4 flex justify-between items-center">
+            <span class="text-xs font-semibold">Remaining</span>
+            <span class="text-xs font-bold text-tertiary">14h 22m</span>
+          </div>
+        </div>
+      </section>
+      <!-- Secondary Metrics Bento Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Consumption Card -->
+        <div class="bg-surface-container-low rounded-[2rem] p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-6">
+              <div class="p-3 bg-surface-container-lowest rounded-xl">
+                <span class="material-symbols-outlined text-primary">home_max</span>
+              </div>
               <span
-                id="battStatus"
-                class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest"
-                >Inactives</span
-              >
+                class="text-[10px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-full uppercase">Optimal</span>
             </div>
-            <div
-              class="w-full bg-surface-container-low rounded-2xl p-4 flex justify-between items-center"
-            >
-              <span class="text-xs font-semibold">Remaining</span>
-              <span class="text-xs font-bold text-tertiary">14h 22m</span>
-            </div>
+            <p class="text-[10px] uppercase font-bold text-on-surface-variant mb-1 tracking-widest">
+              Consommation Energetique
+            </p>
+            <h3 class="font-manrope text-3xl font-extrabold text-on-surface tracking-tight">
+              <span id="liveConsumptionValue">8.42</span><span class="text-lg font-medium text-on-surface-variant">
+                W</span>
+            </h3>
           </div>
-        </section>
-        <!-- Secondary Metrics Bento Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Consumption Card -->
-          <div
-            class="bg-surface-container-low rounded-[2rem] p-8 flex flex-col justify-between"
-          >
-            <div>
-              <div class="flex justify-between items-start mb-6">
-                <div class="p-3 bg-surface-container-lowest rounded-xl">
-                  <span class="material-symbols-outlined text-primary"
-                    >home_max</span
-                  >
-                </div>
-                <span
-                  class="text-[10px] font-bold text-primary bg-primary-fixed px-2 py-0.5 rounded-full uppercase"
-                  >Optimal</span
-                >
-              </div>
-              <p
-                class="text-[10px] uppercase font-bold text-on-surface-variant mb-1 tracking-widest"
-              >
-                Consommation Energetique
-              </p>
-              <h3
-                class="font-manrope text-3xl font-extrabold text-on-surface tracking-tight"
-              >
-                <span id="liveConsumptionValue">8.42</span
-                ><span class="text-lg font-medium text-on-surface-variant">
-                  W</span
-                >
-              </h3>
+          <div class="mt-8">
+            <div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+              <div id="consoBar" class="h-full bg-primary w-[35%]"></div>
             </div>
-            <div class="mt-8">
-              <div
-                class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden"
-              >
-                <div id="consoBar" class="h-full bg-primary w-[35%]"></div>
-              </div>
-              <p id="consoPercentage" class="text-[10px] text-on-surface-variant mt-2">
-                35% de la prédiction totale
-              </p>
-            </div>
+            <p id="consoPercentage" class="text-[10px] text-on-surface-variant mt-2">
+              35% de la prédiction totale
+            </p>
           </div>
-          <!-- Weather Widget (Glassmorphism) -->
-          <div
-            class="relative rounded-[2rem] p-8 overflow-hidden group min-h-[220px]"
-          >
-            <img
-              id="weatherImage"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              data-alt="dramatic sky with soft cumulonimbus clouds at midday, bright sunlight breaking through, high resolution landscape photography"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnkb_gs8x3NCGVmBifcWeb9lSswQeP8wIDqAXB0oKk4qLQeFfzTx4hCtAlJitTpt6ST74ON2VHI1gCkIGEwSF79mSpTNlctcypXhkmb2v7UxNE4xErF2ynAWASO9_0POPDT5tOOq5-XnqsobzdPkW3LgVEKtYFCgLV_eGQ8JRy0kfyx1RqlZE3g_TtgHT9EcN6RlS2jNW1Zcf0eO_4bE2UOrnfhESPPPULZJC0ytSgmGUHuHYkaa1131y5-iWqU-y47LiqT9RS-yJd"
-            />
-            <div
-              class="absolute inset-0 bg-secondary/20 backdrop-blur-sm"
-            ></div>
-            <div
-              class="relative z-10 flex flex-col h-full justify-between text-white"
-            >
-              <div class="flex justify-between items-start">
-                <div>
-                  <h4
-                    class="font-manrope font-bold text-xl"
-                    id="weatherDescription"
-                  >
-                    Cloudy Skies
-                  </h4>
-                  <p class="text-xs opacity-80">Lokossa, BENIN</p>
-                </div>
-                <span
-                  class="material-symbols-outlined text-4xl"
-                  style="font-variation-settings: &quot;FILL&quot; 1"
-                  id="weatherIcon"
-                  >wb_cloudy</span
-                >
+        </div>
+        <!-- Weather Widget (Glassmorphism) -->
+        <div class="relative rounded-[2rem] p-8 overflow-hidden group min-h-[220px]">
+          <img id="weatherImage"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            data-alt="dramatic sky with soft cumulonimbus clouds at midday, bright sunlight breaking through, high resolution landscape photography"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnkb_gs8x3NCGVmBifcWeb9lSswQeP8wIDqAXB0oKk4qLQeFfzTx4hCtAlJitTpt6ST74ON2VHI1gCkIGEwSF79mSpTNlctcypXhkmb2v7UxNE4xErF2ynAWASO9_0POPDT5tOOq5-XnqsobzdPkW3LgVEKtYFCgLV_eGQ8JRy0kfyx1RqlZE3g_TtgHT9EcN6RlS2jNW1Zcf0eO_4bE2UOrnfhESPPPULZJC0ytSgmGUHuHYkaa1131y5-iWqU-y47LiqT9RS-yJd" />
+          <div class="absolute inset-0 bg-secondary/20 backdrop-blur-sm"></div>
+          <div class="relative z-10 flex flex-col h-full justify-between text-white">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-manrope font-bold text-xl" id="weatherDescription">
+                  Cloudy Skies
+                </h4>
+                <p class="text-xs opacity-80">Lokossa, BENIN</p>
               </div>
-              <div class="flex items-end justify-between">
-                <div>
-                  <span
-                    class="font-manrope text-5xl font-extrabold tracking-tighter"
-                    id="weatherTempValue"
-                    >24</span
-                  >
-                  <span>°C</span>
-                </div>
-                <div class="text-right">
-                  <p class="text-[10px] font-bold uppercase tracking-widest">
-                    UV Index
-                  </p>
-                  <p class="font-bold">4 (Low)</p>
-                </div>
+              <span class="material-symbols-outlined text-4xl" style="font-variation-settings: &quot;FILL&quot; 1"
+                id="weatherIcon">wb_cloudy</span>
+            </div>
+            <div class="flex items-end justify-between">
+              <div>
+                <span class="font-manrope text-5xl font-extrabold tracking-tighter" id="weatherTempValue">24</span>
+                <span>°C</span>
+              </div>
+              <div class="text-right">
+                <p class="text-[10px] font-bold uppercase tracking-widest">
+                  UV Index
+                </p>
+                <p class="font-bold">4 (Low)</p>
               </div>
             </div>
           </div>
-          <!-- Savings / Impact Card -->
-          <div
-            class="bg-primary text-on-primary rounded-[2rem] p-8 flex flex-col justify-between shadow-xl shadow-primary/20"
-          >
-            <div>
-              <div class="flex justify-between items-start mb-6">
-                <div class="p-3 bg-white/10 rounded-xl backdrop-blur-md">
-                  <span class="material-symbols-outlined text-primary-fixed"
-                    >eco</span
-                  >
-                </div>
+        </div>
+        <!-- Savings / Impact Card -->
+        <div
+          class="bg-primary text-on-primary rounded-[2rem] p-8 flex flex-col justify-between shadow-xl shadow-primary/20">
+          <div>
+            <div class="flex justify-between items-start mb-6">
+              <div class="p-3 bg-white/10 rounded-xl backdrop-blur-md">
+                <span class="material-symbols-outlined text-primary-fixed">eco</span>
               </div>
-              <p
-                class="text-[10px] uppercase font-bold text-primary-fixed mb-1 tracking-widest"
-              >
-                Economies réalisée aujourd'hui
-              </p>
-              <h3 id="totalSaving" class="font-manrope text-3xl font-extrabold tracking-tight">
-                12.45 FCFA 
-              </h3>
             </div>
-            <div class="mt-8 flex items-center gap-3">
-              <p  class="text-[10px] text-primary-fixed font-medium">
-                Kw/h : 150 FCFA<br> TVA : 18%
-              </p>
-            </div>
+            <p class="text-[10px] uppercase font-bold text-primary-fixed mb-1 tracking-widest">
+              Economies réalisée aujourd'hui
+            </p>
+            <h3 id="totalSaving" class="font-manrope text-3xl font-extrabold tracking-tight">
+              12.45 FCFA
+            </h3>
           </div>
-        </section>
-        <!-- Usage Analytics Section (Full Width Asymmetry) -->
-        <section class="bg-surface-container-lowest rounded-[2.5rem] p-10">
-          <div
-            class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6"
-          >
-            <div>
-              <h2 class="font-manrope text-2xl font-bold tracking-tight">
-                Flux d'énergie
-              </h2>
-              <p class="text-on-surface-variant font-body">
-                Production vs Consumption for the last 24 hours
-              </p>
-            </div>
+          <div class="mt-8 flex items-center gap-3">
+            <p class="text-[10px] text-primary-fixed font-medium">
+              Kw/h : 150 FCFA<br> TVA : 18%
+            </p>
           </div>
-          <!-- Chart Placeholder with Editorial Style -->
-          <div class="relative h-[450px] w-full mt-8">
-            <canvas width="950" height="380" id="consoProdGraph" ></canvas>
-            
+        </div>
+      </section>
+      <!-- Usage Analytics Section (Full Width Asymmetry) -->
+      <section class="bg-surface-container-lowest rounded-[2.5rem] p-10">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+          <div>
+            <h2 class="font-manrope text-2xl font-bold tracking-tight">
+              Flux d'énergie
+            </h2>
+            <p class="text-on-surface-variant font-body">
+              Production et Consommation de la journée
+            </p>
           </div>
+        </div>
+        <!-- Chart Placeholder with Editorial Style -->
+        <div class="relative h-[450px] w-full mt-8">
+          <canvas width="950" height="380" id="consoProdGraph"></canvas>
 
-        </section>
-      </div>
-    </main>
+        </div>
 
-    <script>
-      const gradientPlugin = window['chartjs-plugin-gradient'];
-      Chart.register(gradientPlugin);
-      const liveProductionValue = document.querySelectorAll(
-        ".liveProductionValue",
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const gradientPlugin = window['chartjs-plugin-gradient'];
+    Chart.register(gradientPlugin);
+    const liveProductionValue = document.querySelectorAll(
+      ".liveProductionValue",
+    );
+    const liveConsumptionValue = document.getElementById(
+      "liveConsumptionValue",
+    );
+    const battSource = document.getElementById("sourceBatt");
+    const SBEESource = document.getElementById("SBEESource");
+    const SPSource = document.getElementById("SPSource");
+    const battValue = document.querySelectorAll(".battValue");
+    const battStatus = document.getElementById("battStatus");
+    const battIcon = document.querySelectorAll(".battIcon");
+    const totalProdValue = document.getElementById("totalProdValue");
+    const maxProdValue = document.getElementById("maxProdValue");
+    const weatherDescription = document.getElementById("weatherDescription");
+    const weatherIcon = document.getElementById("weatherIcon");
+    const weatherTempValue = document.getElementById("weatherTempValue");
+    const weatherImage = document.getElementById("weatherImage");
+    const weatherBackgroundImageLink = {
+      overcast:
+        "https://media.gettyimages.com/id/157770236/photo/good-and-evil.jpg?s=612x612&w=0&k=20&c=V0dsQZ3n5Yi2RaJKPqkxmEYb56cZGdb86pzRryuIyVo=",
+      sunny:
+        "https://cdn.vectorstock.com/i/500p/01/18/sun-in-clouds-3d-sunny-weather-elements-white-vector-45910118.jpg",
+      partly_cloudy:
+        "https://thumbs.dreamstime.com/b/partly-cloudy-afternoon-painted-style-9354276.jpg",
+      cloudy:
+        "https://thumbs.dreamstime.com/b/village-summer-cloudy-weather-village-summer-cloudy-weather-432626274.jpg",
+      fog: "https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      rain_light:
+        "https://media.istockphoto.com/id/1458311785/photo/rain-rainy-season-sky.jpg?s=612x612&w=0&k=20&c=ziOrrkUkb4apJyoT2TN3Uuilzb58MboEER-Y-RAVQCQ=",
+      rain_heavy:
+        "https://static.vecteezy.com/system/resources/thumbnails/070/223/697/small/heavy-rain-falls-at-night-near-trees-photo.jpg",
+      thunderstorm:
+        "https://static.vecteezy.com/system/resources/thumbnails/022/382/256/small/lightning-thunderstorm-flash-over-the-night-sky-concept-on-topic-weather-cataclysms-photo.jpg",
+    };
+    /*Récupérer les données depuis la connexion web socket*/
+    let ws;
+    let reconnectAttempts = 0;
+    const maxReconnectAttempts = 5;
+    const reconnectInterval = 3000; // 3 secondes
+    const availableSource = ["batt", "solarPannel", "sbee"];
+    const sbeeIndicator = document.getElementById("sbeeIndicator");
+    const sbeeStatus = document.getElementById("sbeeStatus");
+    const consoBar = document.getElementById("consoBar");
+    let previousData = { "conso": [], "prod": [] }
+
+    function connectWebSocket() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        return; // Déjà connecté
+      }
+
+      console.log(
+        `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
       );
-      const liveConsumptionValue = document.getElementById(
-        "liveConsumptionValue",
-      );
-      const battSource = document.getElementById("sourceBatt");
-      const SBEESource = document.getElementById("SBEESource");
-      const SPSource = document.getElementById("SPSource");
-      const battValue = document.querySelectorAll(".battValue");
-      const battStatus = document.getElementById("battStatus");
-      const battIcon = document.querySelectorAll(".battIcon");
-      const totalProdValue = document.getElementById("totalProdValue");
-      const maxProdValue = document.getElementById("maxProdValue");
-      const weatherDescription = document.getElementById("weatherDescription");
-      const weatherIcon = document.getElementById("weatherIcon");
-      const weatherTempValue = document.getElementById("weatherTempValue");
-      const weatherImage = document.getElementById("weatherImage");
-      const weatherBackgroundImageLink = {
-        overcast:
-          "https://media.gettyimages.com/id/157770236/photo/good-and-evil.jpg?s=612x612&w=0&k=20&c=V0dsQZ3n5Yi2RaJKPqkxmEYb56cZGdb86pzRryuIyVo=",
-        sunny:
-          "https://cdn.vectorstock.com/i/500p/01/18/sun-in-clouds-3d-sunny-weather-elements-white-vector-45910118.jpg",
-        partly_cloudy:
-          "https://thumbs.dreamstime.com/b/partly-cloudy-afternoon-painted-style-9354276.jpg",
-        cloudy:
-          "https://thumbs.dreamstime.com/b/village-summer-cloudy-weather-village-summer-cloudy-weather-432626274.jpg",
-        fog: "https://images.unsplash.com/photo-1487621167305-5d248087c724?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        rain_light:
-          "https://media.istockphoto.com/id/1458311785/photo/rain-rainy-season-sky.jpg?s=612x612&w=0&k=20&c=ziOrrkUkb4apJyoT2TN3Uuilzb58MboEER-Y-RAVQCQ=",
-        rain_heavy:
-          "https://static.vecteezy.com/system/resources/thumbnails/070/223/697/small/heavy-rain-falls-at-night-near-trees-photo.jpg",
-        thunderstorm:
-          "https://static.vecteezy.com/system/resources/thumbnails/022/382/256/small/lightning-thunderstorm-flash-over-the-night-sky-concept-on-topic-weather-cataclysms-photo.jpg",
+      ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
+      //s = new WebSocket("wss://pegboard-untracked-crawfish.ngrok-free.dev/ws/energy");
+      ws.onopen = () => {
+        console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
+        updateConnectionStatus("Connecté");
+        reconnectAttempts = 0; // Reset des tentatives en cas de succès
       };
-      /*Récupérer les données depuis la connexion web socket*/
-      let ws;
-      let reconnectAttempts = 0;
-      const maxReconnectAttempts = 5;
-      const reconnectInterval = 3000; // 3 secondes
-      const availableSource = ["batt", "solarPannel", "sbee"];
-      const sbeeIndicator = document.getElementById("sbeeIndicator");
-      const sbeeStatus = document.getElementById("sbeeStatus");
-      const consoBar  = document.getElementById("consoBar");
-      let previousData = {"conso" : [],"prod":[]}
-
-      function connectWebSocket() {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          return; // Déjà connecté
-        }
-
-        console.log(
-          `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
-        );
-        ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
-
-        ws.onopen = () => {
-          console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
-          updateConnectionStatus("Connecté");
-          reconnectAttempts = 0; // Reset des tentatives en cas de succès
-        };
-        ws.onmessage = (event) => {
-          const data = JSON.parse(event.data);
-          //insertion des données dans l'interface
-          battValue.forEach((batt) => {
-            batt.textContent = data["battPercentage"];
-          });
-          liveProductionValue.forEach((live) => {
-            live.textContent = data["production"];
-          });
-          updateBatteryGauge();
-          liveConsumptionValue.textContent = data["consommation_24h"];
-          console.log("WebSocket message:", data);
-          toggleActiveSource(data["activeSource"]);
-          batterieStatusString(
-            data["strategie"][now.getHours()]["chargerBatt"],
-            data["activeSource"]
-          );
-          totalProdValue.textContent = data["production_24h"];
-          maxProdValue.textContent = data["maxProd"];
-          /* mise a jour  de l'état de la sbee*/
-          updateSbeeState(data["sbee"]);
-          //mise a jour de la barre de progression et du texte de la consommation
-          updateConsumptionData(data["consommation_h"],data["prediction"]["consommation"][now.getHours()]["prediction de consommation"])
-          // economie du jour
-          document.getElementById("totalSaving").textContent = `${Math.round(data["epargne"])} FCFA`
-          // mettre a jour ou pas le graphe 
-          updateGraph(data["graphicData"])
-        };
-
-        ws.onerror = (error) => {
-          console.error("WebSocket erreur:", error);
-        };
-
-        ws.onclose = (event) => {
-          console.warn("WebSocket fermé:", event);
-          updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
-          // Tentative de reconnexion automatique
-
-          if (reconnectAttempts < maxReconnectAttempts) {
-            reconnectAttempts++;
-            updateConnectionStatus(
-              "Connexion...",
-              `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
-            );
-            console.log(`Reconnexion dans ${reconnectInterval}ms...`);
-            setTimeout(connectWebSocket, reconnectInterval);
-          } else {
-            updateConnectionStatus(
-              "Échec",
-              "Nombre maximum de tentatives atteint",
-            );
-            console.error(
-              "Nombre maximum de tentatives de reconnexion atteint",
-            );
-          }
-        };
-      }
-      //fonction pour mettre a jours le graphe ou pas
-      function updateGraph(data){
-        if(data["prod"] !== previousData["prod"]){
-          previousData["prod"] == data["prod"]
-            globalThis.graphe.data.datasets[0].data = data["prod"]
-            globalThis.graphe.update()
-          }
-          if(data["conso"] !== previousData["conso"]){
-            previousData["conso"] = data["conso"]
-            graphe.data.datasets[1].data= data["conso"]
-            globalThis.graphe.update()
-          }
-      }
-      //fonction pour mettre a jour la barre de progression du niveau de consommation
-      function updateConsumptionData(currentConsumption,maxConsumption){
-        percentage = Math.round((currentConsumption/maxConsumption)*100)
-        consoBar.style.width = `${percentage}%`;
-        document.getElementById("consoPercentage").textContent = `${percentage}% de la prédiction totale`
-      }
-      //fonction pour indiquer le status des batterie dans le grand container
-      function batterieStatusString(status,activeSource) {
-        const battSvg = document.querySelector(".battery-svg");
-        const battCircle = document.querySelector("circle.battery-circle");
-
-        if (status) {
-          battStatus.textContent = "Chargement";
-          battIcon.forEach((b) => {
-            b.textContent = `battery_charging_80`;
-          });
-          // Ajouter les animations de balayage
-          battCircle?.classList.add("battery-circle-charging");
-          battSvg?.classList.add("battery-svg-charging");
-        } else {
-            if(activeSource == 'batt'){
-              battStatus.textContent = "Déchargement pour alimenter la maison";
-              battIcon.forEach((b) => {
-                b.textContent = `battery_80`;
-              });
-            }
-            else{
-               battStatus.textContent = "Batteries inactives pour sauvegarder la durée de vie";
-            }
-            // Retirer les animations de balayage
-            battCircle?.classList.remove("battery-circle-charging");
-            battSvg?.classList.remove("battery-svg-charging");
-            // Mettre à jour l'offset en fonction du pourcentage
-            updateBatteryGauge();
-          }
-      }
-      //fonction pour tracer le graphique
-      function graphic(){
-         const ctx = document.getElementById('consoProdGraph').getContext('2d');
-        x_label = []
-        for(let i=0;i<=23;i++){
-          x_label.push(i)
-        }
-        globalThis.graphe =  new Chart(ctx, {
-            type: 'line', // type de graphique : bar, line, pie, etc.
-            data: {
-                  labels: x_label,
-                  datasets: [
-                    {
-                      label: 'Production',
-                      data: [0.5,0.60,0.7,0.8,0.9,1,0.2,0.1,1,0],
-                      fill:true,
-                      tension: 0.5,
-                      pointRadius :0,
-                      gradient:{
-                        backgroundColor:{
-                          axis: 'x',
-                           colors: {
-                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
-                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
-                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
-                          }
-                        },
-                      },
-                      borderColor: '#0d631b',
-                      borderWidth: 3
-                    },
-                    {
-                      label: 'Consommation',
-                      data: [5,6,7,8,5,1,4],
-                      borderColor: '#f8bd2a',
-                      borderWidth: 3,
-                      fill:true,
-                      tension: 0.5,
-                      pointRadius :0,
-                      gradient:{
-                        backgroundColor:{
-                          axis: 'x',
-                           colors: {
-                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
-                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
-                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
-                          }
-                        },
-                      },
-                    }
-                ]
-            },
-            options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        }
-                    }
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: { size: 13, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            let valeur = parseFloat(context.raw).toFixed(2);
-                            return `${label}: ${valeur} kW`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 },
-                        callback: function(value) {
-                            return value + 'h';
-                        }
-                    }
-                }
-            }
-        }
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        //insertion des données dans l'interface
+        battValue.forEach((batt) => {
+          batt.textContent = data["battPercentage"];
         });
-      }
-      graphic()
-      //fonction pour mettre a jour l'indicateur du status de la sbee
-      function updateSbeeState(sbee) {
-        if (sbee) {
-          sbeeIndicator.classList.remove("bg-gray-400", "bg-red-500");
-          sbeeIndicator.classList.add("bg-green-500");
-          sbeeStatus.textContent = "actif";
-        } else {
-          sbeeIndicator.classList.remove("bg-gray-400", "bg-green-500");
-          sbeeIndicator.classList.add("bg-red-500");
-          sbeeStatus.textContent = "coupure détectée";
-        }
-      }
-      //fonction pour activer une source et désactiver les autres
-      function toggleActiveSource(activeSource) {
-        /* desactivation de toute les sources */
-        toggleBattState(false);
-        toggleSBEEState(false);
-        toggleSolarPannelState(false);
-        /* activation de ou des source(s) active sur l'interface */
-        activeSource.forEach((source) => {
-          if (source == "solarPannel") {
-            toggleSolarPannelState(true);
-          } else if (source == "batt") {
-            toggleBattState(true);
-          } else if (source == "sbee") {
-            toggleSBEEState(true);
-          }
+        liveProductionValue.forEach((live) => {
+          live.textContent = data["production"];
         });
-        if (activeSource.length > 1) {
-          liveFlowText.textContent = activeSource.join(" + ");
-        } else {
-          updateLiveFlowStyle(activeSource.join(""));
-        }
-      }
-      // Fonction pour afficher l'état de la connexion WebSocket
-      function updateConnectionStatus(status, message = "") {
-        const statusElement = document.getElementById("connectionStatus");
-        const indicatorElement = document.getElementById("connectionIndicator");
-
-        if (statusElement) {
-          statusElement.textContent = `${status}${message ? ": " + message : ""}`;
-        }
-
-        if (indicatorElement) {
-          // Supprimer toutes les classes de couleur
-          indicatorElement.classList.remove(
-            "bg-gray-400",
-            "bg-green-500",
-            "bg-yellow-500",
-            "bg-red-500",
-            "animate-pulse",
-          );
-
-          // Ajouter la couleur appropriée
-          if (status === "Connecté") {
-            indicatorElement.classList.add("bg-green-500");
-          } else if (status === "Connexion...") {
-            indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
-          } else {
-            indicatorElement.classList.add("bg-red-500");
-          }
-        }
-      }
-
-      // Fonction pour mettre à jour le style du SVG liveflow en fonction de la source active
-      function updateLiveFlowStyle(activeSource) {
-        const liveFlowPath = document.getElementById("liveFlowPath");
-        const liveFlowCircle = document.getElementById("liveFlowCircle");
-        const liveFlowDot = document.getElementById("liveFlowDot");
-        const liveFlowInfo = document.getElementById("liveFlowInfo");
-        const liveFlowText = document.getElementById("liveFlowText");
-        const liveFlowSvg = document.getElementById("liveFlowSvg");
-        let strokeColor = "#0d631b";
-        let sourceLabel = "";
-        let dotColor = "bg-primary";
-        let infoBgClass = "bg-primary-container/10 border-primary/20";
-        let textColor = "text-primary";
-
-        if (activeSource === "batt") {
-          strokeColor = "#ea8c55"; // Orange pour batterie
-          sourceLabel = "Batterie";
-          dotColor = "bg-orange-500";
-          infoBgClass = "bg-orange-100 border-orange-300";
-          textColor = "text-orange-700";
-        } else if (activeSource === "sbee") {
-          strokeColor = "#dc2626"; // Rouge pour SBEE
-          sourceLabel = "SBEE";
-          dotColor = "bg-red-500";
-          infoBgClass = "bg-red-100 border-red-300";
-          textColor = "text-red-700";
-        } else if (activeSource === "solarPannel") {
-          strokeColor = "#16a34a"; // Vert pour panneaux solaires
-          sourceLabel = "Panneaux Solaires";
-          dotColor = "bg-green-500";
-          infoBgClass = "bg-green-100 border-green-300";
-          textColor = "text-green-700";
-        }
-        // Mettre à jour le SVG
-        if (liveFlowPath) liveFlowPath.setAttribute("stroke", strokeColor);
-        if (liveFlowCircle) liveFlowCircle.setAttribute("fill", strokeColor);
-
-        // Mettre à jour le point animé
-        if (liveFlowDot) {
-          liveFlowDot.className = `flex h-2 w-2 rounded-full ${dotColor} animate-ping`;
-        }
-
-        // Mettre à jour le conteneur d'info
-        if (liveFlowInfo) {
-          liveFlowInfo.className = `mt-4 px-4 py-1.5 rounded-full ${infoBgClass} flex items-center gap-2`;
-        }
-
-        // Mettre à jour le texte
-        if (liveFlowText) {
-          liveFlowText.className = `text-[10px] font-extrabold ${textColor} uppercase tracking-widest`;
-          liveFlowText.textContent = ` ${sourceLabel}`;
-        }
-      }
-
-      // Démarrer la connexion WebSocket au chargement de la page
-      updateConnectionStatus("Connexion...", "Initialisation");
-      connectWebSocket();
-      function toggleBattState(state = false) {
-        if (state) {
-          battSource.classList.remove("bg-surface-container-low");
-          battSource.classList.add(
-            "bg-orange-50",
-            "border",
-            "border-orange-300",
-            "shadow-md",
-            "shadow-orange-200",
-          );
-        } else {
-          battSource.classList.remove(
-            "bg-orange-50",
-            "border",
-            "border-orange-300",
-            "shadow-md",
-            "shadow-orange-200",
-          );
-          battSource.classList.toggle(
-            "bg-surface-container-low",
-            "border",
-            "border-outline-variant/30",
-            "opacity-60",
-          );
-        }
-      }
-      function toggleSBEEState(state = false) {
-        if (state) {
-          SBEESource.classList.remove("bg-surface-container-low");
-          SBEESource.classList.add(
-            "bg-red-100",
-            "border",
-            "border-red-300",
-            "shadow-md",
-            "shadow-red-200",
-          );
-        } else {
-          SBEESource.classList.remove(
-            "bg-red-100",
-            "border",
-            "border-red-300",
-            "shadow-md",
-            "shadow-red-200",
-          );
-          SBEESource.classList.toggle(
-            "bg-surface-container-low",
-            "border",
-            "border-outline-variant/30",
-            "opacity-60",
-          );
-        }
-      }
-      function toggleSolarPannelState(state = false) {
-        if (state) {
-          SPSource.classList.remove("bg-surface-container-low");
-          SPSource.classList.add(
-            "bg-green-100",
-            "border",
-            "border-green-300",
-            "shadow-md",
-            "shadow-green-200",
-          );
-        } else {
-          SPSource.classList.remove(
-            "bg-green-100",
-            "border",
-            "border-green-300",
-            "shadow-md",
-            "shadow-green-200",
-          );
-          SPSource.classList.toggle(
-            "bg-surface-container-low",
-            "border",
-            "border-outline-variant/30",
-            "opacity-60",
-          );
-        }
-      }
-      // Nettoyer la connexion WebSocket quand la page se ferme
-      window.addEventListener("beforeunload", () => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.close();
-        }
-      });
-
-      // Vérifier périodiquement l'état de la connexion WebSocket
-      setInterval(() => {
-        if (
-          !ws ||
-          ws.readyState === WebSocket.CLOSED ||
-          ws.readyState === WebSocket.CLOSING
-        ) {
-          console.log(
-            "Connexion WebSocket perdue, tentative de reconnexion...",
-          );
-          connectWebSocket();
-        }
-      }, 10000); // Vérifier toutes les 10 secondes
-      const now = new Date();
-      function updateBatteryGauge() {
-        const battValue = document.querySelector(".battValue");
-        if (!battValue) return;
-
-        const percentage = parseFloat(battValue.textContent) || 0;
-        const circumference = 552.92; // 2 * π * 88
-        const offset = circumference * (1 - percentage / 100);
-
-        // Mettre à jour le stroke-dashoffset du cercle
-        const circle = document.querySelector("circle.battery-circle");
-        if (circle) {
-          // Ne pas appliquer l'offset si l'animation de balayage est active
-          if (!circle.classList.contains("battery-circle-charging")) {
-            circle.setAttribute("stroke-dashoffset", offset.toFixed(2));
-          }
-          if (
-            Number(battValue.textContent) >= 0 &&
-            Number(battValue.textContent) < 40
-          ) {
-            circle.setAttribute("stroke", "#ba1a1a");
-          } else if (
-            Number(battValue.textContent) >= 40 &&
-            Number(battValue.textContent) < 50
-          ) {
-            circle.setAttribute("stroke", "#ffc107");
-          } else if (
-            Number(battValue.textContent) >= 50 &&
-            Number(battValue.textContent) < 100
-          ) {
-            circle.setAttribute("stroke", "#28a745");
-          }
-        }
-      }
-
-      /* fonction pour récupérer les informations météorologiques  */
-      const fastAPiUrl = "/weather";
-      async function getWeatherDataFromFastAPi(hour = now.getHours()) {
-        try {
-          const request = await fetch(fastAPiUrl);
-          const response = await request.json();
-
-          const weatherInfo = getWeatherInfo(response["weatherCode"][hour]);
-          weatherDescription.textContent = weatherInfo["description"];
-          weatherIcon.textContent = weatherInfo["image"];
-          weatherTempValue.textContent = response["AirTemperature"][hour];
-
-          const backgroundImage =
-            weatherBackgroundImageLink[weatherInfo["image"]];
-          const newImage = new Image();
-          newImage.src =
-            weatherBackgroundImageLink[
-              getWeatherInfo(response["weatherCode"][hour], false)["image"]
-            ];
-          newImage.onload = () => {
-            weatherImage.src = newImage.src;
-          };
-        } catch (error) {
-          console.error("Erreur météo :", error);
-        }
-      }
-
-      // Lancement immédiat
-      getWeatherDataFromFastAPi();
-
-      // Puis mise à jour toutes les heures (3 600 000 ms)
-      setInterval(() => getWeatherDataFromFastAPi(), 3600000);
-      function getWeatherInfo(code, useEmoji = true) {
-        // Mapping basé sur les codes WMO d'Open-Meteo
-        const weatherMap = {
-          // Groupe 0-9 : Ciel clair / partiellement nuageux
-          0: { emoji: "☀️", url: "sunny", desc: "Ciel dégagé" },
-          1: {
-            emoji: "🌤️",
-            url: "mainly_clear",
-            desc: "Principalement dégagé",
-          },
-          2: {
-            emoji: "⛅",
-            url: "partly_cloudy",
-            desc: "Partiellement nuageux",
-          },
-          3: { emoji: "☁️", url: "overcast", desc: "Nuageux" },
-
-          // Brouillard : 45, 48
-          45: { emoji: "🌫️", url: "fog", desc: "Brouillard" },
-          48: {
-            emoji: "🌫️❄️",
-            url: "depositing_rime_fog",
-            desc: "Brouillard givrant",
-          },
-
-          // Pluie fine / bruine : 51, 53, 55
-          51: { emoji: "🌦️", url: "light_drizzle", desc: "Bruine légère" },
-          53: { emoji: "🌧️", url: "moderate_drizzle", desc: "Bruine modérée" },
-          55: { emoji: "🌧️💧", url: "dense_drizzle", desc: "Bruine dense" },
-
-          // Pluie verglaçante : 56, 57
-          56: {
-            emoji: "🌨️❄️",
-            url: "freezing_drizzle_light",
-            desc: "Bruine verglaçante légère",
-          },
-          57: {
-            emoji: "🌨️❄️💧",
-            url: "freezing_drizzle_dense",
-            desc: "Bruine verglaçante dense",
-          },
-
-          // Pluie : 61, 63, 65
-          61: { emoji: "🌦️", url: "light_rain", desc: "Pluie légère" },
-          63: { emoji: "🌧️", url: "moderate_rain", desc: "Pluie modérée" },
-          65: { emoji: "🌧️💧💧", url: "heavy_rain", desc: "Pluie forte" },
-
-          // Pluie verglaçante : 66, 67
-          66: {
-            emoji: "🌨️❄️💧",
-            url: "freezing_rain_light",
-            desc: "Pluie verglaçante légère",
-          },
-          67: {
-            emoji: "🌨️❄️💧💧",
-            url: "freezing_rain_heavy",
-            desc: "Pluie verglaçante forte",
-          },
-
-          // Neige : 71, 73, 75
-          71: { emoji: "🌨️", url: "light_snow", desc: "Neige légère" },
-          73: { emoji: "❄️🌨️", url: "moderate_snow", desc: "Neige modérée" },
-          75: { emoji: "❄️❄️🌨️", url: "heavy_snow", desc: "Neige forte" },
-
-          // Grains de neige : 77
-          77: { emoji: "🌨️💨", url: "snow_grains", desc: "Grains de neige" },
-
-          // Averses de pluie : 80, 81, 82
-          80: {
-            emoji: "☔",
-            url: "rain_showers_light",
-            desc: "Averses légères",
-          },
-          81: {
-            emoji: "☔☔",
-            url: "rain_showers_moderate",
-            desc: "Averses modérées",
-          },
-          82: {
-            emoji: "☔☔☔",
-            url: "rain_showers_violent",
-            desc: "Averses violentes",
-          },
-
-          // Averses de neige : 85, 86
-          85: {
-            emoji: "❄️☔",
-            url: "snow_showers_light",
-            desc: "Averses de neige légères",
-          },
-          86: {
-            emoji: "❄️❄️☔",
-            url: "snow_showers_heavy",
-            desc: "Averses de neige fortes",
-          },
-
-          // Orages : 95, 96, 99
-          95: { emoji: "⛈️", url: "thunderstorm", desc: "Orage modéré" },
-          96: {
-            emoji: "⛈️🌨️",
-            url: "thunderstorm_hail_light",
-            desc: "Orage avec grêle légère",
-          },
-          99: {
-            emoji: "⛈️🌨️🌨️",
-            url: "thunderstorm_hail_heavy",
-            desc: "Orage avec grêle forte",
-          },
-        };
-        // Valeur par défaut si code inconnu
-        const defaultWeather = {
-          emoji: "❓",
-          url: "unknown",
-          desc: "Code météo inconnu",
-        };
-        const weather = weatherMap[code] || defaultWeather;
-        return {
-          image: useEmoji ? weather.emoji : weather.url,
-          description: weather.desc,
-        };
-      }
-
-      /**
-       * Mettre à jour au chargement de la page
-       */
-      document.addEventListener("DOMContentLoaded", () => {
         updateBatteryGauge();
-        // Initialiser le liveflow avec la source par défaut (panneaux solaires)
-        updateLiveFlowStyle("solarPannel", 0);
+        liveConsumptionValue.textContent = data["consommation_24h"];
+        console.log("WebSocket message:", data);
+        toggleActiveSource(data["activeSource"]);
+        batterieStatusString(
+          data["strategie"][now.getHours()]["chargerBatt"],
+          data["activeSource"]
+        );
+        totalProdValue.textContent = data["production_24h"];
+        maxProdValue.textContent = data["maxProd"];
+        /* mise a jour  de l'état de la sbee*/
+        updateSbeeState(data["sbee"]);
+        //mise a jour de la barre de progression et du texte de la consommation
+        updateConsumptionData(data["consommation_h"], data["prediction"]["consommation"][now.getHours()]["prediction de consommation"])
+        // economie du jour
+        document.getElementById("totalSaving").textContent = `${Math.round(data["epargne"])} FCFA`
+        // mettre a jour ou pas le graphe 
+        updateGraph(data["graphicData"])
+      };
+
+      ws.onerror = (error) => {
+        console.error("WebSocket erreur:", error);
+      };
+
+      ws.onclose = (event) => {
+        console.warn("WebSocket fermé:", event);
+        updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
+        // Tentative de reconnexion automatique
+
+        if (reconnectAttempts < maxReconnectAttempts) {
+          reconnectAttempts++;
+          updateConnectionStatus(
+            "Connexion...",
+            `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
+          );
+          console.log(`Reconnexion dans ${reconnectInterval}ms...`);
+          setTimeout(connectWebSocket, reconnectInterval);
+        } else {
+          updateConnectionStatus(
+            "Échec",
+            "Nombre maximum de tentatives atteint",
+          );
+          console.error(
+            "Nombre maximum de tentatives de reconnexion atteint",
+          );
+        }
+      };
+    }
+    //fonction pour mettre a jours le graphe ou pas
+    function updateGraph(data) {
+      if (data["prod"] !== previousData["prod"]) {
+        previousData["prod"] == data["prod"]
+        globalThis.graphe.data.datasets[0].data = data["prod"]
+        globalThis.graphe.update()
+      }
+      if (data["conso"] !== previousData["conso"]) {
+        previousData["conso"] = data["conso"]
+        graphe.data.datasets[1].data = data["conso"]
+        globalThis.graphe.update()
+      }
+    }
+    //fonction pour mettre a jour la barre de progression du niveau de consommation
+    function updateConsumptionData(currentConsumption, maxConsumption) {
+      percentage = Math.round((currentConsumption / maxConsumption) * 100)
+      consoBar.style.width = `${percentage}%`;
+      document.getElementById("consoPercentage").textContent = `${percentage}% de la prédiction totale`
+    }
+    //fonction pour indiquer le status des batterie dans le grand container
+    function batterieStatusString(status, activeSource) {
+      const battSvg = document.querySelector(".battery-svg");
+      const battCircle = document.querySelector("circle.battery-circle");
+
+      if (status) {
+        battStatus.textContent = "Chargement";
+        battIcon.forEach((b) => {
+          b.textContent = `battery_charging_80`;
+        });
+        // Ajouter les animations de balayage
+        battCircle?.classList.add("battery-circle-charging");
+        battSvg?.classList.add("battery-svg-charging");
+      } else {
+        if (activeSource == 'batt') {
+          battStatus.textContent = "Déchargement pour alimenter la maison";
+          battIcon.forEach((b) => {
+            b.textContent = `battery_80`;
+          });
+        }
+        else {
+          battStatus.textContent = "Batteries inactives pour sauvegarder la durée de vie";
+        }
+        // Retirer les animations de balayage
+        battCircle?.classList.remove("battery-circle-charging");
+        battSvg?.classList.remove("battery-svg-charging");
+        // Mettre à jour l'offset en fonction du pourcentage
+        updateBatteryGauge();
+      }
+    }
+    //fonction pour tracer le graphique
+    function graphic() {
+      const ctx = document.getElementById('consoProdGraph').getContext('2d');
+      x_label = []
+      for (let i = 0; i <= 23; i++) {
+        x_label.push(i)
+      }
+      globalThis.graphe = new Chart(ctx, {
+        type: 'line', // type de graphique : bar, line, pie, etc.
+        data: {
+          labels: x_label,
+          datasets: [
+            {
+              label: 'Production',
+              data: [],
+              fill: true,
+              tension: 0.5,
+              pointRadius: 0,
+              gradient: {
+                backgroundColor: {
+                  axis: 'x',
+                  colors: {
+                    0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                    50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                    100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
+                  }
+                },
+              },
+              borderColor: '#0d631b',
+              borderWidth: 3
+            },
+            {
+              label: 'Consommation',
+              data: [5, 6, 7, 8, 5, 1, 4],
+              borderColor: '#f8bd2a',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.5,
+              pointRadius: 0,
+              gradient: {
+                backgroundColor: {
+                  axis: 'x',
+                  colors: {
+                    0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                    50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                    100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
+                  }
+                },
+              },
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 15,
+                font: {
+                  size: 12,
+                  weight: '500'
+                }
+              }
+            },
+            tooltip: {
+              enabled: true,
+              mode: 'index',
+              intersect: false,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: { size: 13, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: function (context) {
+                  let label = context.dataset.label || '';
+                  let valeur = parseFloat(context.raw).toFixed(2);
+                  return `${label}: ${valeur} kW`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                font: { size: 11 }
+              }
+            },
+            x: {
+              grid: {
+                display: false,
+                drawBorder: false
+              },
+              ticks: {
+                font: { size: 11 },
+                callback: function (value) {
+                  return value + 'h';
+                }
+              }
+            }
+          }
+        }
       });
-      /* Écouter les mises à jour HTMX du conteneur metricsContainer */
-    </script>
-  </body>
+    }
+    graphic()
+    //fonction pour mettre a jour l'indicateur du status de la sbee
+    function updateSbeeState(sbee) {
+      if (sbee) {
+        sbeeIndicator.classList.remove("bg-gray-400", "bg-red-500");
+        sbeeIndicator.classList.add("bg-green-500");
+        sbeeStatus.textContent = "actif";
+      } else {
+        sbeeIndicator.classList.remove("bg-gray-400", "bg-green-500");
+        sbeeIndicator.classList.add("bg-red-500");
+        sbeeStatus.textContent = "coupure détectée";
+      }
+    }
+    //fonction pour activer une source et désactiver les autres
+    function toggleActiveSource(activeSource) {
+      /* desactivation de toute les sources */
+      toggleBattState(false);
+      toggleSBEEState(false);
+      toggleSolarPannelState(false);
+      /* activation de ou des source(s) active sur l'interface */
+      activeSource.forEach((source) => {
+        if (source == "solarPannel") {
+          toggleSolarPannelState(true);
+        } else if (source == "batt") {
+          toggleBattState(true);
+        } else if (source == "sbee") {
+          toggleSBEEState(true);
+        }
+      });
+      if (activeSource.length > 1) {
+        liveFlowText.textContent = activeSource.join(" + ");
+      } else {
+        updateLiveFlowStyle(activeSource.join(""));
+      }
+    }
+    // Fonction pour afficher l'état de la connexion WebSocket
+    function updateConnectionStatus(status, message = "") {
+      const statusElement = document.getElementById("connectionStatus");
+      const indicatorElement = document.getElementById("connectionIndicator");
+
+      if (statusElement) {
+        statusElement.textContent = `${status}${message ? ": " + message : ""}`;
+      }
+
+      if (indicatorElement) {
+        // Supprimer toutes les classes de couleur
+        indicatorElement.classList.remove(
+          "bg-gray-400",
+          "bg-green-500",
+          "bg-yellow-500",
+          "bg-red-500",
+          "animate-pulse",
+        );
+
+        // Ajouter la couleur appropriée
+        if (status === "Connecté") {
+          indicatorElement.classList.add("bg-green-500");
+        } else if (status === "Connexion...") {
+          indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
+        } else {
+          indicatorElement.classList.add("bg-red-500");
+        }
+      }
+    }
+
+    // Fonction pour mettre à jour le style du SVG liveflow en fonction de la source active
+    function updateLiveFlowStyle(activeSource) {
+      const liveFlowPath = document.getElementById("liveFlowPath");
+      const liveFlowCircle = document.getElementById("liveFlowCircle");
+      const liveFlowDot = document.getElementById("liveFlowDot");
+      const liveFlowInfo = document.getElementById("liveFlowInfo");
+      const liveFlowText = document.getElementById("liveFlowText");
+      const liveFlowSvg = document.getElementById("liveFlowSvg");
+      let strokeColor = "#0d631b";
+      let sourceLabel = "";
+      let dotColor = "bg-primary";
+      let infoBgClass = "bg-primary-container/10 border-primary/20";
+      let textColor = "text-primary";
+
+      if (activeSource === "batt") {
+        strokeColor = "#ea8c55"; // Orange pour batterie
+        sourceLabel = "Batterie";
+        dotColor = "bg-orange-500";
+        infoBgClass = "bg-orange-100 border-orange-300";
+        textColor = "text-orange-700";
+      } else if (activeSource === "sbee") {
+        strokeColor = "#dc2626"; // Rouge pour SBEE
+        sourceLabel = "SBEE";
+        dotColor = "bg-red-500";
+        infoBgClass = "bg-red-100 border-red-300";
+        textColor = "text-red-700";
+      } else if (activeSource === "solarPannel") {
+        strokeColor = "#16a34a"; // Vert pour panneaux solaires
+        sourceLabel = "Panneaux Solaires";
+        dotColor = "bg-green-500";
+        infoBgClass = "bg-green-100 border-green-300";
+        textColor = "text-green-700";
+      }
+      // Mettre à jour le SVG
+      if (liveFlowPath) liveFlowPath.setAttribute("stroke", strokeColor);
+      if (liveFlowCircle) liveFlowCircle.setAttribute("fill", strokeColor);
+
+      // Mettre à jour le point animé
+      if (liveFlowDot) {
+        liveFlowDot.className = `flex h-2 w-2 rounded-full ${dotColor} animate-ping`;
+      }
+
+      // Mettre à jour le conteneur d'info
+      if (liveFlowInfo) {
+        liveFlowInfo.className = `mt-4 px-4 py-1.5 rounded-full ${infoBgClass} flex items-center gap-2`;
+      }
+
+      // Mettre à jour le texte
+      if (liveFlowText) {
+        liveFlowText.className = `text-[10px] font-extrabold ${textColor} uppercase tracking-widest`;
+        liveFlowText.textContent = ` ${sourceLabel}`;
+      }
+    }
+
+    // Démarrer la connexion WebSocket au chargement de la page
+    updateConnectionStatus("Connexion...", "Initialisation");
+    connectWebSocket();
+    function toggleBattState(state = false) {
+      if (state) {
+        battSource.classList.remove("bg-surface-container-low");
+        battSource.classList.add(
+          "bg-orange-50",
+          "border",
+          "border-orange-300",
+          "shadow-md",
+          "shadow-orange-200",
+        );
+      } else {
+        battSource.classList.remove(
+          "bg-orange-50",
+          "border",
+          "border-orange-300",
+          "shadow-md",
+          "shadow-orange-200",
+        );
+        battSource.classList.toggle(
+          "bg-surface-container-low",
+          "border",
+          "border-outline-variant/30",
+          "opacity-60",
+        );
+      }
+    }
+    function toggleSBEEState(state = false) {
+      if (state) {
+        SBEESource.classList.remove("bg-surface-container-low");
+        SBEESource.classList.add(
+          "bg-red-100",
+          "border",
+          "border-red-300",
+          "shadow-md",
+          "shadow-red-200",
+        );
+      } else {
+        SBEESource.classList.remove(
+          "bg-red-100",
+          "border",
+          "border-red-300",
+          "shadow-md",
+          "shadow-red-200",
+        );
+        SBEESource.classList.toggle(
+          "bg-surface-container-low",
+          "border",
+          "border-outline-variant/30",
+          "opacity-60",
+        );
+      }
+    }
+    function toggleSolarPannelState(state = false) {
+      if (state) {
+        SPSource.classList.remove("bg-surface-container-low");
+        SPSource.classList.add(
+          "bg-green-100",
+          "border",
+          "border-green-300",
+          "shadow-md",
+          "shadow-green-200",
+        );
+      } else {
+        SPSource.classList.remove(
+          "bg-green-100",
+          "border",
+          "border-green-300",
+          "shadow-md",
+          "shadow-green-200",
+        );
+        SPSource.classList.toggle(
+          "bg-surface-container-low",
+          "border",
+          "border-outline-variant/30",
+          "opacity-60",
+        );
+      }
+    }
+    // Nettoyer la connexion WebSocket quand la page se ferme
+    window.addEventListener("beforeunload", () => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+    });
+
+    // Vérifier périodiquement l'état de la connexion WebSocket
+    setInterval(() => {
+      if (
+        !ws ||
+        ws.readyState === WebSocket.CLOSED ||
+        ws.readyState === WebSocket.CLOSING
+      ) {
+        console.log(
+          "Connexion WebSocket perdue, tentative de reconnexion...",
+        );
+        connectWebSocket();
+      }
+    }, 10000); // Vérifier toutes les 10 secondes
+    const now = new Date();
+    function updateBatteryGauge() {
+      const battValue = document.querySelector(".battValue");
+      if (!battValue) return;
+
+      const percentage = parseFloat(battValue.textContent) || 0;
+      const circumference = 552.92; // 2 * π * 88
+      const offset = circumference * (1 - percentage / 100);
+
+      // Mettre à jour le stroke-dashoffset du cercle
+      const circle = document.querySelector("circle.battery-circle");
+      if (circle) {
+        // Ne pas appliquer l'offset si l'animation de balayage est active
+        if (!circle.classList.contains("battery-circle-charging")) {
+          circle.setAttribute("stroke-dashoffset", offset.toFixed(2));
+        }
+        if (
+          Number(battValue.textContent) >= 0 &&
+          Number(battValue.textContent) < 40
+        ) {
+          circle.setAttribute("stroke", "#ba1a1a");
+        } else if (
+          Number(battValue.textContent) >= 40 &&
+          Number(battValue.textContent) < 50
+        ) {
+          circle.setAttribute("stroke", "#ffc107");
+        } else if (
+          Number(battValue.textContent) >= 50 &&
+          Number(battValue.textContent) < 100
+        ) {
+          circle.setAttribute("stroke", "#28a745");
+        }
+      }
+    }
+
+    /* fonction pour récupérer les informations météorologiques  */
+    const fastAPiUrl = "/weather";
+    async function getWeatherDataFromFastAPi(hour = now.getHours()) {
+      try {
+        const request = await fetch(fastAPiUrl);
+        const response = await request.json();
+
+        const weatherInfo = getWeatherInfo(response["weatherCode"][hour]);
+        weatherDescription.textContent = weatherInfo["description"];
+        weatherIcon.textContent = weatherInfo["image"];
+        weatherTempValue.textContent = response["AirTemperature"][hour];
+
+        const backgroundImage =
+          weatherBackgroundImageLink[weatherInfo["image"]];
+        const newImage = new Image();
+        newImage.src =
+          weatherBackgroundImageLink[
+          getWeatherInfo(response["weatherCode"][hour], false)["image"]
+          ];
+        newImage.onload = () => {
+          weatherImage.src = newImage.src;
+        };
+      } catch (error) {
+        console.error("Erreur météo :", error);
+      }
+    }
+
+    // Lancement immédiat
+    getWeatherDataFromFastAPi();
+
+    // Puis mise à jour toutes les heures (3 600 000 ms)
+    setInterval(() => getWeatherDataFromFastAPi(), 3600000);
+    function getWeatherInfo(code, useEmoji = true) {
+      // Mapping basé sur les codes WMO d'Open-Meteo
+      const weatherMap = {
+        // Groupe 0-9 : Ciel clair / partiellement nuageux
+        0: { emoji: "☀️", url: "sunny", desc: "Ciel dégagé" },
+        1: {
+          emoji: "🌤️",
+          url: "mainly_clear",
+          desc: "Principalement dégagé",
+        },
+        2: {
+          emoji: "⛅",
+          url: "partly_cloudy",
+          desc: "Partiellement nuageux",
+        },
+        3: { emoji: "☁️", url: "overcast", desc: "Nuageux" },
+
+        // Brouillard : 45, 48
+        45: { emoji: "🌫️", url: "fog", desc: "Brouillard" },
+        48: {
+          emoji: "🌫️❄️",
+          url: "depositing_rime_fog",
+          desc: "Brouillard givrant",
+        },
+
+        // Pluie fine / bruine : 51, 53, 55
+        51: { emoji: "🌦️", url: "light_drizzle", desc: "Bruine légère" },
+        53: { emoji: "🌧️", url: "moderate_drizzle", desc: "Bruine modérée" },
+        55: { emoji: "🌧️💧", url: "dense_drizzle", desc: "Bruine dense" },
+
+        // Pluie verglaçante : 56, 57
+        56: {
+          emoji: "🌨️❄️",
+          url: "freezing_drizzle_light",
+          desc: "Bruine verglaçante légère",
+        },
+        57: {
+          emoji: "🌨️❄️💧",
+          url: "freezing_drizzle_dense",
+          desc: "Bruine verglaçante dense",
+        },
+
+        // Pluie : 61, 63, 65
+        61: { emoji: "🌦️", url: "light_rain", desc: "Pluie légère" },
+        63: { emoji: "🌧️", url: "moderate_rain", desc: "Pluie modérée" },
+        65: { emoji: "🌧️💧💧", url: "heavy_rain", desc: "Pluie forte" },
+
+        // Pluie verglaçante : 66, 67
+        66: {
+          emoji: "🌨️❄️💧",
+          url: "freezing_rain_light",
+          desc: "Pluie verglaçante légère",
+        },
+        67: {
+          emoji: "🌨️❄️💧💧",
+          url: "freezing_rain_heavy",
+          desc: "Pluie verglaçante forte",
+        },
+
+        // Neige : 71, 73, 75
+        71: { emoji: "🌨️", url: "light_snow", desc: "Neige légère" },
+        73: { emoji: "❄️🌨️", url: "moderate_snow", desc: "Neige modérée" },
+        75: { emoji: "❄️❄️🌨️", url: "heavy_snow", desc: "Neige forte" },
+
+        // Grains de neige : 77
+        77: { emoji: "🌨️💨", url: "snow_grains", desc: "Grains de neige" },
+
+        // Averses de pluie : 80, 81, 82
+        80: {
+          emoji: "☔",
+          url: "rain_showers_light",
+          desc: "Averses légères",
+        },
+        81: {
+          emoji: "☔☔",
+          url: "rain_showers_moderate",
+          desc: "Averses modérées",
+        },
+        82: {
+          emoji: "☔☔☔",
+          url: "rain_showers_violent",
+          desc: "Averses violentes",
+        },
+
+        // Averses de neige : 85, 86
+        85: {
+          emoji: "❄️☔",
+          url: "snow_showers_light",
+          desc: "Averses de neige légères",
+        },
+        86: {
+          emoji: "❄️❄️☔",
+          url: "snow_showers_heavy",
+          desc: "Averses de neige fortes",
+        },
+
+        // Orages : 95, 96, 99
+        95: { emoji: "⛈️", url: "thunderstorm", desc: "Orage modéré" },
+        96: {
+          emoji: "⛈️🌨️",
+          url: "thunderstorm_hail_light",
+          desc: "Orage avec grêle légère",
+        },
+        99: {
+          emoji: "⛈️🌨️🌨️",
+          url: "thunderstorm_hail_heavy",
+          desc: "Orage avec grêle forte",
+        },
+      };
+      // Valeur par défaut si code inconnu
+      const defaultWeather = {
+        emoji: "❓",
+        url: "unknown",
+        desc: "Code météo inconnu",
+      };
+      const weather = weatherMap[code] || defaultWeather;
+      return {
+        image: useEmoji ? weather.emoji : weather.url,
+        description: weather.desc,
+      };
+    }
+
+    /**
+     * Mettre à jour au chargement de la page
+     */
+    document.addEventListener("DOMContentLoaded", () => {
+      updateBatteryGauge();
+      // Initialiser le liveflow avec la source par défaut (panneaux solaires)
+      updateLiveFlowStyle("solarPannel", 0);
+    });
+    /* Écouter les mises à jour HTMX du conteneur metricsContainer */
+  </script>
+</body>
+
 </html>

@@ -20,6 +20,9 @@ from datetime import datetime,date,timedelta
 
 import math
 
+from fastapi import Query
+
+
 app =FastAPI()
 base_path = Path(__file__).resolve().parent.parent
 
@@ -79,11 +82,12 @@ def getWeatherData():
             "weatherCode" : hourly["weathercode"]            
         } 
 try :
-    #weatherData =  getWeatherData()
-    #print(weatherData)
-    weatherData = {'WindSpeed': [6.4, 6.3, 6.4, 5.6, 5.2, 5.5, 4.4, 5.5, 6.3, 10.0, 8.7, 8.0, 7.7, 9.9, 12.2, 10.6, 12.9, 13.2, 14.1, 12.0, 10.8, 9.9, 8.9, 8.2], 'Sunshine': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 56.78633333333333, 60.0, 60.0, 48.093833333333336, 0.0, 0.0, 0.0, 0.0], 'AirPressure': [1013.0, 1011.7, 1010.8, 1010.2, 1010.0, 1010.2, 1010.6, 1011.2, 1012.0, 1012.6, 1012.6, 1012.2, 1011.6, 1010.6, 1009.6, 1009.1, 1008.5, 1008.2, 1008.7, 1009.3, 1010.3, 1011.2, 1012.1, 1012.2], 'Radiation': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 113.0, 326.0, 490.0, 692.0, 839.0, 761.0, 837.0, 695.0, 375.0, 365.0, 218.0, 57.0, 0.0, 0.0, 0.0, 0.0], 'AirTemperature': [27.0, 27.2, 26.8, 26.4, 26.1, 26.0, 25.8, 25.9, 27.4, 29.1, 30.0, 31.1, 32.0, 32.2, 32.5, 30.4, 29.2, 29.0, 29.0, 28.2, 27.8, 27.5, 27.3, 27.1], 'RelativeAirHumidity': [85, 87, 89, 90, 91, 91, 93, 93, 88, 79, 74, 69, 65, 64, 62, 75, 80, 78, 78, 82, 83, 85, 86, 87], 'Hour': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], 'Month': [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5], 'weatherCode': [2, 0, 0, 0, 1, 1, 1, 2, 3, 3, 51, 51, 51, 51, 51, 95, 55, 51, 3, 3, 2, 2, 2, 2]}
+    weatherData =  getWeatherData()
+    print(weatherData)
+    #weatherData = {'WindSpeed': [4.5, 8.0, 9.4, 9.2, 8.5, 8.0, 8.1, 5.4, 2.2, 8.2, 6.9, 10.9, 10.4, 9.3, 9.7, 10.6, 10.0, 17.6, 8.8, 6.5, 4.0, 4.2, 9.4, 7.2], 'Sunshine': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 7.908833333333333, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 7.357666666666666, 0.0, 0.0, 0.0, 0.0], 'AirPressure': [1012.0, 1011.6, 1011.2, 1010.9, 1010.8, 1011.0, 1011.5, 1012.3, 1013.1, 1013.5, 1013.6, 1013.5, 1012.9, 1011.9, 1010.7, 1009.7, 1008.2, 1008.7, 1010.1, 1010.9, 1011.8, 1012.7, 1014.0, 1014.6], 'Radiation': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 96.0, 170.0, 509.0, 729.0, 792.0, 849.0, 862.0, 771.0, 488.0, 415.0, 201.0, 33.0, 0.0, 0.0, 0.0, 0.0], 'AirTemperature': [26.9, 27.1, 26.8, 26.6, 26.4, 26.2, 25.9, 25.7, 24.6, 25.4, 27.3, 29.8, 31.2, 31.6, 32.0, 30.0, 30.2, 28.5, 25.7, 24.6, 24.9, 25.1, 24.7, 24.6], 'RelativeAirHumidity': [90, 89, 91, 91, 91, 91, 93, 93, 96, 95, 87, 73, 67, 68, 66, 74, 70, 80, 91, 94, 95, 96, 96, 96], 'Hour': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], 'Month': [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5], 'weatherCode': [2, 95, 95, 2, 1, 0, 0, 1, 80, 53, 0, 1, 1, 0, 95, 53, 51, 53, 81, 81, 55, 51, 51, 53]}
 except Exception as e: 
     print("error-----------------------------------------")
+    print(e)
 
 # model de classe
 #model de classe pour la prédiction
@@ -110,7 +114,7 @@ with open("model/solar_model.pkl","rb") as f:
 # endpoint pour récupérer les informations de la batterie
 @app.get("/batterie/today")
 async def getBattData():
-    """Récupère toutes les données de la batterie depuis mla BDD"""
+    """Récupère toutes les données de la batterie depuis la BDD"""
     try:
         async with aiosqlite.connect("energy.db") as db:
             db.row_factory = aiosqlite.Row
@@ -150,6 +154,7 @@ async def get_today_batt_data():
                 }
     except Exception as e:
         return {e}
+
 # endpoint pour predire la production
 @app.post("/prediction/production")
 def getPredProd(data :prod_data) :
@@ -580,26 +585,61 @@ async def getTodayGraphicData():
 asyncio.create_task(getTodayGraphicData())
 
 # variable pour stocker les prédictions
-prediction_consommation = getConso(analyser_lokossa())
+# stockages des features(est_weekend,est_jour_ferie,sc,sp) pour la prediction de la consommation
+cf = analyser_lokossa()
+conso_features = {
+    "est_weekend" : cf[0],
+    "est_jour_ferie" : cf[1],
+    "saison_chaudes": cf[2],
+    "saison_pluies" : cf[3]
+}
+prediction_consommation = getConso(cf)
 prediction_production = getPred(weatherData)
 # initialisation de la BDD
 async def init_db():
     print("database initiated")
     async with aiosqlite.connect("energy.db") as db:
+        # table consommation
         await db.execute("""
             CREATE TABLE IF NOT EXISTS consommation(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
                 consommationReel REAL,
-                consommationPred REAL
+                consommationPred REAL,
+                consoFeatures TEXT
             )
         """)
+        # await db.execute("""
+        #     ALTER TABLE consommation ADD COLUMN consoFeatures TEXT DEFAULT 0 
+        # """)
+        # table batterie
         await db.execute("""
             CREATE TABLE IF NOT EXISTS batterie(
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
                 battPercentage REAL,
                 battCapacity REAL
+            )
+        """)
+        # table gain
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS gain(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                gain REAL, 
+                tva REAL,
+                kwh REAL
+            )
+        """)
+        # table archive journalière
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS archive(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                production REAL, 
+                consommation REAL,
+                gain REAL,
+                status TEXT
             )
         """)
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON batterie(timestamp)")
@@ -619,13 +659,46 @@ async def init_db():
         """)
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON production(timestamp)")
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON consommation(timestamp)")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON gain(timestamp)")
+        await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON archive(timestamp)")
         await db.commit()
 
 start_time = datetime.now()
+# fonction pour choisir un status
+def statusProvider(prod,conso):
+    """retourne un status(optimale,déficitaire,equilibré) en fonction de prod, et conso
+
+    Args:
+        prod (_float_): _description_
+        conso (_float_): _description_
+
+    Returns:
+        _string_: _description_
+    """
+    if prod>conso : return "optimale"
+    elif prod<conso : return "déficitaire"
+    elif prod == conso :return "equilibré"
+    else: return "inconnu"
 # fonction a executer tout les 24h
 async def cycle24h():
     while True:
-        weatherData = getWeatherData()
+        print(f"initiation du de 24h cycle a {datetime.now().hour}:{datetime.now().minute}")
+        await asyncio.sleep(86400)  # attend 24 heures
+        # sauvegarde de l'archive dans la base de donées
+        production = prod_cumul_24h.energie_wh()
+        consommation = conso_cumul_24h.energie_wh()
+        gain = conso_ER_24h.energie_kwh* tarrif_kwh*taxe
+        status = statusProvider(production,consommation)
+        async with aiosqlite.connect("energy.db") as db:
+            try:
+                await db.execute(
+                    """INSERT INTO archive(production, consommation, gain, status) VALUES (?, ?, ?, ?)""",
+                    (production,consommation,gain,status)
+                )
+                await db.commit()
+                print("---donnée de 24h inséré dans la BDD---")
+            except Exception as e:
+                print(e)
         
 # fonction a executer toute les heures
 async def cycle1h():
@@ -653,7 +726,7 @@ async def cycle1h():
                     predConso = 0
                 
                 async with aiosqlite.connect("energy.db") as db:
-                    await db.execute("INSERT INTO consommation (consommationReel,consommationPred) VALUES (?,?)", (conso_cumul.energie_wh(),predConso))
+                    await db.execute("INSERT INTO consommation (consommationReel,consommationPred,consoFeatures) VALUES (?,?,?)", (conso_cumul.energie_wh(),predConso,json.dumps(conso_features)))
                     if not("Erreur API " in str(weatherData)):
                         try:
                             # Extraire les valeurs scalaires correspondant à l'heure actuelle
@@ -680,6 +753,13 @@ async def cycle1h():
                                 (battPercentage, battCapacity)
                                 VALUES (?, ?)""",
                                 (sensor_data["battPercentage"],sensor_data["battCapacity"])
+                            )
+                            # insertion du gain par heure ou epargne dans la BDD
+                            await db.execute(
+                                """INSERT INTO gain
+                                (gain, tva,kwh)
+                                VALUES (?, ?, ?)""",
+                                (epargne,taxe,tarrif_kwh)
                             )
                             await db.commit()
                             print("donnée inséré dans la BDD")
@@ -778,6 +858,7 @@ async def startup_event():
     # Créer et stocker les tâches
     background_tasks = [
         asyncio.create_task(cycle1h()),
+        asyncio.create_task(cycle24h()),
         asyncio.create_task(updateSensorData())
     ]
     await init_db()
@@ -883,7 +964,7 @@ conso_cumul = EnergyCumul(duree_heures=1)
 prod_cumul_24h = EnergyCumul(duree_heures=24)
 conso_cumul_24h = EnergyCumul(duree_heures=24)
 conso_ER = EnergyCumul() # cumule de la consommation sur les energies renouvelables pour calculer l'epargne
-
+conso_ER_24h = EnergyCumul(duree_heures=24)# cumule de la consommation sur les energies renouvelables pour calculer l'epargne sur une journée
 
 async def init_cumuls():
     """Initialiser les cumuls avec les données de la base de données"""
@@ -944,7 +1025,20 @@ async def formular(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="optimisation.html",
+    )
+@app.get("/meteo")   
+async def formular(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="meteo.html",
     )    
+
+@app.get("/settings")
+async def settings_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="settings.html",
+    )
 
 @app.post("/formulaire",response_class = HTMLResponse)
 def handle_form(request:Request,windspeed :str  = Form(...)):
@@ -981,10 +1075,150 @@ async def get_hourly_weather_data():
             return {"error": "Impossible de récupérer les données météorologiques"}
     except Exception as e:
         return {"error": f"Erreur: {str(e)}"}
+# Endpoint pour récupérer les gains du jour
+@app.get("/gain/today")
+async def get_today_gain():
+    """Récupère les données de gain du jour"""
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            db.row_factory = aiosqlite.Row
+            async with db.execute("""
+                SELECT id, timestamp, gain, tva, kwh
+                FROM gain
+                WHERE timestamp >= date('now')
+                ORDER BY timestamp DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                data = [dict(row) for row in rows]
+                return {
+                    "count": len(data),
+                    "date": date.today().isoformat(),
+                    "data": data
+                }
+    except Exception as e:
+        return {
+            "error": f"Erreur lors de la lecture de la base de données: {str(e)}"
+        }
 
+# Endpoint pour récupérer les archives du jour
+@app.get("/archive/today")
+async def get_today_archive():
+    """Récupère les données d'archive du jour"""
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            db.row_factory = aiosqlite.Row
+            async with db.execute("""
+                SELECT id, timestamp, production, consommation, gain, status
+                FROM archive
+                WHERE timestamp >= date('now')
+                ORDER BY timestamp DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                data = [dict(row) for row in rows]
+                return {
+                    "count": len(data),
+                    "date": date.today().isoformat(),
+                    "data": data
+                }
+    except Exception as e:
+        return {
+            "error": f"Erreur lors de la lecture de la base de données: {str(e)}"
+        }
+        
+# recuperer toute les données archivée
+@app.get("/archive/all")
+async def get_today_archive():
+    """Récupère les données d'archive du jour"""
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            db.row_factory = aiosqlite.Row
+            async with db.execute("""
+                SELECT id, timestamp, production, consommation, gain, status
+                FROM archive
+                ORDER BY timestamp DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                data = [dict(row) for row in rows]
+                return {
+                    "count": len(data),
+                    "date": date.today().isoformat(),
+                    "data": data
+                }
+    except Exception as e:
+        return {
+            "error": f"Erreur lors de la lecture de la base de données: {str(e)}"
+        }
 
+# endpoint pour récuperer les données d'archive 
+@app.get("/archive/grouped")
+async def get_archive_all_grouped():
+    """
+    Retourne les données de la table archive regroupées par jour, par mois et par année.
+    """
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            db.row_factory = aiosqlite.Row
+            result = {}
 
+            # 1. Regroupement par jour
+            async with db.execute("""
+                SELECT 
+                    DATE(timestamp) AS periode,
+                    SUM(production) AS total_production,
+                    SUM(consommation) AS total_consommation,
+                    SUM(gain) AS total_gain,
+                    AVG(gain) AS avg_gain,
+                    COUNT(*) AS count
+                FROM archive
+                GROUP BY periode
+                ORDER BY periode DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                result["daily"] = [dict(row) for row in rows]
 
+            # 2. Regroupement par mois
+            async with db.execute("""
+                SELECT 
+                    strftime('%Y-%m', timestamp) AS periode,
+                    SUM(production) AS total_production,
+                    SUM(consommation) AS total_consommation,
+                    SUM(gain) AS total_gain,
+                    AVG(gain) AS avg_gain,
+                    COUNT(*) AS count
+                FROM archive
+                GROUP BY periode
+                ORDER BY periode DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                result["monthly"] = [dict(row) for row in rows]
+
+            # 3. Regroupement par année
+            async with db.execute("""
+                SELECT 
+                    strftime('%Y', timestamp) AS periode,
+                    SUM(production) AS total_production,
+                    SUM(consommation) AS total_consommation,
+                    SUM(gain) AS total_gain,
+                    AVG(gain) AS avg_gain,
+                    COUNT(*) AS count
+                FROM archive
+                GROUP BY periode
+                ORDER BY periode DESC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                result["yearly"] = [dict(row) for row in rows]
+
+            # Arrondir les valeurs numériques
+            for group in ["daily", "monthly", "yearly"]:
+                for item in result[group]:
+                    for key in ["total_production", "total_consommation", "total_gain", "avg_gain"]:
+                        if item.get(key) is not None:
+                            item[key] = round(item[key], 2)
+
+            return result
+
+    except Exception as e:
+        return {"error": f"Erreur lors du regroupement des archives : {str(e)}"}
 
 # analyse de la journée et extraction des donnée de prédiciton de la consommation
 predictionData = {
@@ -1136,8 +1370,8 @@ applyStrategy()
 # fonction pour calculer le gain 
 def saving(puissance):
     conso_ER.ajouter(puissance)
+    global epargne 
     epargne = conso_ER.energie_kwh * tarrif_kwh * taxe
-    return epargne
 # fonction pour synchroniser l'application de la stratégie a l'heure exacte correspondante
 async def awaitExactHour():
     now = datetime.now()
@@ -1149,7 +1383,7 @@ async def awaitExactHour():
         applyStrategy()
 # explication de la stratégie par l'ia deepseek
 def getExplanation(strategie):
-    # brain prompt
+    # system prompt
     explication = """
         Un script python prend 7 paramètres : 
         - `conso` : puissance consommée par l'installation  
@@ -1199,9 +1433,7 @@ def getExplanation(strategie):
             → `sourceActive = ["solarPannel"]`, `chargerBatt = false`, `mode = "ultraSaving"`
         """
     output = strategie
-    exemple = """Tu dois produire dans une liste des json suivant cet exemple: { 'index':'l'index que tu recoit','sourceActive’: 'je prévoit une production de 180 et une consommation de 20, la production etant supérieur a la consommation, je bascule alors l’installation sur les panneaux solaire pour économiser...’,
-    'chargerBatt’: 'Le pourcentage des batterie est de 20% pour éviter une décharge profonde j’utilise le surplus de production pour recharger les recharger’,
-    'mode’: si le mode est normal ' en autosuffisance solaire:alors tout les appareils sont autorisé a consommé l’énergie disponible’ ou si le mode est saving 'economie denergie’: les appareils a forte consommation sont desactiver pour augmenter l’autonomei’ et si c’est ultrasaving 'energie disponible très faible, seul les appareils neccessaires sont activée}’
+    exemple = """Tu dois produire dans une liste des json suivant cet exemple: { "index":"l'index que tu recoit","sourceActive": "je prévoit une production de 180 et une consommation de 20, la production etant supérieur a la consommation, je bascule alors l'installation sur les panneaux solaire pour économiser...","chargerBatt": "Le pourcentage des batterie est de 20% pour éviter une décharge profonde j'utilise le surplus de production pour recharger les recharger","mode": "si le mode est normal: en autosuffisance solaire alors tout les appareils sont autorisé a consommé l'énergie disponible. ou si le mode est saving: economie d'energie, les appareils a forte consommation sont desactiver pour augmenter l'autonomie. et si c'est ultrasaving: energie disponible très faible, seul les appareils neccessaires sont activée"}
     """
     payload ={
         "messages": [
@@ -1218,7 +1450,7 @@ def getExplanation(strategie):
         
         response = request.json()
         content = response["choices"][0]["message"].get('content')
-        #print(json.loads(content))
+        print(json.loads(content))
         return json.loads(content)
     except requests.exceptions.HTTPError as e:
         print(f"Erreur HTTP {request.status_code}: {request.text}")
@@ -1232,8 +1464,9 @@ def getExplanation(strategie):
     except Exception as e:
         print(f"Erreur inattendue: {str(e)}")
         return f"Erreur: {str(e)}"
-#groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
-groq_interpretation = [{'index': 0, 'sourceActive': 'Je prévois une consommation de 1695,4 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 1, 'sourceActive': 'Je prévois une consommation de 1707,13 et une production de 118,02, étant donné que la production est inférieure à la consommation, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 2, 'sourceActive': 'Je prévois une consommation de 1710,5 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 3, 'sourceActive': 'Je prévois une consommation de 1685,6 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 4, 'sourceActive': 'Je prévois une consommation de 200,48 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 5, 'sourceActive': 'Je prévois une consommation de 239,9 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 6, 'sourceActive': 'Je prévois une consommation de 187,74 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 7, 'sourceActive': 'Je prévois une consommation de 277,75 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 8, 'sourceActive': 'Je prévois une consommation de 151,6 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 9, 'sourceActive': 'Je prévois une consommation de 149,09 et une production de 162,81, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 10, 'sourceActive': 'Je prévois une consommation de 151,28 et une production de 1517,89, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 11, 'sourceActive': 'Je prévois une consommation de 149,42 et une production de 4405,29, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 12, 'sourceActive': 'Je prévois une consommation de 328,03 et une production de 4479,96, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 13, 'sourceActive': 'Je prévois une consommation de 197,74 et une production de 4691,31, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 14, 'sourceActive': 'Je prévois une consommation de 198,48 et une production de 4353,8, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 15, 'sourceActive': 'Je prévois une consommation de 199,82 et une production de 4300,26, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 16, 'sourceActive': 'Je prévois une consommation de 201,4 et une production de 2879,95, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 17, 'sourceActive': 'Je prévois une consommation de 149,1 et une production de 1308,39, étant donné que la production est supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production.', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible.'}, {'index': 18, 'sourceActive': 'Je prévois une consommation de 190,35 et une production de 830,96, étant donné que la production est inférieure à la consommation, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est presque vide, je charge la batterie pour éviter une décharge profonde et utiliser le surplus de production de la source de secours.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 19, 'sourceActive': 'Je prévois une consommation de 313,7 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 20, 'sourceActive': 'Je prévois une consommation de 188,51 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 21, 'sourceActive': 'Je prévois une consommation de 189,77 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 22, 'sourceActive': 'Je prévois une consommation de 1754,21 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}, {'index': 23, 'sourceActive': 'Je prévois une consommation de 1742,95 et une production de 0, étant donné que la production est nulle, je bascule alors l’installation sur la source de secours pour éviter une perte d’énergie.', 'chargerBatt': 'La batterie est vide, mais comme la source de secours est utilisée, je ne charge pas la batterie pour économiser l’énergie disponible.', 'mode': "économie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l’autonomie."}]
+groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
+#groq_interpretation= [{'index': 0, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1696,62, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 1, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1675,09, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 2, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1680,93, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 3, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1707,54, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 4, 'sourceActive': 'Je prévois une production de 0 et une consommation de 198,64, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 5, 'sourceActive': 'Je prévois une production de 0 et une consommation de 236,71, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 6, 'sourceActive': 'Je prévois une production de 0 et une consommation de 189,15, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 7, 'sourceActive': 'Je prévois une production de 0 et une consommation de 274,81, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 8, 'sourceActive': 'Je prévois une production de 0 et une consommation de 152,34, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 9, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1065,15, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 10, 'sourceActive': 'Je prévois une production de 1123,35 et une consommation de 1167,32, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 11, 'sourceActive': 'Je prévois une production de 4245,25 et une consommation de 203,74, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 12, 'sourceActive': 'Je prévois une production de 4204,37 et une consommation de 374,1, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 13, 'sourceActive': 'Je prévois une production de 4413,26 et une consommation de 1751,56, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 14, 'sourceActive': 'Je prévois une production de 4572,92 et une consommation de 1754,88, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 15, 'sourceActive': 'Je prévois une production de 3859,14 et une consommation de 1718,76, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 16, 'sourceActive': 'Je prévois une production de 3819,92 et une consommation de 252,8, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 17, 'sourceActive': 'Je prévois une production de 3246,5 et une consommation de 876,57, la production étant supérieure à la consommation, je bascule alors l’installation sur les panneaux solaires pour économiser l’énergie', 'chargerBatt': 'La batterie est à 0% et la production est supérieure au seuil, il est possible de recharger la batterie', 'mode': 'en autosuffisance solaire : tous les appareils sont autorisés à consommer l’énergie disponible'}, {'index': 18, 'sourceActive': 'Je prévois une production de 175,85 et une consommation de 752,61, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la production est inférieure à la consommation, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 19, 'sourceActive': 'Je prévois une production de 0 et une consommation de 312,7, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 20, 'sourceActive': 'Je prévois une production de 0 et une consommation de 188,73, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 21, 'sourceActive': 'Je prévois une production de 0 et une consommation de 188,07, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 22, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1752,7, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}, {'index': 23, 'sourceActive': 'Je prévois une production de 0 et une consommation de 1734,0, la production étant inférieure à la consommation, je bascule alors l’installation sur la source de secours pour subvenir aux besoins', 'chargerBatt': "La batterie est à 0% et la consommation est supérieure à la production, il n'est pas possible de recharger la batterie", 'mode': "economie d'énergie : les appareils à forte consommation sont désactivés pour augmenter l'autonomie"}]
+
 @app.websocket("/ws/energy")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
@@ -1266,7 +1499,9 @@ async def websocket_endpoint(websocket: WebSocket):
             strategie = hourlyStrategy(predictionData)
             # calculer l'epargne
             if 'batt' in  sensor_data["activeSource"] or 'solarPannel' in sensor_data["activeSource"]:
-                epargne =  saving(conso_cumul.energie_kwh)
+                saving(sensor_data['consommation']) # cumule pour une heure
+                conso_ER_24h.ajouter(sensor_data['consommation'])# cumule pour 24h
+            
             # Créer les données actuelles
             current_data = {
                 "production": f"{sensor_data['production']:.2f}",

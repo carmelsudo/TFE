@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#e7e8e9",
+                      "inverse-surface": "#2e3132",
+                      "tertiary-container": "#246dc8",
+                      "tertiary-fixed": "#d6e3ff",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#f8bd2a",
+                      "inverse-on-surface": "#f0f1f2",
+                      "outline": "#707a6c",
+                      "on-tertiary-fixed": "#001b3d",
+                      "surface-dim": "#d9dadb",
+                      "on-primary-fixed": "#002204",
+                      "on-secondary-container": "#6f5100",
+                      "primary-fixed": "#a3f69c",
+                      "on-surface": "#191c1d",
+                      "on-secondary": "#ffffff",
+                      "surface-container": "#edeeef",
+                      "inverse-primary": "#88d982",
+                      "surface-container-highest": "#e1e3e4",
+                      "primary-container": "#2e7d32",
+                      "background": "#f8f9fa",
+                      "error": "#ba1a1a",
+                      "on-secondary-fixed-variant": "#5c4300",
+                      "surface-variant": "#e1e3e4",
+                      "surface-container-low": "#f3f4f5",
+                      "on-primary-container": "#cbffc2",
+                      "on-error": "#ffffff",
+                      "on-secondary-fixed": "#261a00",
+                      "primary-fixed-dim": "#88d982",
+                      "on-primary-fixed-variant": "#005312",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#bfcaba",
+                      "surface-bright": "#f8f9fa",
+                      "surface": "#f8f9fa",
+                      "error-container": "#ffdad6",
+                      "secondary": "#795900",
+                      "primary": "#0d631b",
+                      "tertiary-fixed-dim": "#a9c7ff",
+                      "on-background": "#191c1d",
+                      "on-surface-variant": "#40493d",
+                      "on-tertiary-container": "#edf1ff",
+                      "on-error-container": "#93000a",
+                      "secondary-fixed": "#ffdfa0",
+                      "tertiary": "#0054a7",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#fec330",
+                      "on-tertiary-fixed-variant": "#00468c",
+                      "surface-tint": "#1b6d24"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Manrope', sans-serif; }
+        .glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+<div class="p-8">
+<h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">Luminous</h1>
+<p class="font-manrope text-sm tracking-tight text-slate-500">Energy Intelligence</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                Analyse IA
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">lightbulb</span>
+                Optimization
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">wb_sunny</span>
+                Weather
+            </a>
+</nav>
+<div class="px-4 py-8 border-t border-slate-200/50">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                Support
+            </a>
+<div class="mt-8 px-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a homeowner in a bright sunlit kitchen looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGucaNg6F982UwC8nmOBjIzdplQ-LmU_xv07cpAv3MYPtu5cr5ePpL6GG2V4QSMXXfRV-3WhDYErbkwguv7o1_n7_0zMNJCfMYddtjNKbm5ROupWegjrS5dzY3Q42uzF6YT777WEaKSBS9SEmK3qDsLbApqkziD8RHeCffxYK3qe3jbhznrMDLIRZ51P4sUtju5MrnrkEDx2nU-Nt5tuTpLoiLM490XTIQlWt5IC15c0kWOeYWU3bKDDz8_WQio9zFQgYxfNXxNCSc"/>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Alex River</p>
+<p class="text-[10px] text-on-surface-variant">Premium Plan</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 ml-64 max-w-[calc(100%-16rem)] bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl transition-all">
+<div class="flex items-center gap-4">
+<h2 class="text-on-surface-variant font-headline font-semibold">The Living Equilibrium</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant">search</span>
+<input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search insights..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-all">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-all">account_circle</button>
+</div>
+</div>
+</header>
+<main class="ml-64 p-8 max-w-7xl mx-auto space-y-8">
+<!-- Header & Range Selector -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<p class="text-primary font-semibold tracking-wider uppercase text-xs mb-1">Performance Intelligence</p>
+<h2 class="text-4xl font-extrabold tracking-tight font-headline">Analyse IA</h2>
+</div>
+<div class="flex p-1 bg-surface-container rounded-xl">
+<button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">24h</button>
+<button class="px-6 py-2 rounded-lg text-sm font-bold bg-surface-container-lowest text-primary shadow-sm">7d</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">30d</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">Custom</button>
+</div>
+</section>
+<!-- Section 1: Efficacité du Modèle de Production -->
+<section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="headline-sm text-on-surface-variant font-semibold">Efficacité du Modèle de Production</h3>
+<p class="text-label-sm text-outline">Analyse comparative entre les prévisions météo et le rendement réel des panneaux</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs font-medium text-on-surface-variant">Production Réelle</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary/40 border border-primary"></span>
+<span class="text-xs font-medium text-on-surface-variant">Production Prédite</span>
+</div>
+</div>
+</div>
+<div class="h-80 w-full relative">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="grad-prod-real" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:var(--tw-primary);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:var(--tw-primary);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
+<!-- Predicted Path (Dashed) -->
+<path d="M0,280 Q100,240 200,100 T400,60 T600,160 T800,260 T1000,240" fill="none" opacity="0.4" stroke="#0d631b" stroke-dasharray="8,8" stroke-linecap="round" stroke-width="2"></path>
+<!-- Real Path (Solid) -->
+<path d="M0,280 Q120,220 200,110 T410,45 T590,145 T820,265 T1000,245 L1000,300 L0,300 Z" fill="url(#grad-prod-real)"></path>
+<path d="M0,280 Q120,220 200,110 T410,45 T590,145 T820,265 T1000,245" fill="none" stroke="#0d631b" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="mt-6 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest">
+<span>Lundi</span>
+<span>Mardi</span>
+<span>Mercredi</span>
+<span>Jeudi</span>
+<span>Vendredi</span>
+<span>Samedi</span>
+<span>Dimanche</span>
+</div>
+</div>
+</section>
+<!-- Section 2: Précision de la Consommation IA -->
+<section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="headline-sm text-on-surface-variant font-semibold">Précision de la Consommation IA</h3>
+<p class="text-label-sm text-outline">Modélisation des habitudes de vie vs consommation réelle mesurée</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="text-xs font-medium text-on-surface-variant">Consommation Réelle</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary/40 border border-secondary"></span>
+<span class="text-xs font-medium text-on-surface-variant">Consommation Prédite</span>
+</div>
+</div>
+</div>
+<div class="h-80 w-full relative">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="grad-cons-real" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:var(--tw-secondary);stop-opacity:0.2"></stop>
+<stop offset="100%" style="stop-color:var(--tw-secondary);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
+<!-- Predicted Path (Dashed) -->
+<path d="M0,220 Q150,230 300,190 T500,160 T750,210 T1000,180" fill="none" opacity="0.4" stroke="#795900" stroke-dasharray="8,8" stroke-linecap="round" stroke-width="2"></path>
+<!-- Real Path (Solid) -->
+<path d="M0,210 Q140,240 310,180 T510,170 T740,220 T1000,190 L1000,300 L0,300 Z" fill="url(#grad-cons-real)"></path>
+<path d="M0,210 Q140,240 310,180 T510,170 T740,220 T1000,190" fill="none" stroke="#795900" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="mt-6 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest">
+<span>Lundi</span>
+<span>Mardi</span>
+<span>Mercredi</span>
+<span>Jeudi</span>
+<span>Vendredi</span>
+<span>Samedi</span>
+<span>Dimanche</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Raisonnement de l'IA Décisionnelle -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-12 bg-surface-container-low rounded-[2rem] p-8">
+<h3 class="headline-sm text-on-surface-variant font-semibold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                    Raisonnement de l'IA Décisionnelle
+                </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Current Decision -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">wb_sunny</span>
+</div>
+<h4 class="font-bold text-on-surface">Source Actuelle</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<span class="font-bold text-primary">Solaire privilégié</span> car le niveau de batterie est supérieur à 80% et l'ensoleillement actuel est optimal (&gt; 800W/m²). L'excédent est réinjecté pour compenser les pics futurs.
+                        </p>
+</div>
+<!-- Forecast Decision -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">bolt</span>
+</div>
+<h4 class="font-bold text-on-surface">Action Planifiée</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<span class="font-bold text-error">Passage sur Réseau SBEE</span> prévu à 18h00. L'IA a détecté une baisse de production précoce et anticipe une forte consommation domestique. Batterie préservée pour la pointe de 20h.
+                        </p>
+</div>
+<!-- Battery Strategy -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">battery_charging_full</span>
+</div>
+<h4 class="font-bold text-on-surface">Stratégie Stockage</h4>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+<span class="font-bold text-secondary">Mode Économie active</span>. Recharge lente activée pour prolonger la durée de vie des cellules. Cycle de décharge profonde évité grâce à l'arbitrage tarifaire intelligent.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- New Section: Battery Charge Evolution -->
+<section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm space-y-8">
+<div>
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="headline-sm text-on-surface-variant font-semibold">Évolution de la Charge Batterie</h3>
+<p class="text-label-sm text-outline">État de charge sur les dernières 24 heures en temps réel</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+<span class="text-xs font-medium text-on-surface-variant">Niveau de Charge (%)</span>
+</div>
+</div>
+<div class="h-64 w-full relative">
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 200">
+<defs>
+<lineargradient id="grad-battery" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:var(--tw-tertiary);stop-opacity:0.15"></stop>
+<stop offset="100%" style="stop-color:var(--tw-tertiary);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="0" y2="0"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="100" y2="100"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#edeeef" stroke-width="1" x1="0" x2="1000" y1="200" y2="200"></line>
+<!-- Battery Curve -->
+<path d="M0,180 Q100,170 200,60 T400,20 T600,40 T800,120 T1000,160 L1000,200 L0,200 Z" fill="url(#grad-battery)"></path>
+<path d="M0,180 Q100,170 200,60 T400,20 T600,40 T800,120 T1000,160" fill="none" stroke="#0054a7" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="mt-4 flex justify-between text-[10px] font-bold text-outline uppercase tracking-widest">
+<span>00:00</span>
+<span>04:00</span>
+<span>08:00</span>
+<span>12:00</span>
+<span>16:00</span>
+<span>20:00</span>
+<span>23:59</span>
+</div>
+</div>
+</div>
+<!-- IA Longevity Impact Text Block -->
+<div class="bg-tertiary-fixed/30 p-8 rounded-2xl border border-tertiary-fixed/50">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-tertiary">verified</span>
+<h4 class="font-bold text-tertiary font-headline">Impact IA sur la Longévité</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                        L'algorithme de gestion intelligente Lumina optimise dynamiquement les cycles de charge pour maximiser la durée de vie de vos composants. En évitant les décharges profondes (&lt;20%) et en régulant la vitesse de charge en fonction des pics de température, l'IA réduit l'usure chimique des cellules. Cette stratégie proactive permet de prolonger le cycle de vie de la batterie de <span class="font-bold text-tertiary">35%</span> par rapport à un cycle de gestion standard.
+                    </p>
+<div class="flex gap-4">
+<div class="flex-1 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+<p class="text-[10px] font-bold text-outline uppercase mb-1">Cycle de vie estimé</p>
+<p class="text-2xl font-black text-on-surface font-headline">12.5 <span class="text-sm font-medium">ans</span></p>
+</div>
+<div class="flex-1 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+<p class="text-[10px] font-bold text-outline uppercase mb-1">Santé Batterie</p>
+<p class="text-2xl font-black text-primary font-headline">98.2%</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Generation History -->
+<section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+<h3 class="headline-sm text-on-surface-variant font-semibold mb-8">
+<div class="flex justify-between items-center w-full">
+<span class="headline-sm text-on-surface-variant font-semibold">Generation History</span>
+<div class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant/30">
+<button class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-surface-container-lowest text-primary shadow-sm">Jour</button>
+<button class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all">Mois</button>
+<button class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all">Année</button>
+</div>
+</div>
+</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[10px] font-bold text-outline uppercase tracking-widest border-b border-surface-container">
+<th class="pb-4 px-4">Date</th>
+<th class="pb-4 px-4">Production</th>
+<th class="pb-4 px-4">Consumption</th>
+<th class="pb-4 px-4">Net Flow</th>
+<th class="pb-4 px-4">Net Saving</th>
+<th class="pb-4 px-4 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-6 px-4 font-medium">Oct 24, 2023</td>
+<td class="py-6 px-4 text-secondary font-bold">24.5 kWh</td>
+<td class="py-6 px-4 text-primary font-bold">12.1 kWh</td>
+<td class="py-6 px-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                    12.4 kWh Surplus
+                                </div>
+</td>
+<td class="py-6 px-4 font-bold text-primary">$12.45</td>
+<td class="py-6 px-4 text-right">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-[10px] font-bold rounded-full">OPTIMAL</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-6 px-4 font-medium">Oct 23, 2023</td>
+<td class="py-6 px-4 text-secondary font-bold">18.2 kWh</td>
+<td class="py-6 px-4 text-primary font-bold">15.8 kWh</td>
+<td class="py-6 px-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+                                    2.4 kWh Surplus
+                                </div>
+</td>
+<td class="py-6 px-4 font-bold text-primary">$8.20</td>
+<td class="py-6 px-4 text-right">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold rounded-full">BALANCED</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-6 px-4 font-medium">Oct 22, 2023</td>
+<td class="py-6 px-4 text-secondary font-bold">5.4 kWh</td>
+<td class="py-6 px-4 text-primary font-bold">19.2 kWh</td>
+<td class="py-6 px-4">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-sm">arrow_downward</span>
+                                    13.8 kWh Deficit
+                                </div>
+</td>
+<td class="py-6 px-4 font-bold text-outline-variant">-$2.10</td>
+<td class="py-6 px-4 text-right">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full">GRID HEAVY</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Contextual FAB for quick actions -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group relative">
+<span class="material-symbols-outlined">download</span>
+<!-- Tooltip -->
+<span class="absolute right-full mr-4 bg-inverse-surface text-inverse-on-surface text-xs py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Export CSV Report</span>
+</button>
+</div>
+</body></html>

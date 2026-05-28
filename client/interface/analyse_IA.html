@@ -1,877 +1,831 @@
 <!doctype html>
 
 <html class="light" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Analyse IA</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <link href="../../static/styles.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "surface-container-high": "#e7e8e9",
-              "inverse-surface": "#2e3132",
-              "tertiary-container": "#246dc8",
-              "tertiary-fixed": "#d6e3ff",
-              "surface-container-lowest": "#ffffff",
-              "secondary-fixed-dim": "#f8bd2a",
-              "inverse-on-surface": "#f0f1f2",
-              outline: "#707a6c",
-              "on-tertiary-fixed": "#001b3d",
-              "surface-dim": "#d9dadb",
-              "on-primary-fixed": "#002204",
-              "on-secondary-container": "#6f5100",
-              "primary-fixed": "#a3f69c",
-              "on-surface": "#191c1d",
-              "on-secondary": "#ffffff",
-              "surface-container": "#edeeef",
-              "inverse-primary": "#88d982",
-              "surface-container-highest": "#e1e3e4",
-              "primary-container": "#2e7d32",
-              background: "#f8f9fa",
-              error: "#ba1a1a",
-              "on-secondary-fixed-variant": "#5c4300",
-              "surface-variant": "#e1e3e4",
-              "surface-container-low": "#f3f4f5",
-              "on-primary-container": "#cbffc2",
-              "on-error": "#ffffff",
-              "on-secondary-fixed": "#261a00",
-              "primary-fixed-dim": "#88d982",
-              "on-primary-fixed-variant": "#005312",
-              "on-primary": "#ffffff",
-              "outline-variant": "#bfcaba",
-              "surface-bright": "#f8f9fa",
-              surface: "#f8f9fa",
-              "error-container": "#ffdad6",
-              secondary: "#795900",
-              primary: "#0d631b",
-              "tertiary-fixed-dim": "#a9c7ff",
-              "on-background": "#191c1d",
-              "on-surface-variant": "#40493d",
-              "on-tertiary-container": "#edf1ff",
-              "on-error-container": "#93000a",
-              "secondary-fixed": "#ffdfa0",
-              tertiary: "#0054a7",
-              "on-tertiary": "#ffffff",
-              "secondary-container": "#fec330",
-              "on-tertiary-fixed-variant": "#00468c",
-              "surface-tint": "#1b6d24",
-            },
-            borderRadius: {
-              DEFAULT: "0.25rem",
-              lg: "0.5rem",
-              xl: "0.75rem",
-              full: "9999px",
-            },
-            fontFamily: {
-              headline: ["Manrope"],
-              body: ["Inter"],
-              label: ["Inter"],
-            },
+
+<head>
+  <meta charset="utf-8" />
+  <title>Analyse IA</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link href="../../static/styles.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#e7e8e9",
+            "inverse-surface": "#2e3132",
+            "tertiary-container": "#246dc8",
+            "tertiary-fixed": "#d6e3ff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-fixed-dim": "#f8bd2a",
+            "inverse-on-surface": "#f0f1f2",
+            outline: "#707a6c",
+            "on-tertiary-fixed": "#001b3d",
+            "surface-dim": "#d9dadb",
+            "on-primary-fixed": "#002204",
+            "on-secondary-container": "#6f5100",
+            "primary-fixed": "#a3f69c",
+            "on-surface": "#191c1d",
+            "on-secondary": "#ffffff",
+            "surface-container": "#edeeef",
+            "inverse-primary": "#88d982",
+            "surface-container-highest": "#e1e3e4",
+            "primary-container": "#2e7d32",
+            background: "#f8f9fa",
+            error: "#ba1a1a",
+            "on-secondary-fixed-variant": "#5c4300",
+            "surface-variant": "#e1e3e4",
+            "surface-container-low": "#f3f4f5",
+            "on-primary-container": "#cbffc2",
+            "on-error": "#ffffff",
+            "on-secondary-fixed": "#261a00",
+            "primary-fixed-dim": "#88d982",
+            "on-primary-fixed-variant": "#005312",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bfcaba",
+            "surface-bright": "#f8f9fa",
+            surface: "#f8f9fa",
+            "error-container": "#ffdad6",
+            secondary: "#795900",
+            primary: "#0d631b",
+            "tertiary-fixed-dim": "#a9c7ff",
+            "on-background": "#191c1d",
+            "on-surface-variant": "#40493d",
+            "on-tertiary-container": "#edf1ff",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#ffdfa0",
+            tertiary: "#0054a7",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#fec330",
+            "on-tertiary-fixed-variant": "#00468c",
+            "surface-tint": "#1b6d24",
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px",
+          },
+          fontFamily: {
+            headline: ["Manrope"],
+            body: ["Inter"],
+            label: ["Inter"],
           },
         },
-      };
-    </script>
-    <style>
-      .hour-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
-}
-.hour-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.hour-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 10px;
-}
-.hour-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-.hour-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-      
-      .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
-      }
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      h1,
-      h2,
-      h3,
-      .headline {
-        font-family: "Manrope", sans-serif;
-      }
-      .glass {
-        background: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-      }
-    </style>
-  </head>
-  <body class="bg-background text-on-surface">
-    <!-- SideNavBar (Shared Component) -->
-    <aside
-      class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50"
-    >
-      <div class="p-8">
-        <h1
-          class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope"
-        >
-          Luminous
-        </h1>
-        <p class="font-manrope text-sm tracking-tight text-slate-500">
-          Energy Intelligence
-        </p>
-      </div>
-      <nav class="flex-1 px-4 space-y-2">
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="/"
-        >
-          <span class="material-symbols-outlined">dashboard</span>
-          Acceuil
-        </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="#"
-        >
-          <span class="material-symbols-outlined">psychology</span>
-          Analyse IA
-        </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="/optimisation"
-        >
-          <span class="material-symbols-outlined">lightbulb</span>
-          Optimisation
-        </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="#"
-        >
-          <span class="material-symbols-outlined">wb_sunny</span>
-          Météo
-        </a>
-      </nav>
-      <div class="px-4 py-8 border-t border-slate-200/50">
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="#"
-        >
-          <span class="material-symbols-outlined">settings</span>
-          Settings
-        </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
-          href="#"
-        >
-          <span class="material-symbols-outlined">help_outline</span>
-          Support
-        </a>
-        <div class="mt-8 px-4 flex items-center gap-3">
-          <div
-            class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden"
-          >
-            <img
-              class="w-full h-full object-cover"
-              data-alt="professional portrait of a homeowner in a bright sunlit kitchen looking confident"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGucaNg6F982UwC8nmOBjIzdplQ-LmU_xv07cpAv3MYPtu5cr5ePpL6GG2V4QSMXXfRV-3WhDYErbkwguv7o1_n7_0zMNJCfMYddtjNKbm5ROupWegjrS5dzY3Q42uzF6YT777WEaKSBS9SEmK3qDsLbApqkziD8RHeCffxYK3qe3jbhznrMDLIRZ51P4sUtju5MrnrkEDx2nU-Nt5tuTpLoiLM490XTIQlWt5IC15c0kWOeYWU3bKDDz8_WQio9zFQgYxfNXxNCSc"
-            />
-          </div>
-          <div>
-            <p class="text-xs font-bold text-on-surface">Alex River</p>
-            <p class="text-[10px] text-on-surface-variant">Premium Plan</p>
-          </div>
-        </div>
-      </div>
-    </aside>
-    <!-- TopNavBar (Shared Component) -->
-    <header
-        class="flex justify-between items-center w-full px-8 pl-[270px] py-4 sticky top-0 z-100 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none transition-all"
-      >
-        <div class="flex items-center gap-4">
-          <h2
-            class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight"
-          >
-            The Living Equilibrium
-          </h2>
-          <div class="flex items-center gap-2">
-            <div
-              class="w-2 h-2 rounded-full bg-gray-400"
-              id="connectionIndicator"
-            ></div>
-            <span
-              class="text-xs font-medium text-gray-600"
-              id="connectionStatus"
-              >Connexion...</span
-            >
-          </div>
-        </div>
-        <div class="flex items-center gap-6">
-          <div class="relative group">
-            <input
-              class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body"
-              placeholder="Search insights..."
-              type="text"
-            />
-            <span
-              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm"
-              >search</span
-            >
-          </div>
-          <div class="flex items-center gap-4 text-on-surface-variant">
-            <button class="hover:opacity-80 transition-all relative">
-              <span class="material-symbols-outlined">notifications</span>
-              <span
-                class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"
-              ></span>
-            </button>
-            <button class="hover:opacity-80 transition-all">
-              <span class="material-symbols-outlined">account_circle</span>
-            </button>
-          </div>
-        </div>
-      </header>
-    <main class="ml-64 p-8 max-w-7xl mx-auto space-y-8">
-      <!-- Header & Range Selector -->
-      <section
-        class="flex flex-col md:flex-row md:items-end justify-between gap-4"
-      >
-        <div>
-          <p
-            class="text-primary font-semibold tracking-wider uppercase text-xs mb-1"
-          >
-            Performance Intelligence
-          </p>
-          <h2 class="text-4xl font-extrabold tracking-tight font-headline">
-            Analyse IA
-          </h2>
-        </div>
-      </section>
-      <!-- Section 3: Raisonnement de l'IA Décisionnelle -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
-      <h3 class="headline-sm text-on-surface-variant font-semibold mb-8 flex items-center gap-2">
-      <span class="material-symbols-outlined text-primary">analytics</span> Actions du Modèle
-          </h3>
-      <div class="relative space-y-8">
-      <!-- Timeline vertical line -->
-      <div class="absolute left-6 top-2 bottom-2 w-0.5 bg-surface-container-highest"></div>
-      <!-- Timeline Items -->
-      <div class="relative flex items-start gap-8 group">
-      <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
-      <span class="material-symbols-outlined text-primary">energy_savings_leaf</span>
-      </div>
-      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
-      <div class="flex items-center justify-between mb-2">
-      <h4 class="font-bold text-on-surface font-headline">Source Active :<span class="font-bold text-primary " id="activeSourceString"> Solaire privilégié</span> </h4>
-      <span class="text-[10px] font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-full uppercase tracking-tighter">Current Status</span>
-      </div>
-      <p class="text-sm text-on-surface-variant leading-relaxed" id="activeSourceExp">
-       Le niveau de batterie est supérieur à 80% et l'ensoleillement actuel est optimal (&gt; 800W/m²). L'excédent de production est réinjecté pour compenser les pics de consommation futurs.
-                      </p>
-      </div>
-      </div>
-      <div class="relative flex items-start gap-8 group">
-      <div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
-      <span class="material-symbols-outlined text-tertiary">battery_charging_80</span>
-      </div>
-      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
-      <div class="flex items-center justify-between mb-2">
-      <h4 class="font-bold text-on-surface font-headline">État des batteries: <span class="font-bold text-secondary" id="battString"> Passage sur Réseau SBEE</span></h4>
-      <span class="text-[10px] font-bold text-tertiary px-2 py-0.5 bg-tertiary/10 rounded-full uppercase tracking-tighter">Forecast Alert</span>
-      </div>
-      <p class="text-sm text-on-surface-variant leading-relaxed" id="battExp">
-       Prévu à 18h00. L'IA a détecté une baisse de production précoce. La batterie est préservée (Santé: 98.2%) pour la pointe domestique de 20h.
-                      </p>
-      </div>
-      </div>
-      <div class="relative flex items-start gap-8 group">
-      <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
-      <span class="material-symbols-outlined text-secondary">settings_suggest</span>
-      </div>
-      <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
-      <div class="flex items-center justify-between mb-2">
-      <h4 class="font-bold text-on-surface font-headline">Mode de fonctionnement: <span class="font-bold text-tertiary" id="modeString"> Mode Économie active</span>.</h4>
-      <span class="text-[10px] font-bold text-secondary px-2 py-0.5 bg-secondary/10 rounded-full uppercase tracking-tighter">Logic Applied</span>
-      </div>
-      <p class="text-sm text-on-surface-variant leading-relaxed" id="modeExp">
-       L'algorithme Lumina privilégie une recharge lente pour maximiser la longévité des cellules et utilise l'arbitrage tarifaire pour réduire les coûts.
-                      </p>
-      </div>
-      </div>
-      </div>
-                <div class="hour-scroll flex p-1 bg-surface-container rounded-xl overflow-x-auto whitespace-nowrap mt-5">
-              <!-- Generate 24 hour slots: 0-1, 1-2, ..., 23-0 -->
-              <!-- We'll set the button for current hour (e.g., 14-15 as active example) -->
-              <!-- Replace with dynamic logic if needed -->
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                0-1
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                1-2
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                2-3
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                3-4
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                4-5
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                5-6
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                6-7
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                7-8
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                8-9
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                9-10
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                10-11
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-bold bg-surface-container-lowest text-primary shadow-sm">
-                11-12
-              </button> <!-- example active -->
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                12-13
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                13-14
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                14-15
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                15-16
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                16-17
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                17-18
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                18-19
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                19-20
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                20-21
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                21-22
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                22-23
-              </button>
-              <button class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
-                23-0
-              </button>
-          </div>
-      </section>
-      <!-- Section 1: Efficacité du Modèle de Production -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
-        <div class="flex justify-between items-start mb-8">
-          <div>
-            <h3 class="headline-sm text-on-surface-variant font-semibold">
-              Efficacité du Modèle de Production
-            </h3>
-            <p class="text-label-sm text-outline">
-              Analyse comparative entre les prévisions météo et le rendement
-              réel des panneaux
-            </p>
-          </div>
-          <div class="flex gap-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-primary"></span>
-              <span class="text-xs font-medium text-on-surface-variant"
-                >Production Réelle</span
-              >
-            </div>
-            <div class="flex items-center gap-2">
-              <span
-                class="w-3 h-3 rounded-full bg-primary/40 border border-primary"
-              ></span>
-              <span class="text-xs font-medium text-on-surface-variant"
-                >Production Prédite</span
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Chart Placeholder with Editorial Style -->
-          <div class="relative h-[450px] w-full mt-8">
-            <canvas width="950" height="380" id="consoProdGraph" ></canvas>
-          </div>
-        </div>
-        
-      </section>
-      <!-- Section 2: Précision de la Consommation IA -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
-        <div class="flex justify-between items-start mb-8">
-          <div>
-            <h3 class="headline-sm text-on-surface-variant font-semibold">
-              Précision de la Consommation IA
-            </h3>
-            <p class="text-label-sm text-outline">
-              Modélisation des habitudes de vie vs consommation réelle mesurée
-            </p>
-          </div>
-          <div class="flex gap-4">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-secondary"></span>
-              <span class="text-xs font-medium text-on-surface-variant"
-                >Consommation Réelle</span
-              >
-            </div>
-            <div class="flex items-center gap-2">
-              <span
-                class="w-3 h-3 rounded-full bg-secondary/40 border border-secondary"
-              ></span>
-              <span class="text-xs font-medium text-on-surface-variant"
-                >Consommation Prédite</span
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Chart Placeholder for Consumption -->
-        <div class="relative h-[450px] w-full mt-8">
-          <canvas width="950" height="380" id="consoGraph" ></canvas>
-        </div>
-      </section>
-
-      <!-- New Section: Battery Charge Evolution -->
-      <section
-        class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm space-y-8"
-      >
-        <div>
-          <div class="flex justify-between items-start mb-8">
-            <div>
-              <h3 class="headline-sm text-on-surface-variant font-semibold">
-                Évolution de la Charge Batterie
-              </h3>
-              <p class="text-label-sm text-outline">
-                État de charge sur les dernières 24 heures en temps réel
-              </p>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-tertiary"></span>
-              <span class="text-xs font-medium text-on-surface-variant"
-                >Niveau de Charge (%)</span
-              >
-            </div>
-          </div>
-          <div class="relative h-[450px] w-full mt-8">
-            <canvas width="950" height="380" id="battGraph" ></canvas>
-          </div>
-        </div>
-        <!-- IA Longevity Impact Text Block -->
-        <div
-          class="bg-tertiary-fixed/30 p-8 rounded-2xl border border-tertiary-fixed/50"
-        >
-          <div class="flex items-center gap-3 mb-4">
-            <span class="material-symbols-outlined text-tertiary"
-              >verified</span
-            >
-            <h4 class="font-bold text-tertiary font-headline">
-              Impact IA sur la Longévité
-            </h4>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <p class="text-on-surface-variant text-sm leading-relaxed">
-              L'algorithme de gestion intelligente Lumina optimise dynamiquement
-              les cycles de charge pour maximiser la durée de vie de vos
-              composants. En évitant les décharges profondes (&lt;20%) et en
-              régulant la vitesse de charge en fonction des pics de température,
-              l'IA réduit l'usure chimique des cellules. Cette stratégie
-              proactive permet de prolonger le cycle de vie de la batterie de
-              <span class="font-bold text-tertiary">35%</span> par rapport à un
-              cycle de gestion standard.
-            </p>
-            <div class="flex gap-4"><div class="flex flex-col gap-4 w-full">
-<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
-<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
-<span class="material-symbols-outlined text-tertiary">history</span>
-</div>
-<div>
-<p class="text-[10px] font-bold text-outline uppercase mb-1">Cycle de vie estimé</p>
-<p class="text-2xl font-black text-on-surface font-headline">12.5 <span class="text-sm font-medium">ans</span></p>
-</div>
-</div>
-<div class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
-<div class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
-<span class="material-symbols-outlined text-primary">favorite</span>
-</div>
-<div>
-<p class="text-[10px] font-bold text-outline uppercase mb-1">Santé Batterie</p>
-<p class="text-2xl font-black text-primary font-headline">98.2%</p>
-</div>
-</div>
-</div></div>
-          </div>
-        </div>
-      </section>
-      <!-- Generation History -->
-      <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
-        <h3 class="headline-sm text-on-surface-variant font-semibold mb-8">
-          <div class="flex justify-between items-center w-full">
-            <span class="headline-sm text-on-surface-variant font-semibold"
-              >Generation History</span
-            >
-            <div
-              class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant/30"
-            >
-              <button
-                class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-surface-container-lowest text-primary shadow-sm"
-              >
-                Jour
-              </button>
-              <button
-                class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all"
-              >
-                Mois
-              </button>
-              <button
-                class="px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all"
-              >
-                Année
-              </button>
-            </div>
-          </div>
-        </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left">
-            <thead>
-              <tr
-                class="text-[10px] font-bold text-outline uppercase tracking-widest border-b border-surface-container"
-              >
-                <th class="pb-4 px-4">Date</th>
-                <th class="pb-4 px-4">Production</th>
-                <th class="pb-4 px-4">Consumption</th>
-                <th class="pb-4 px-4">Net Saving</th>
-                <th class="pb-4 px-4 text-right">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-surface-container">
-              <tr
-                class="hover:bg-surface-container-low transition-colors group"
-              >
-                <td class="py-6 px-4 font-medium">Oct 24, 2023</td>
-                <td class="py-6 px-4 text-secondary font-bold">24.5 kWh</td>
-                <td class="py-6 px-4 text-primary font-bold">12.1 kWh</td>
-                <td class="py-6 px-4 font-bold text-primary">$12.45</td>
-                <td class="py-6 px-4 text-right">
-                  <span
-                    class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-[10px] font-bold rounded-full"
-                    >OPTIMAL</span
-                  >
-                </td>
-              </tr>
-              <tr
-                class="hover:bg-surface-container-low transition-colors group"
-              >
-                <td class="py-6 px-4 font-medium">Oct 23, 2023</td>
-                <td class="py-6 px-4 text-secondary font-bold">18.2 kWh</td>
-                <td class="py-6 px-4 text-primary font-bold">15.8 kWh</td>
-                <td class="py-6 px-4 font-bold text-primary">$8.20</td>
-                <td class="py-6 px-4 text-right">
-                  <span
-                    class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed text-[10px] font-bold rounded-full"
-                    >BALANCED</span
-                  >
-                </td>
-              </tr>
-              <tr
-                class="hover:bg-surface-container-low transition-colors group"
-              >
-                <td class="py-6 px-4 font-medium">Oct 22, 2023</td>
-                <td class="py-6 px-4 text-secondary font-bold">5.4 kWh</td>
-                <td class="py-6 px-4 text-primary font-bold">19.2 kWh</td>
-                <td class="py-6 px-4 font-bold text-outline-variant">-$2.10</td>
-                <td class="py-6 px-4 text-right">
-                  <span
-                    class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed text-[10px] font-bold rounded-full"
-                    >GRID HEAVY</span
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-    <!-- Contextual FAB for quick actions -->
-    <div class="fixed bottom-8 right-8 z-50">
-      <button
-        class="bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group relative"
-      >
-        <span class="material-symbols-outlined">download</span>
-        <!-- Tooltip -->
-        <span
-          class="absolute right-full mr-4 bg-inverse-surface text-inverse-on-surface text-xs py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
-          >Export CSV Report</span
-        >
-      </button>
-    </div>
-  </body>
-  <script>
-    let activeHourButton = null;
-    let currentWebSocketData = null;
-    
-    // Initialize with current hour at page load
-    function initializeCurrentHour() {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const container = document.querySelector('.flex.p-1.bg-surface-container');
-      const buttons = container.querySelectorAll('button');
-      
-      let currentButton = null;
-      buttons.forEach((btn, index) => {
-        if (index === currentHour) {
-          currentButton = btn;
-        }
-      });
-      
-      if (currentButton) {
-        // Remove active style from all buttons
-        buttons.forEach(button => {
-          button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
-          button.classList.add('text-on-surface-variant', 'font-medium');
-        });
-        // Add active style to current hour
-        currentButton.classList.remove('text-on-surface-variant', 'font-medium');
-        currentButton.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
-        activeHourButton = currentHour;
-      }
+      },
+    };
+  </script>
+  <style>
+    .hour-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
     }
-    
-    //Make the hour buttons interactive: update active state on click
+
+    .hour-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .hour-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 10px;
+    }
+
+    .hour-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .hour-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+        "FILL" 0,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    .headline {
+      font-family: "Manrope", sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+  </style>
+</head>
+
+<body class="bg-background text-on-surface">
+  <!-- SideNavBar (Shared Component) -->
+  <aside class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+    <div class="p-8">
+      <h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">
+        Luminous
+      </h1>
+      <p class="font-manrope text-sm tracking-tight text-slate-500">
+        Gestion intelligente de l'energie
+      </p>
+    </div>
+    <nav class="flex-1 px-4 space-y-2">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="/">
+        <span class="material-symbols-outlined">dashboard</span>
+        Acceuil
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="#">
+        <span class="material-symbols-outlined">psychology</span>
+        Analyse IA
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="/optimisation">
+        <span class="material-symbols-outlined">lightbulb</span>
+        Optimisation
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="#">
+        <span class="material-symbols-outlined">wb_sunny</span>
+        Météo
+      </a>
+    </nav>
+    <div class="px-4 py-8 border-t border-slate-200/50">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="#">
+        <span class="material-symbols-outlined">settings</span>
+        Paramètres
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors duration-200 ease-in-out font-manrope text-sm tracking-tight"
+        href="#">
+        <span class="material-symbols-outlined">help_outline</span>
+        Aide
+      </a>
+    </div>
+  </aside>
+  <!-- TopNavBar (Shared Component) -->
+  <header
+    class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none transition-all">
+    <div class="flex items-center gap-4">
+      <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">
+        Luminous AI
+      </h2>
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-gray-400" id="connectionIndicator"></div>
+        <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">
+          Luminous AI
+        </h2>
+        <span class="text-xs font-medium text-gray-600" id="connectionStatus">Connexion...</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="relative group">
+        <input
+          class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body"
+          placeholder="Search insights..." type="text" />
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+      </div>
+      <div class="flex items-center gap-4 text-on-surface-variant">
+        <button class="hover:opacity-80 transition-all relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+        </button>
+        <button class="hover:opacity-80 transition-all">
+          <span class="material-symbols-outlined">account_circle</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <main class="ml-64 p-8 max-w-7xl mx-auto space-y-8">
+    <!-- Header & Range Selector -->
+    <section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <p class="text-primary font-semibold tracking-wider uppercase text-xs mb-1">
+          Performance Intelligence
+        </p>
+        <h2 class="text-4xl font-extrabold tracking-tight font-headline">
+          Analyse IA
+        </h2>
+      </div>
+    </section>
+    <!-- Section 3: Raisonnement de l'IA Décisionnelle -->
+    <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+      <h3 class="headline-sm text-on-surface-variant font-semibold mb-8 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">analytics</span> Actions du Modèle
+      </h3>
+      <div class="relative space-y-8">
+        <!-- Timeline vertical line -->
+        <div class="absolute left-6 top-2 bottom-2 w-0.5 bg-surface-container-highest"></div>
+        <!-- Timeline Items -->
+        <div class="relative flex items-start gap-8 group">
+          <div
+            class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-primary">energy_savings_leaf</span>
+          </div>
+          <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-bold text-on-surface font-headline">Source Active :<span class="font-bold text-primary "
+                  id="activeSourceString"> Solaire privilégié</span> </h4>
+              <span
+                class="text-[10px] font-bold text-primary px-2 py-0.5 bg-primary/10 rounded-full uppercase tracking-tighter">Current
+                Status</span>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed" id="activeSourceExp">
+              Le niveau de batterie est supérieur à 80% et l'ensoleillement actuel est optimal (&gt; 800W/m²).
+              L'excédent de production est réinjecté pour compenser les pics de consommation futurs.
+            </p>
+          </div>
+        </div>
+        <div class="relative flex items-start gap-8 group">
+          <div
+            class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-tertiary">battery_charging_80</span>
+          </div>
+          <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-bold text-on-surface font-headline">État des batteries: <span
+                  class="font-bold text-secondary" id="battString"> Passage sur Réseau SBEE</span></h4>
+              <span
+                class="text-[10px] font-bold text-tertiary px-2 py-0.5 bg-tertiary/10 rounded-full uppercase tracking-tighter">Forecast
+                Alert</span>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed" id="battExp">
+              Prévu à 18h00. L'IA a détecté une baisse de production précoce. La batterie est préservée (Santé: 98.2%)
+              pour la pointe domestique de 20h.
+            </p>
+          </div>
+        </div>
+        <div class="relative flex items-start gap-8 group">
+          <div
+            class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center shrink-0 z-10 border-4 border-surface-container-lowest group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-secondary">settings_suggest</span>
+          </div>
+          <div class="flex-1 bg-surface-container-low/50 p-6 rounded-2xl border border-outline-variant/20 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-bold text-on-surface font-headline">Mode de fonctionnement: <span
+                  class="font-bold text-tertiary" id="modeString"> Mode Économie active</span>.</h4>
+              <span
+                class="text-[10px] font-bold text-secondary px-2 py-0.5 bg-secondary/10 rounded-full uppercase tracking-tighter">Logic
+                Applied</span>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed" id="modeExp">
+              L'algorithme Lumina privilégie une recharge lente pour maximiser la longévité des cellules et utilise
+              l'arbitrage tarifaire pour réduire les coûts.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="hour-scroll flex p-1 bg-surface-container rounded-xl overflow-x-auto whitespace-nowrap mt-5">
+        <!-- Generate 24 hour slots: 0-1, 1-2, ..., 23-0 -->
+        <!-- We'll set the button for current hour (e.g., 14-15 as active example) -->
+        <!-- Replace with dynamic logic if needed -->
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          0-1
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          1-2
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          2-3
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          3-4
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          4-5
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          5-6
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          6-7
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          7-8
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          8-9
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          9-10
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          10-11
+        </button>
+        <button class="px-6 py-2 rounded-lg text-sm font-bold bg-surface-container-lowest text-primary shadow-sm">
+          11-12
+        </button> <!-- example active -->
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          12-13
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          13-14
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          14-15
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          15-16
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          16-17
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          17-18
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          18-19
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          19-20
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          20-21
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          21-22
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          22-23
+        </button>
+        <button
+          class="px-6 py-2 rounded-lg text-sm font-medium transition-all hover:bg-surface-container-high text-on-surface-variant">
+          23-0
+        </button>
+      </div>
+    </section>
+    <!-- Section 1: Efficacité du Modèle de Production -->
+    <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+      <div class="flex justify-between items-start mb-8">
+        <div>
+          <h3 class="headline-sm text-on-surface-variant font-semibold">
+            Efficacité du Modèle de Production
+          </h3>
+          <p class="text-label-sm text-outline">
+            Analyse comparative entre les prévisions météo et le rendement
+            réel des panneaux
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-primary"></span>
+            <span class="text-xs font-medium text-on-surface-variant">Production Réelle</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-primary/40 border border-primary"></span>
+            <span class="text-xs font-medium text-on-surface-variant">Production Prédite</span>
+          </div>
+        </div>
+      </div>
+      <!-- Chart Placeholder with Editorial Style -->
+      <div class="relative h-[450px] w-full mt-8">
+        <canvas width="950" height="380" id="consoProdGraph"></canvas>
+      </div>
+      </div>
+
+    </section>
+    <!-- Section 2: Précision de la Consommation IA -->
+    <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+      <div class="flex justify-between items-start mb-8">
+        <div>
+          <h3 class="headline-sm text-on-surface-variant font-semibold">
+            Précision de la Consommation IA
+          </h3>
+          <p class="text-label-sm text-outline">
+            Modélisation des habitudes de vie vs consommation réelle mesurée
+          </p>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-secondary"></span>
+            <span class="text-xs font-medium text-on-surface-variant">Consommation Réelle</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-secondary/40 border border-secondary"></span>
+            <span class="text-xs font-medium text-on-surface-variant">Consommation Prédite</span>
+          </div>
+        </div>
+      </div>
+      <!-- Chart Placeholder for Consumption -->
+      <div class="relative h-[450px] w-full mt-8">
+        <canvas width="950" height="380" id="consoGraph"></canvas>
+      </div>
+    </section>
+
+    <!-- New Section: Battery Charge Evolution -->
+    <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm space-y-8">
+      <div>
+        <div class="flex justify-between items-start mb-8">
+          <div>
+            <h3 class="headline-sm text-on-surface-variant font-semibold">
+              Évolution de la Charge Batterie
+            </h3>
+            <p class="text-label-sm text-outline">
+              État de charge sur les dernières 24 heures en temps réel
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-tertiary"></span>
+            <span class="text-xs font-medium text-on-surface-variant">Niveau de Charge (%)</span>
+          </div>
+        </div>
+        <div class="relative h-[450px] w-full mt-8">
+          <canvas width="950" height="380" id="battGraph"></canvas>
+        </div>
+      </div>
+      <!-- IA Longevity Impact Text Block -->
+      <div class="bg-tertiary-fixed/30 p-8 rounded-2xl border border-tertiary-fixed/50">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="material-symbols-outlined text-tertiary">verified</span>
+          <h4 class="font-bold text-tertiary font-headline">
+            Impact IA sur la Longévité
+          </h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            L'algorithme de gestion intelligente Lumina optimise dynamiquement
+            les cycles de charge pour maximiser la durée de vie de vos
+            composants. En évitant les décharges profondes (&lt;20%) et en
+            régulant la vitesse de charge en fonction des pics de température,
+            l'IA réduit l'usure chimique des cellules. Cette stratégie
+            proactive permet de prolonger le cycle de vie de la batterie de
+            <span class="font-bold text-tertiary">35%</span> par rapport à un
+            cycle de gestion standard.
+          </p>
+          <div class="flex gap-4">
+            <div class="flex flex-col gap-4 w-full">
+              <div
+                class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+                <div
+                  class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
+                  <span class="material-symbols-outlined text-tertiary">history</span>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold text-outline uppercase mb-1">Cycle de vie estimé</p>
+                  <p class="text-2xl font-black text-on-surface font-headline">12.5 <span
+                      class="text-sm font-medium">ans</span></p>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant/20">
+                <div
+                  class="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-lg border border-outline-variant/20 shrink-0">
+                  <span class="material-symbols-outlined text-primary">favorite</span>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold text-outline uppercase mb-1">Santé Batterie</p>
+                  <p class="text-2xl font-black text-primary font-headline">98.2%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Generation History -->
+    <section class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-sm">
+      <div class="flex justify-between mb-5">
+        <h3 class="headline-sm text-on-surface-variant font-semibold" text-[250px]>Archive</h3>
+        <div class="flex justify-end items-center w-full gap-3">
+          <div>
+            <div class="relative">
+              <input id="searchInput"
+                class="w-full bg-surface-container-high border-1 border-outline-variant/30 rounded-lg pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-body"
+                placeholder="Rechercher par date..." type="text" />
+              <span
+                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">
+                search
+              </span>
+            </div>
+          </div>
+          <div class="flex p-1 bg-surface-container-low rounded-lg border border-outline-variant/30">
+            <button id="bouttonJour"
+              class="period-btn px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-surface-container-lowest text-primary shadow-sm transition-all"
+              data-period="day">
+              Jour
+            </button>
+            <button id="bouttonMois"
+              class="period-btn px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all"
+              data-period="month">
+              Mois
+            </button>
+            <button id="bouttonAnnee"
+              class="period-btn px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high transition-all"
+              data-period="year">
+              Année
+            </button>
+          </div>
+          <button type="button" id="toggleTableBtn"
+            class="px-4 py-2 text-sm font-bold text-primary hover:opacity-80 transition-all flex items-center gap-2"
+            data-expanded="false">
+            Voir plus
+            <span class="material-symbols-outlined toggle-icon"
+              style="font-size: 20px; transition: transform 0.3s ease;">expand_more</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left" id="histab">
+          <thead>
+            <tr class="text-[10px] font-bold text-outline uppercase tracking-widest border-b border-surface-container">
+              <th class="pb-4 px-4">Date</th>
+              <th class="pb-4 px-4">Production</th>
+              <th class="pb-4 px-4">Consommation</th>
+              <th class="pb-4 px-4">Epargne (FCFA)</th>
+              <th class="pb-4 px-4 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container" id="tbody">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <!-- Contextual FAB for quick actions -->
+  <div class="fixed bottom-8 right-8 z-50">
+    <button
+      class="bg-primary text-on-primary w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group relative">
+      <span class="material-symbols-outlined">download</span>
+      <!-- Tooltip -->
+      <span
+        class="absolute right-full mr-4 bg-inverse-surface text-inverse-on-surface text-xs py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Export
+        CSV Report</span>
+    </button>
+  </div>
+</body>
+<script>
+  let activeHourButton = null;
+  let currentWebSocketData = null;
+  const tbody = document.getElementById("tbody");
+  // Initialize with current hour at page load
+  function initializeCurrentHour() {
+    const now = new Date();
+    const currentHour = now.getHours();
     const container = document.querySelector('.flex.p-1.bg-surface-container');
-    container.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn || !container.contains(btn)) return;
-      // Remove active style from all children
-      container.querySelectorAll('button').forEach(button => {
-        button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
-        button.classList.add('text-on-surface-variant', 'font-medium');
-      });
-      // Add active style to clicked button
-      btn.classList.remove('text-on-surface-variant', 'font-medium');
-      btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
-      activeHourButton = parseInt(btn.textContent.trim().split("-")[0]);
-      
-      // Update display with selected hour data
-      if (currentWebSocketData) {
-        updateExp(currentWebSocketData, activeHourButton);
+    const buttons = container.querySelectorAll('button');
+
+    let currentButton = null;
+    buttons.forEach((btn, index) => {
+      if (index === currentHour) {
+        currentButton = btn;
       }
     });
 
-    //connection au websocket
-    let ws;
-    let reconnectAttempts = 0;
-    const maxReconnectAttempts = 5;
-    const reconnectInterval = 3000; // 3 secondes
-    now = new Date();
-    //fonction pour tracer le graphe de la batterie
-      function graphic(){
-        const ctx = document.getElementById('battGraph').getContext('2d');
-        x_label = []
-        for(let i=0;i<=23;i++){
-          x_label.push(i)
-        }
-        globalThis.battGraphic =  new Chart(ctx, {
-            type: 'line', // type de graphique : bar, line, pie, etc.
-            data: {
-                  labels: x_label,
-                  datasets: [
-                    {
-                      label: 'Pourcentage',
-                      data: [],
-                      fill:true,
-                      tension: 0.5,
-                      pointRadius :0,
-                      gradient:{
-                        backgroundColor:{
-                          axis: 'x',
-                           colors: {
-                              0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
-                              50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
-                              100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
-                          }
-                        },
-                      },
-                      borderColor: '#5483F7',
-                      borderWidth: 3
-                    },
-                    ]
-            },
-            options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        }
-                    }
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: { size: 13, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            let valeur = parseFloat(context.raw).toFixed(2);
-                            return `${label}: ${valeur} %`;
-                        }
-                    }
+    if (currentButton) {
+      // Remove active style from all buttons
+      buttons.forEach(button => {
+        button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+        button.classList.add('text-on-surface-variant', 'font-medium');
+      });
+      // Add active style to current hour
+      currentButton.classList.remove('text-on-surface-variant', 'font-medium');
+      currentButton.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+      activeHourButton = currentHour;
+    }
+  }
+
+  //Make the hour buttons interactive: update active state on click
+  const container = document.querySelector('.flex.p-1.bg-surface-container');
+  container.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn || !container.contains(btn)) return;
+    // Remove active style from all children
+    container.querySelectorAll('button').forEach(button => {
+      button.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+      button.classList.add('text-on-surface-variant', 'font-medium');
+    });
+    // Add active style to clicked button
+    btn.classList.remove('text-on-surface-variant', 'font-medium');
+    btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-bold');
+    activeHourButton = parseInt(btn.textContent.trim().split("-")[0]);
+
+    // Update display with selected hour data
+    if (currentWebSocketData) {
+      updateExp(currentWebSocketData, activeHourButton);
+    }
+  });
+
+  //connection au websocket
+  const histab = document.getElementById('histab')
+  let ws;
+  let reconnectAttempts = 0;
+  const maxReconnectAttempts = 5;
+  const reconnectInterval = 3000; // 3 secondes
+  now = new Date();
+  //fonction pour tracer le graphe de la batterie
+  function graphic() {
+    const ctx = document.getElementById('battGraph').getContext('2d');
+    x_label = []
+    for (let i = 0; i <= 23; i++) {
+      x_label.push(i)
+    }
+    globalThis.battGraphic = new Chart(ctx, {
+      type: 'line', // type de graphique : bar, line, pie, etc.
+      data: {
+        labels: x_label,
+        datasets: [
+          {
+            label: 'Pourcentage',
+            data: [],
+            fill: true,
+            tension: 0.5,
+            pointRadius: 0,
+            gradient: {
+              backgroundColor: {
+                axis: 'x',
+                colors: {
+                  0: 'rgba(232, 235, 233, 0.2)',   // Pale Mist (Bottom/Min)
+                  50: 'rgba(149, 185, 154, 0.4)',  // Sage Green (Midpoint)
+                  100: 'rgba(0, 75, 28, 0.8)'      // Forest Green (Top/Line Max)
                 }
+              },
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    suggestedMax:100,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 },
-                        callback: function(value) {
-                            return value + 'h';
-                        }
-                    }
-                }
+            borderColor: '#5483F7',
+            borderWidth: 3
+          },
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false,
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              usePointStyle: true,
+              padding: 15,
+              font: {
+                size: 12,
+                weight: '500'
+              }
             }
-        }
-        });
-      }
-    graphic()
-    //traducteur du mode
-    function modeTrans(mode){
-      if(mode == "saving") return "Economie d'énergie";
-      else if(mode == "normal") return "Normal";
-      else return "Ultra economie d'énergie"
-    }
-    function activeSourceTrans(as){
-      if(as == 'solarPannel') return 'Panneaux solaires'
-      else if(as == 'sbee') return 'sbee'
-      else return 'batteries'
-    }
-    //fonction pour changer le contenu des explication
-    function updateExp(data, selectedHour = null){
-      const activeSourceString = document.getElementById("activeSourceString");
-      const activeSourceExp= document.getElementById("activeSourceExp");
-      const battString = document.getElementById("battString");
-      const battExp = document.getElementById("battExp");
-      const modeString = document.getElementById("modeString");
-      const modeExp = document.getElementById("modeExp");
-      
-      // Use selected hour if provided, otherwise use current hour
-      const now = new Date();
-      const hourToDisplay = selectedHour !== null ? selectedHour : now.getHours();
-      
-      activeSourceString.textContent = ` ${ activeSourceTrans(data["strategie"][hourToDisplay]["sourceActive"])}`.toUpperCase()
-      activeSourceExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["sourceActive"]
-      if(!data["activeSource"].includes('batt') && !data["strategie"][hourToDisplay]["chargerBatt"]){
-        //la source active n'est pas la batterie et la batterie ne se charge pas
-        battString.textContent = " INACTIVE";
-      }
-      else if(data["activeSource"].includes('batt')){
-        //la batterie est la source d'alimentation
-        battString.textContent = " DECHARGEMENT";
-      }
-      else if(data["strategie"][hourToDisplay]["chargerBatt"]){
-        battString.textContent = " CHARGEMENT";
-      }
-      battExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["chargerBatt"]
-
-      modeString.textContent =` ${modeTrans(data["strategie"][hourToDisplay]["mode"])}`.toUpperCase()
-      modeExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["mode"]
-    }
-    function updateConnectionStatus(status, message = "") {
-        const statusElement = document.getElementById("connectionStatus");
-        const indicatorElement = document.getElementById("connectionIndicator");
-
-        if (statusElement) {
-          statusElement.textContent = `${status}${message ? ": " + message : ""}`;
-        }
-
-        if (indicatorElement) {
-          // Supprimer toutes les classes de couleur
-          indicatorElement.classList.remove(
-            "bg-gray-400",
-            "bg-green-500",
-            "bg-yellow-500",
-            "bg-red-500",
-            "animate-pulse",
-          );
-
-          // Ajouter la couleur appropriée
-          if (status === "Connecté") {
-            indicatorElement.classList.add("bg-green-500");
-          } else if (status === "Connexion...") {
-            indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
-          } else {
-            indicatorElement.classList.add("bg-red-500");
+          },
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            padding: 12,
+            titleFont: { size: 13, weight: 'bold' },
+            bodyFont: { size: 12 },
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || '';
+                let valeur = parseFloat(context.raw).toFixed(2);
+                return `${label}: ${valeur} %`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            suggestedMax: 100,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)',
+              drawBorder: false
+            },
+            ticks: {
+              font: { size: 11 }
+            }
+          },
+          x: {
+            grid: {
+              display: false,
+              drawBorder: false
+            },
+            ticks: {
+              font: { size: 11 },
+              callback: function (value) {
+                return value + 'h';
+              }
+            }
           }
         }
       }
-    //afficher les graphes
-  class displayGraphic{
-    constructor(canvasElement, dataReel, dataPred, graphicType = 'production', label1 = 'Réelle', label2 = 'Prédite'){
+    });
+  }
+  graphic()
+  //traducteur du mode
+  function modeTrans(mode) {
+    if (mode == "saving") return "Economie d'énergie";
+    else if (mode == "normal") return "Normal";
+    else return "Ultra economie d'énergie"
+  }
+  function activeSourceTrans(as) {
+    if (as == 'solarPannel') return 'Panneaux solaires'
+    else if (as == 'sbee') return 'sbee'
+    else return 'batteries'
+  }
+  //fonction pour changer le contenu des explication
+  function updateExp(data, selectedHour = null) {
+    const activeSourceString = document.getElementById("activeSourceString");
+    const activeSourceExp = document.getElementById("activeSourceExp");
+    const battString = document.getElementById("battString");
+    const battExp = document.getElementById("battExp");
+    const modeString = document.getElementById("modeString");
+    const modeExp = document.getElementById("modeExp");
+
+    // Use selected hour if provided, otherwise use current hour
+    const now = new Date();
+    const hourToDisplay = selectedHour !== null ? selectedHour : now.getHours();
+
+    activeSourceString.textContent = ` ${activeSourceTrans(data["strategie"][hourToDisplay]["sourceActive"])}`.toUpperCase()
+    activeSourceExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["sourceActive"]
+    if (!data["activeSource"].includes('batt') && !data["strategie"][hourToDisplay]["chargerBatt"]) {
+      //la source active n'est pas la batterie et la batterie ne se charge pas
+      battString.textContent = " INACTIVE";
+    }
+    else if (data["activeSource"].includes('batt')) {
+      //la batterie est la source d'alimentation
+      battString.textContent = " DECHARGEMENT";
+    }
+    else if (data["strategie"][hourToDisplay]["chargerBatt"]) {
+      battString.textContent = " CHARGEMENT";
+    }
+    battExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["chargerBatt"]
+
+    modeString.textContent = ` ${modeTrans(data["strategie"][hourToDisplay]["mode"])}`.toUpperCase()
+    modeExp.textContent = data["analyse"]["interpretation"][hourToDisplay]["mode"]
+  }
+  function updateConnectionStatus(status, message = "") {
+    const statusElement = document.getElementById("connectionStatus");
+    const indicatorElement = document.getElementById("connectionIndicator");
+
+    if (statusElement) {
+      statusElement.textContent = `${status}${message ? ": " + message : ""}`;
+    }
+
+    if (indicatorElement) {
+      // Supprimer toutes les classes de couleur
+      indicatorElement.classList.remove(
+        "bg-gray-400",
+        "bg-green-500",
+        "bg-yellow-500",
+        "bg-red-500",
+        "animate-pulse",
+      );
+
+      // Ajouter la couleur appropriée
+      if (status === "Connecté") {
+        indicatorElement.classList.add("bg-green-500");
+      } else if (status === "Connexion...") {
+        indicatorElement.classList.add("bg-yellow-500", "animate-pulse");
+      } else {
+        indicatorElement.classList.add("bg-red-500");
+      }
+    }
+  }
+  //afficher les graphes
+  class displayGraphic {
+    constructor(canvasElement, dataReel, dataPred, graphicType = 'production', label1 = 'Réelle', label2 = 'Prédite') {
       this.canvasElement = canvasElement;
       this.dataReel = dataReel || [];
       this.dataPred = dataPred || [];
@@ -880,377 +834,607 @@
       this.label2 = label2;
       this.chart = null;
     }
-  
-  // Conversion correcte hex -> RGB
-  hexToRgb(hex) {
-    const cleanHex = hex.replace('#', '');
-    const r = parseInt(cleanHex.substring(0, 2), 16);
-    const g = parseInt(cleanHex.substring(2, 4), 16);
-    const b = parseInt(cleanHex.substring(4, 6), 16);
-    return { r, g, b };
-  }
-  
-  // Générer les labels des heures (0-23)
-  generateHourLabels(){
-    return Array.from({length: 24}, (_, i) => i);
-  }
-  
-  // Assurer que les données ont 24 éléments (une valeur par heure)
-  ensureDataLength(data){
-    const dataArray = Array.isArray(data) ? data : [];
-    while(dataArray.length < 24){
-      dataArray.push(0);
+
+    // Conversion correcte hex -> RGB
+    hexToRgb(hex) {
+      const cleanHex = hex.replace('#', '');
+      const r = parseInt(cleanHex.substring(0, 2), 16);
+      const g = parseInt(cleanHex.substring(2, 4), 16);
+      const b = parseInt(cleanHex.substring(4, 6), 16);
+      return { r, g, b };
     }
-    return dataArray.slice(0, 24);
-  }
-  
-  // Afficher le graphe
-  display(){
-    if(!this.canvasElement){
-      console.error('Canvas element not found');
-      return;
+
+    // Générer les labels des heures (0-23)
+    generateHourLabels() {
+      return Array.from({ length: 24 }, (_, i) => i);
     }
-    
-    const ctx = this.canvasElement.getContext('2d');
-    const labels = this.generateHourLabels();
-    
-    // Assurer que les données ont la bonne taille
-    const data1 = this.dataReel;
-    const data2 = this.dataPred;
-    
-    // Déterminer les couleurs selon le type de graphe
-    let borderColor1, bgGradientColors1, borderColor2, bgGradientColors2;
-    
-    if(this.graphicType === 'production'){
-      borderColor1 = '#0d631b';  // Vert foncé
-      bgGradientColors1 = {
-        0: 'rgba(232, 235, 233, 0.1)',
-        50: 'rgba(149, 185, 154, 0.3)',
-        100: 'rgba(13, 99, 27, 0.4)'
-      };
-      borderColor2 = '#2e7d32';  // Vert moyen
-      bgGradientColors2 = {
-        0: 'rgba(232, 235, 233, 0.1)',
-        50: 'rgba(149, 185, 154, 0.3)',
-        100: 'rgba(13, 99, 27, 0.4)'
-      };
-    } else {
-      borderColor1 = '#795900';  // Marron (consommation réelle)
-      bgGradientColors1 = {
-        0: 'rgba(232, 235, 233, 0.1)',
-        50: 'rgba(149, 185, 154, 0.3)',
-        100: 'rgba(13, 99, 27, 0.4)'
-      };
-      borderColor2 = '#f8bd2a';  // Jaune (consommation prédite)
-      bgGradientColors2 = {
-        0: 'rgba(232, 235, 233, 0.1)',
-        50: 'rgba(149, 185, 154, 0.3)',
-        100: 'rgba(13, 99, 27, 0.4)'
-      };
+
+    // Assurer que les données ont 24 éléments (une valeur par heure)
+    ensureDataLength(data) {
+      const dataArray = Array.isArray(data) ? data : [];
+      while (dataArray.length < 24) {
+        dataArray.push(0);
+      }
+      return dataArray.slice(0, 24);
     }
-    
-    // Conversion RGB des couleurs
-    const rgb1 = this.hexToRgb(borderColor1);
-    const rgb2 = this.hexToRgb(borderColor2);
-    
-    // Supprimer l'ancien graphe s'il existe
-    if(this.chart){
-      this.chart.destroy();
-    }
-    
-    // Créer le nouveau graphe
-    this.chart = new Chart(ctx, {
+
+    // Afficher le graphe
+    display() {
+      if (!this.canvasElement) {
+        console.error('Canvas element not found');
+        return;
+      }
+
+      const ctx = this.canvasElement.getContext('2d');
+      const labels = this.generateHourLabels();
+
+      // Assurer que les données ont la bonne taille
+      const data1 = this.dataReel;
+      const data2 = this.dataPred;
+
+      // Déterminer les couleurs selon le type de graphe
+      let borderColor1, bgGradientColors1, borderColor2, bgGradientColors2;
+
+      if (this.graphicType === 'production') {
+        borderColor1 = '#0d631b';  // Vert foncé
+        bgGradientColors1 = {
+          0: 'rgba(232, 235, 233, 0.1)',
+          50: 'rgba(149, 185, 154, 0.3)',
+          100: 'rgba(13, 99, 27, 0.4)'
+        };
+        borderColor2 = '#2e7d32';  // Vert moyen
+        bgGradientColors2 = {
+          0: 'rgba(232, 235, 233, 0.1)',
+          50: 'rgba(149, 185, 154, 0.3)',
+          100: 'rgba(13, 99, 27, 0.4)'
+        };
+      } else {
+        borderColor1 = '#795900';  // Marron (consommation réelle)
+        bgGradientColors1 = {
+          0: 'rgba(232, 235, 233, 0.1)',
+          50: 'rgba(149, 185, 154, 0.3)',
+          100: 'rgba(13, 99, 27, 0.4)'
+        };
+        borderColor2 = '#f8bd2a';  // Jaune (consommation prédite)
+        bgGradientColors2 = {
+          0: 'rgba(232, 235, 233, 0.1)',
+          50: 'rgba(149, 185, 154, 0.3)',
+          100: 'rgba(13, 99, 27, 0.4)'
+        };
+      }
+
+      // Conversion RGB des couleurs
+      const rgb1 = this.hexToRgb(borderColor1);
+      const rgb2 = this.hexToRgb(borderColor2);
+
+      // Supprimer l'ancien graphe s'il existe
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
+      // Créer le nouveau graphe
+      this.chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels,
-            datasets: [
-              {
-                label: `${this.label1}`,
-                data: data1,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                borderColor: borderColor1,
-                borderWidth: 3,
-                backgroundColor: `rgba(${rgb1.r}, ${rgb1.g}, ${rgb1.b}, 0.1)`,
-              },
-              {
-                label: `${this.label2}`,
-                data: data2,
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                borderColor: borderColor2,
-                borderWidth: 3,
-                borderDash: [5, 5],
-                backgroundColor: `rgba(${rgb2.r}, ${rgb2.g}, ${rgb2.b}, 0.05)`,
-              }
-            ]
+          labels: labels,
+          datasets: [
+            {
+              label: `${this.label1}`,
+              data: data1,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 0,
+              borderColor: borderColor1,
+              borderWidth: 3,
+              backgroundColor: `rgba(${rgb1.r}, ${rgb1.g}, ${rgb1.b}, 0.1)`,
+            },
+            {
+              label: `${this.label2}`,
+              data: data2,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 0,
+              borderColor: borderColor2,
+              borderWidth: 3,
+              borderDash: [5, 5],
+              backgroundColor: `rgba(${rgb2.r}, ${rgb2.g}, ${rgb2.b}, 0.05)`,
+            }
+          ]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 15,
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        }
-                    }
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false,
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    titleFont: { size: 13, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.dataset.label || '';
-                            let valeur = parseFloat(context.raw).toFixed(2);
-                            return `${label}: ${valeur} kW`;
-                        }
-                    }
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 15,
+                font: {
+                  size: 12,
+                  weight: '500'
                 }
+              }
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 }
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: { size: 11 },
-                        callback: function(value) {
-                            return value + 'h';
-                        }
-                    }
+            tooltip: {
+              enabled: true,
+              mode: 'index',
+              intersect: false,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: { size: 13, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: function (context) {
+                  let label = context.dataset.label || '';
+                  let valeur = parseFloat(context.raw).toFixed(2);
+                  return `${label}: ${valeur} kW`;
                 }
+              }
             }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: false
+              },
+              ticks: {
+                font: { size: 11 }
+              }
+            },
+            x: {
+              grid: {
+                display: false,
+                drawBorder: false
+              },
+              ticks: {
+                font: { size: 11 },
+                callback: function (value) {
+                  return value + 'h';
+                }
+              }
+            }
+          }
         }
+      });
+    }
+  }
+  // Variables globales pour les instances des graphes
+  let productionChart = null;
+  let consumptionChart = null;
+  let lastGraphicData = { prod: [], conso: [], prodPred: [], consoPred: [] };
+  let lastBattGraphicData = []
+  // Fonction pour comparer deux tableaux (convertit aussi les données en nombres)
+  function areArraysEqual(arr1, arr2) {
+    // Convertir en tableaux s'il y a lieu
+    const data1 = Array.isArray(arr1) ? arr1 : [];
+    const data2 = Array.isArray(arr2) ? arr2 : [];
+
+    if (data1.length !== data2.length) return false;
+
+    // Comparer les valeurs avec une petite tolérance pour les nombres
+    return data1.every((val, idx) => {
+      const v1 = parseFloat(val) || 0;
+      const v2 = parseFloat(data2[idx]) || 0;
+      return Math.abs(v1 - v2) < 0.0001; // Tolérance pour les imprécisions flottantes
     });
   }
-}
-    // Variables globales pour les instances des graphes
-    let productionChart = null;
-    let consumptionChart = null;
-    let lastGraphicData = { prod: [], conso: [], prodPred: [], consoPred: [] };
-    let lastBattGraphicData = []
-    // Fonction pour comparer deux tableaux (convertit aussi les données en nombres)
-    function areArraysEqual(arr1, arr2) {
-        // Convertir en tableaux s'il y a lieu
-        const data1 = Array.isArray(arr1) ? arr1 : [];
-        const data2 = Array.isArray(arr2) ? arr2 : [];
-        
-        if (data1.length !== data2.length) return false;
-        
-        // Comparer les valeurs avec une petite tolérance pour les nombres
-        return data1.every((val, idx) => {
-            const v1 = parseFloat(val) || 0;
-            const v2 = parseFloat(data2[idx]) || 0;
-            return Math.abs(v1 - v2) < 0.0001; // Tolérance pour les imprécisions flottantes
-        });
-    }
-    
-    // Fonction pour initialiser et mettre à jour les graphes
-    function updateGraphics(data) {
-        try {
-            // Extraire les données réelles du graphicData et les convertir en nombres
-            const graphicData = data.graphicData || { prod: [], conso: [] };
-            const prodReal = (Array.isArray(graphicData.prod) ? graphicData.prod : []).map(val => parseFloat(val) || 0);
-            const consoReal = (Array.isArray(graphicData.conso) ? graphicData.conso : []).map(val => parseFloat(val) || 0);
-            // Extraire les données prédites des prédictions
-            const prodPred = data.prediction?.production?.hourly_predictions?.map(p => parseFloat(p.prediction_wh) || 0) || [];
-            
-            // Gérer les données de consommation prédite - peuvent être tableau ou autre format
-            let consoPred = [];
-            consoPred = data.prediction.consommation.map(val => val["prediction de consommation"]);
-            
-            // Vérifier si les données ont changé
-            const prodChanged = !areArraysEqual(lastGraphicData.prod, prodReal) || !areArraysEqual(lastGraphicData.prodPred, prodPred);
-            const consoChanged = !areArraysEqual(lastGraphicData.conso, consoReal) || !areArraysEqual(lastGraphicData.consoPred, consoPred);
-            
-            // Mettre à jour le graphe de production si les données ont changé
-            if (prodChanged) {
-                const canvasProd = document.getElementById('consoProdGraph');
-                if (canvasProd) {
-                    if (!productionChart) {
-                        productionChart = new displayGraphic(
-                            canvasProd,
-                            prodReal,
-                            prodPred,
-                            'production',
-                            'Production Réelle',
-                            'Production Prédite'
-                        );
-                    } else {
-                        productionChart.dataReel = prodReal;
-                        productionChart.dataPred = prodPred;
-                    }
-                    productionChart.display();
-                }
-                lastGraphicData.prod = [...prodReal];
-                lastGraphicData.prodPred = [...prodPred];
-            }
-            
-            // Mettre à jour le graphe de consommation si les données ont changé
-            if (consoChanged) {
-                const canvasConso = document.getElementById('consoGraph');
-                if (canvasConso) {
-                    if (!consumptionChart) {
-                        consumptionChart = new displayGraphic(
-                            canvasConso,
-                            consoReal,
-                            consoPred,
-                            'consumption',
-                            'Consommation Réelle',
-                            'Consommation Prédite'
-                        );
-                    } else {
-                        consumptionChart.dataReel = consoReal;
-                        consumptionChart.dataPred = consoPred;
-                    }
-                    consumptionChart.display();
-                }
-                lastGraphicData.conso = [...consoReal];
-                lastGraphicData.consoPred = [...consoPred];
-            }
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour des graphes:', error);
-        }
-    }
-    // fonction pour mettre a jours le graphe de la batterie
-    function updateBattGraph(data){
-      const now = new Date
-      graphicData = data["graphicData"]["batt"];
-      if(!areArraysEqual(lastBattGraphicData,graphicData)){
-          globalThis.battGraphic.data.datasets[0].data = graphicData;
-          globalThis.battGraphic.data.datasets[0].data.push(data['battPercentage']) 
-      }
-      if(data["battPercentage"] !== globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length-1]){
-        globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length-1] = data["battPercentage"]
-      }
-      globalThis.battGraphic.update()
-    }
-    
-    //connection websocket
-    function connectWebSocket() {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          return; // Déjà connecté
-        }
 
-        console.log(
-          `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
-        );
-        ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
+  // Fonction pour initialiser et mettre à jour les graphes
+  function updateGraphics(data) {
+    try {
+      // Extraire les données réelles du graphicData et les convertir en nombres
+      const graphicData = data.graphicData || { prod: [], conso: [] };
+      const prodReal = (Array.isArray(graphicData.prod) ? graphicData.prod : []).map(val => parseFloat(val) || 0);
+      const consoReal = (Array.isArray(graphicData.conso) ? graphicData.conso : []).map(val => parseFloat(val) || 0);
+      // Extraire les données prédites des prédictions
+      const prodPred = data.prediction?.production?.hourly_predictions?.map(p => parseFloat(p.prediction_wh) || 0) || [];
 
-        ws.onopen = () => {
-          console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
-          updateConnectionStatus("Connecté");
-          reconnectAttempts = 0; // Reset des tentatives en cas de succès
-        };
-        ws.onmessage = (event) => {
-          const data = JSON.parse(event.data);
-          console.log(data)
-          currentWebSocketData = data; // Store data for later use
-          updateExp(data, activeHourButton)
-          updateGraphics(data); // Mettre à jour les graphes avec les nouvelles données
-          updateBattGraph(data);
-        };
+      // Gérer les données de consommation prédite - peuvent être tableau ou autre format
+      let consoPred = [];
+      consoPred = data.prediction.consommation.map(val => val["prediction de consommation"]);
 
-        ws.onerror = (error) => {
-          console.error("WebSocket erreur:", error);
-        };
+      // Vérifier si les données ont changé
+      const prodChanged = !areArraysEqual(lastGraphicData.prod, prodReal) || !areArraysEqual(lastGraphicData.prodPred, prodPred);
+      const consoChanged = !areArraysEqual(lastGraphicData.conso, consoReal) || !areArraysEqual(lastGraphicData.consoPred, consoPred);
 
-        ws.onclose = (event) => {
-          console.warn("WebSocket fermé:", event);
-          updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
-          // Tentative de reconnexion automatique
-
-          if (reconnectAttempts < maxReconnectAttempts) {
-            reconnectAttempts++;
-            updateConnectionStatus(
-              "Connexion...",
-              `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
+      // Mettre à jour le graphe de production si les données ont changé
+      if (prodChanged) {
+        const canvasProd = document.getElementById('consoProdGraph');
+        if (canvasProd) {
+          if (!productionChart) {
+            productionChart = new displayGraphic(
+              canvasProd,
+              prodReal,
+              prodPred,
+              'production',
+              'Production Réelle',
+              'Production Prédite'
             );
-            console.log(`Reconnexion dans ${reconnectInterval}ms...`);
-            setTimeout(connectWebSocket, reconnectInterval);
           } else {
-            updateConnectionStatus(
-              "Échec",
-              "Nombre maximum de tentatives atteint",
-            );
-            console.error(
-              "Nombre maximum de tentatives de reconnexion atteint",
-            );
+            productionChart.dataReel = prodReal;
+            productionChart.dataPred = prodPred;
           }
-        };
-      }
-      setInterval(() => {
-        if (
-          !ws ||
-          ws.readyState === WebSocket.CLOSED ||
-          ws.readyState === WebSocket.CLOSING
-        ) {
-          console.log(
-            "Connexion WebSocket perdue, tentative de reconnexion...",
-          );
-          connectWebSocket();
+          productionChart.display();
         }
-      }, 10000); // Vérifier toutes les 10 secondes
-      
-      // Initialize current hour on page load
-      initializeCurrentHour();
-      
-      // Initialiser les graphes avec des données vides
-      const canvasProd = document.getElementById('consoProdGraph');
-      const canvasConso = document.getElementById('consoGraph');
-      
-      if (canvasProd) {
-        productionChart = new displayGraphic(
-            canvasProd,
-            Array(24).fill(0),
-            Array(24).fill(0),
-            'production',
-            'Production Réelle',
-            'Production Prédite'
-        );
-        productionChart.display();
+        lastGraphicData.prod = [...prodReal];
+        lastGraphicData.prodPred = [...prodPred];
       }
-      
-      if (canvasConso) {
-        consumptionChart = new displayGraphic(
-            canvasConso,
-            Array(24).fill(0),
-            Array(24).fill(0),
-            'consumption',
-            'Consommation Réelle',
-            'Consommation Prédite'
-        );
-        consumptionChart.display();
+
+      // Mettre à jour le graphe de consommation si les données ont changé
+      if (consoChanged) {
+        const canvasConso = document.getElementById('consoGraph');
+        if (canvasConso) {
+          if (!consumptionChart) {
+            consumptionChart = new displayGraphic(
+              canvasConso,
+              consoReal,
+              consoPred,
+              'consumption',
+              'Consommation Réelle',
+              'Consommation Prédite'
+            );
+          } else {
+            consumptionChart.dataReel = consoReal;
+            consumptionChart.dataPred = consoPred;
+          }
+          consumptionChart.display();
+        }
+        lastGraphicData.conso = [...consoReal];
+        lastGraphicData.consoPred = [...consoPred];
       }
-      
-      connectWebSocket()
-  </script>
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des graphes:', error);
+    }
+  }
+  // fonction pour mettre a jours le graphe de la batterie
+  function updateBattGraph(data) {
+    const now = new Date
+    graphicData = data["graphicData"]["batt"];
+    if (!areArraysEqual(lastBattGraphicData, graphicData)) {
+      globalThis.battGraphic.data.datasets[0].data = graphicData;
+      globalThis.battGraphic.data.datasets[0].data.push(data['battPercentage'])
+    }
+    if (data["battPercentage"] !== globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length - 1]) {
+      globalThis.battGraphic.data.datasets[0].data[globalThis.battGraphic.data.datasets[0].data.length - 1] = data["battPercentage"]
+    }
+    globalThis.battGraphic.update()
+  }
+
+  //connection websocket
+  function connectWebSocket() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      return; // Déjà connecté
+    }
+
+    console.log(
+      `Tentative de connexion WebSocket (${reconnectAttempts + 1}/${maxReconnectAttempts})`,
+    );
+    ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
+    //ws = new WebSocket("wss://pegboard-untracked-crawfish.ngrok-free.dev/ws/energy");
+
+    ws.onopen = () => {
+      console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
+      updateConnectionStatus("Connecté");
+      reconnectAttempts = 0; // Reset des tentatives en cas de succès
+    };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      currentWebSocketData = data; // Store data for later use
+      updateExp(data, activeHourButton)
+      updateGraphics(data); // Mettre à jour les graphes avec les nouvelles données
+      updateBattGraph(data);
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket erreur:", error);
+    };
+
+    ws.onclose = (event) => {
+      console.warn("WebSocket fermé:", event);
+      updateConnectionStatus("Déconnecté", `Code: ${event.code}`);
+      // Tentative de reconnexion automatique
+
+      if (reconnectAttempts < maxReconnectAttempts) {
+        reconnectAttempts++;
+        updateConnectionStatus(
+          "Connexion...",
+          `Tentative ${reconnectAttempts}/${maxReconnectAttempts}`,
+        );
+        console.log(`Reconnexion dans ${reconnectInterval}ms...`);
+        setTimeout(connectWebSocket, reconnectInterval);
+      } else {
+        updateConnectionStatus(
+          "Échec",
+          "Nombre maximum de tentatives atteint",
+        );
+        console.error(
+          "Nombre maximum de tentatives de reconnexion atteint",
+        );
+      }
+    };
+  }
+  setInterval(() => {
+    if (
+      !ws ||
+      ws.readyState === WebSocket.CLOSED ||
+      ws.readyState === WebSocket.CLOSING
+    ) {
+      console.log(
+        "Connexion WebSocket perdue, tentative de reconnexion...",
+      );
+      connectWebSocket();
+    }
+  }, 10000); // Vérifier toutes les 10 secondes
+
+  // Initialize current hour on page load
+  initializeCurrentHour();
+
+  // Initialiser les graphes avec des données vides
+  const canvasProd = document.getElementById('consoProdGraph');
+  const canvasConso = document.getElementById('consoGraph');
+
+  if (canvasProd) {
+    productionChart = new displayGraphic(
+      canvasProd,
+      Array(24).fill(0),
+      Array(24).fill(0),
+      'production',
+      'Production Réelle',
+      'Production Prédite'
+    );
+    productionChart.display();
+  }
+
+  if (canvasConso) {
+    consumptionChart = new displayGraphic(
+      canvasConso,
+      Array(24).fill(0),
+      Array(24).fill(0),
+      'consumption',
+      'Consommation Réelle',
+      'Consommation Prédite'
+    );
+    consumptionChart.display();
+  }
+
+  connectWebSocket()
+  // code pour récuperer les données de d'archive depuis la base de donnée
+  let archiveData = null;
+  let currentPeriod = 'day';
+
+  // Récupération des éléments du DOM
+  const searchInput = document.getElementById('searchInput');
+  const bouttonJour = document.getElementById('bouttonJour');
+  const bouttonMois = document.getElementById('bouttonMois');
+  const bouttonAnnee = document.getElementById('bouttonAnnee');
+  const periodButtons = document.querySelectorAll('.period-btn');
+
+  // Fonction pour mettre à jour l'état visuel des boutons
+  function updateButtonState(activePeriod) {
+    periodButtons.forEach(btn => {
+      if (btn.dataset.period === activePeriod) {
+        btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant', 'hover:bg-surface-container-high');
+        btn.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+      } else {
+        btn.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm');
+        btn.classList.add('text-on-surface-variant', 'hover:bg-surface-container-high');
+      }
+    });
+  }
+
+  // Au chargement de la page
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("-------------chargé---------------------")
+    fetch('/archive/grouped')
+      .then(res => res.json())
+      .then(data => {
+        archiveData = data;
+        history_rows(data.daily, 'day');
+
+        // Ajouter les écouteurs d'événements pour les boutons
+        bouttonAnnee.addEventListener("click", () => {
+          currentPeriod = 'year';
+          updateButtonState('year');
+          history_rows(data.yearly, 'year');
+          searchInput.value = '';
+          filterTable();
+        });
+        bouttonMois.addEventListener("click", () => {
+          currentPeriod = 'month';
+          updateButtonState('month');
+          history_rows(data.monthly, 'month');
+          searchInput.value = '';
+          filterTable();
+        });
+        bouttonJour.addEventListener("click", () => {
+          currentPeriod = 'day';
+          updateButtonState('day');
+          history_rows(data.daily, 'day');
+          searchInput.value = '';
+          filterTable();
+        });
+
+        // Ajouter l'écouteur d'événement pour la recherche
+        searchInput.addEventListener('input', filterTable);
+      });
+
+  })
+  // Fonction pour filtrer le tableau en fonction de la recherche
+  function filterTable() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      const dateCell = cells[0] ? cells[0].textContent.toLowerCase() : '';
+
+      if (dateCell.includes(searchTerm) || searchTerm === '') {
+        row.style.display = '';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    // Afficher un message si aucun résultat
+    if (visibleCount === 0 && searchTerm !== '') {
+      console.log('Aucun résultat de recherche');
+    }
+  }
+
+  //fonction pour generer les différentes lignes du tableau d'archive
+  function history_rows(data, periode) {
+    //netoyage des lignes précédentes
+    tbody.replaceChildren()
+    data.forEach((d, index) => {
+      let newRow = tbody.insertRow();
+      newRow.classList.add("hover:bg-surface-container-low", "font-bold", "text-outline", "uppercase", "tracking-widest", "border-b", "border-surface-container");
+
+      // Masquer les lignes après la 5ème au chargement initial
+      if (index >= 5) {
+        newRow.style.display = 'none';
+      }
+
+      let dateCell = newRow.insertCell();
+      let dateStr = d.periode;
+      let date = new Date(dateStr);
+      if (periode == 'day') {
+        date = date;
+        dateCell.textContent = date.toLocaleDateString('fr-FR', { day: "2-digit", month: "short", year: "numeric" });
+      }
+      else if (periode == "month") {
+        dateCell.textContent = date.toLocaleDateString('fr-FR', { month: "short", year: "numeric" });
+      }
+      else if (periode == "year") {
+        dateCell.textContent = dateStr
+      }
+      dateCell.classList.add("py-6", "px-4")
+      let prodCell = newRow.insertCell()
+      prodCell.textContent = d.total_production;
+      prodCell.classList.add("py-6", "px-4", "text-primary")
+      let consoCell = newRow.insertCell();
+      consoCell.textContent = d.total_consommation;
+      consoCell.classList.add("py-6", "px-4", "text-secondary");
+      let savingCell = newRow.insertCell();
+      savingCell.classList.add("py-6", "px-4", "text-primary");
+      savingCell.textContent = d.total_gain;
+      let statusCell = newRow.insertCell()
+      history_status_provider(d.total_production, d.total_consommation, statusCell);
+    });
+  }
+  //fonction pour afficher un status dans le tableau historique
+  function history_status_provider(prod, conso, cell) {
+    if (prod > conso) {
+      st = document.createElement("span")
+      st.classList.add('px-3', 'py-1', 'bg-primary-fixed', 'text-on-primary-fixed', 'text-[10px]', 'font-bold', 'rounded-full');
+      st.textContent = "Optimale";
+      cell.appendChild(st)
+    }
+    else if (prod < conso) {
+      st = document.createElement("span")
+      st.classList.add('px-3', 'py-1', 'bg-red-500/20', 'text-red-800', 'text-[10px]', 'font-bold', 'rounded-full');
+      st.textContent = "Déficitaire";
+      cell.appendChild(st)
+    }
+    else if (prod == conso) {
+      st = document.createElement("span")
+      st.classList.add('px-3', 'py-1', 'bg-secondary-fixed', 'text-on-secondary-fixed', 'text-[10px]', 'font-bold', 'rounded-full');
+      st.textContent = "Equilibré";
+      cell.appendChild(st)
+    }
+  }
+  // Lors du changement du filtre (select, boutons...)
+  function onFilterChange(granularite) { // 'day', 'month', 'year'
+    if (!archiveData) return;
+    let data = archiveData[granularite + 'ly']; // daily -> daily, monthly -> monthly, yearly -> yearly
+    afficherDonnees(data);
+  }
+
+  // Fonction pour dérouler/replier le tableau d'historique
+  function toggleTable() {
+    const toggleBtn = document.getElementById('toggleTableBtn');
+    const tbody = document.getElementById('tbody');
+    const icon = toggleBtn.querySelector('.toggle-icon');
+    const isExpanded = toggleBtn.getAttribute('data-expanded') === 'true';
+
+    if (isExpanded) {
+      // Replier: masquer les lignes après la 5ème (mais respecter les résultats de recherche)
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const rows = tbody.querySelectorAll('tr');
+      let visibleCount = 0;
+
+      rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        const dateCell = cells[0] ? cells[0].textContent.toLowerCase() : '';
+        const matchesSearch = dateCell.includes(searchTerm) || searchTerm === '';
+
+        if (matchesSearch && visibleCount < 5) {
+          row.style.display = '';
+          visibleCount++;
+        } else if (matchesSearch || row.style.display === '') {
+          row.style.display = 'none';
+        }
+      });
+
+      // Mettre à jour l'interface
+      toggleBtn.setAttribute('data-expanded', 'false');
+      toggleBtn.innerHTML = 'Voir plus<span class="material-symbols-outlined toggle-icon" style="font-size: 20px; transition: transform 0.3s ease;">expand_more</span>';
+    } else {
+      // Dérouler: afficher toutes les lignes (respecter les résultats de recherche)
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const rows = tbody.querySelectorAll('tr');
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const dateCell = cells[0] ? cells[0].textContent.toLowerCase() : '';
+        const matchesSearch = dateCell.includes(searchTerm) || searchTerm === '';
+
+        if (matchesSearch) {
+          row.style.display = '';
+        }
+      });
+
+      // Mettre à jour l'interface
+      toggleBtn.setAttribute('data-expanded', 'true');
+      toggleBtn.innerHTML = 'Voir moins<span class="material-symbols-outlined toggle-icon" style="font-size: 20px; transition: transform 0.3s ease;">expand_less</span>';
+    }
+  }
+
+  // Ajouter l'écouteur d'événement au bouton
+  const toggleBtn = document.getElementById('toggleTableBtn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', toggleTable);
+  }
+
+  // Masquer les lignes après la 5ème au chargement initial
+  window.addEventListener('DOMContentLoaded', function () {
+    fetch('/archive/grouped')
+      .then(res => res.json())
+      .then(data => {
+        setTimeout(() => {
+          const tbody = document.getElementById('tbody');
+          const rows = tbody.querySelectorAll('tr');
+          let visibleCount = 0;
+          rows.forEach((row, index) => {
+            if (visibleCount < 5) {
+              row.style.display = '';
+              visibleCount++;
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }, 100);
+      });
+  });
+</script>
+
 </html>
