@@ -142,7 +142,7 @@
 
 <body class="text-on-surface">
   <!-- SideNavBar Shell -->
-  <aside class="flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+  <aside class="flex flex-col fixed left-0 top-0  h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
     <div class="px-6 py-8">
       <div class="flex items-center gap-3 mb-10">
         <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
@@ -184,9 +184,14 @@
     </div>
     <div class="mt-auto px-6 py-8 space-y-1">
       <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+        href="/settings">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Paramètre</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
         href="#">
         <span class="material-symbols-outlined">help_outline</span>
-        <span>Support</span>
+        <span>Aide</span>
       </a>
 
     </div>
@@ -218,9 +223,11 @@
             <span class="material-symbols-outlined">notifications</span>
             <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
           </button>
-          <button class="hover:opacity-80 transition-all">
+          <a href="/settings">
+            <button class="hover:opacity-80 transition-all">
             <span class="material-symbols-outlined">account_circle</span>
-          </button>
+            </button>
+          </a>
         </div>
       </div>
     </header>
@@ -594,6 +601,11 @@
         console.log("WebSocket connecté à ws://127.0.0.1:8000/ws/energy");
         updateConnectionStatus("Connecté");
         reconnectAttempts = 0; // Reset des tentatives en cas de succès
+        ws.send(JSON.stringify({
+          type: "commande_appareil",
+          appareil: "lampe_salon",
+          action: "on"
+        }));
       };
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);

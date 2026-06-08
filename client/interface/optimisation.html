@@ -1,17 +1,11 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html class="light" lang="fr">
-
 <head>
-  <title>Optimisation</title>
+  <title>Optimisation · Luminous AI</title>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
-    rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -58,7 +52,6 @@
             "tertiary-fixed-dim": "#a9c7ff",
             "on-background": "#191c1d",
             "on-surface-variant": "#40493d",
-            "on-tertiary-container": "#edf1ff",
             "on-error-container": "#93000a",
             "secondary-fixed": "#ffdfa0",
             tertiary: "#0054a7",
@@ -84,502 +77,488 @@
   </script>
   <style>
     .material-symbols-outlined {
-      font-variation-settings:
-        "FILL" 0,
-        "wght" 400,
-        "GRAD" 0,
-        "opsz" 24;
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
     }
-
     body {
       font-family: "Inter", sans-serif;
     }
-
-    h1,
-    h2,
-    h3,
-    .headline {
+    h1, h2, h3, .headline {
       font-family: "Manrope", sans-serif;
+    }
+    /* custom smooth transitions for toggles */
+    .appliance-toggle span {
+      transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
   </style>
 </head>
-
-<body class="bg-background text-on-surface">
-  <!-- SideNavBar Shell -->
+<body class="bg-background text-on-surface antialiased">
+  <!-- SideNavBar (unchanged but crisp) -->
   <aside class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
     <div class="px-6 py-8">
       <div class="flex items-center gap-3 mb-10">
         <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
-          <span class="material-symbols-outlined text-on-primary-container"
-            style="font-variation-settings: &quot;FILL&quot; 1">wb_sunny</span>
+          <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1">wb_sunny</span>
         </div>
         <div>
-          <h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">
-            Luminous
-          </h1>
-          <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
-            Gestion intelligente de l'energie
-          </p>
+          <h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">Luminous</h1>
+          <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Gestion intelligente de l'energie</p>
         </div>
       </div>
       <nav class="space-y-1">
-        <!-- Overview is Active -->
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="/">
-          <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1">dashboard</span>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 transition-colors" href="/">
+          <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">dashboard</span>
           <span>Acceuil</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="/analyse_ia">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 transition-colors" href="/analyse_ia">
           <span class="material-symbols-outlined">psychology</span>
           <span>Analyse IA</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-200"
-          href="/optimisation">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-200" href="/optimisation">
           <span class="material-symbols-outlined">lightbulb</span>
           <span>Optimisation</span>
         </a>
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="/meteo">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 transition-colors" href="/meteo">
           <span class="material-symbols-outlined">wb_sunny</span>
           <span>Météo</span>
         </a>
       </nav>
     </div>
     <div class="mt-auto px-6 py-8 space-y-1">
-      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-        href="#">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 transition-colors" href="/settings">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Paramètres</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 transition-colors" href="#">
         <span class="material-symbols-outlined">help_outline</span>
-        <span>Support</span>
+        <span>Aide</span>
       </a>
     </div>
   </aside>
-  <!-- TopNavBar Shell -->
-  <header
-    class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 ml-64 max-w-[calc(100%-16rem)] bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl shadow-sm shadow-slate-200/50 dark:shadow-none font-manrope text-base transition-all">
-    <div class="flex items-center gap-2">
-      <span class="font-bold text-on-surface">L'Équilibre Vivant</span>
-      <span
-        class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase">Optimisé</span>
+
+  <!-- TopNavBar Shell (clean) -->
+  <header class="pl-80 flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm transition-all">
+    <div class="flex items-center gap-4">
+      <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">Luminous AI</h2>
+      <div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-sm">
+        <div class="w-2 h-2 rounded-full bg-gray-500" id="connectionIndicator"></div>
+        <span class="text-xs font-medium text-gray-600" id="connectionStatus">...</span>
+      </div>
     </div>
     <div class="flex items-center gap-6">
-      <div class="relative">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
-          data-icon="search">search</span>
-        <input
-          class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all"
-          placeholder="Rechercher..." type="text" />
+      <div class="relative group">
+        <input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body placeholder:text-on-surface-variant/70" placeholder="Rechercher..." type="text">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
       </div>
-      <div class="flex items-center gap-4">
-        <button class="material-symbols-outlined text-slate-500 hover:opacity-80 transition-all"
-          data-icon="notifications">
-          notifications
+      <div class="flex items-center gap-4 text-on-surface-variant">
+        <button class="hover:opacity-80 transition-all relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
         </button>
-        <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-200">
-          <img alt="Profil utilisateur"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPw7sVF-HVSVcDIdtXibYw0YKzLO9CxYqIRYAckRt1o8xypkOYyLDL9wamXACUn63C7APjvkH-Idm92iDJMpnKzeifMvOmQ1qoRhgwb7aXLDfnUnIuOcdu6DV1VcB11Bp30pb1a9yU0E-ipTWmREQ_mswWBixRX3f_X50-pI6WOOtkvQRRVPVozSMcTfx47To7XmEzIgsINBo_U2J2Y7VD9rPRw8JJN5t4m0WImKRb2TXmRhW1a4nx5lj_mQp55c9sb2NHfG5wo8Fw" />
-        </div>
+        <button class="hover:opacity-80 transition-all">
+          <span class="material-symbols-outlined">account_circle</span>
+        </button>
       </div>
     </div>
   </header>
-  <!-- Main Content Canvas -->
+
+  <!-- MAIN CONTENT: épuré, lisible, aéré -->
   <main class="ml-64 p-8 min-h-screen">
-    <!-- Hero Header -->
-    <div class="grid grid-cols-12 gap-8 mb-12 items-end">
-      <div class="col-span-12">
-        <span class="text-primary font-bold tracking-widest text-[10px] uppercase mb-2 block">Rapport
-          d'Intelligence</span>
-        <h2 class="text-4xl font-extrabold tracking-tighter text-on-surface leading-tight">
-          Tableau de Bord d'<span class="text-primary-container">Optimisation</span>
-        </h2>
-        <p class="text-on-surface-variant mt-4 text-lg leading-relaxed">
-          Bienvenue sur votre page d'optimisation. Suivez les recommandations
-          de l'IA pour optimiser votre Systeme Energetique
-        </p>
-      </div>
+    <!-- Hero intro simplifiée -->
+    <div class="mb-10">
+      <span class="text-primary font-bold tracking-widest text-[10px] uppercase mb-2 block">Rapport d'intelligence</span>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface leading-tight">
+        Tableau de bord d'<span class="text-primary-container">optimisation</span>
+      </h2>
+      <p class="text-on-surface-variant mt-3 text-base max-w-2xl">
+        Recommandations IA pour maximiser votre autoconsommation et la durée de vie de votre système énergétique.
+      </p>
     </div>
-    <div class="grid grid-cols-12 gap-12">
-      <!-- Featured Recommendation Card -->
-      <div
-        class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-[2rem] p-8 relative overflow-hidden group">
-        <div class="relative z-10">
-          <h4 class="text-lg font-bold text-on-surface w-[300px]">
-            Production et Consommation
-          </h4>
-          <span>Optimisation de votre énergie</span>
-          <div class="insight flex flex-col gap-2 pt-10">
-            <!-- icon+phrase -->
-            <div class="ProdInsgiht bg-surface-container-low rounded-2xl px-3 pb-5 pt-2 p">
-              <div class="flex gap-2 items-center mb-1">
-                <span class="material-symbols-outlined text-2xl text-primary"
-                  style="font-variation-settings: &quot;FILL&quot; 1">
-                  trending_up
-                </span>
-                <h3 class="text-xxl font-bold text-on-surface leading-snug max-w-md">
-                  Pic de production a 12h
-                </h3>
-              </div>
-              <p class="text-on-surface-variant max-w-md text-sm">
-                je prévois une forte production entre 12h et 16h, profitez-en pour lancer la machine a laver, ou lancer
-                les appareils énergivores
-              </p>
-            </div>
-            <!-- icon+phrase -->
-            <div class="ProdInsgiht bg-surface-container-low rounded-2xl px-3 pb-5 py-2 p">
-              <div class="flex gap-2 items-center mb-1">
-                <span class="material-symbols-outlined text-2xl text-primary"
-                  style="font-variation-settings: &quot;FILL&quot; 1">
-                  trending_up
-                </span>
-                <h3 class="text-xxl font-bold text-on-surface leading-snug max-w-md">
-                  Pic de production a 12h
-                </h3>
-              </div>
-              <p class="text-on-surface-variant max-w-md text-sm">
-                je prévois une forte production entre 12h et 16h, profitez-en pour lancer la machine a laver, ou lancer
-                les appareils énergivores
-              </p>
-            </div>
-            <!-- icon+phrase -->
-            <div class="ProdInsgiht bg-surface-container-low rounded-2xl px-3 pb-5 pt-2 p">
-              <div class="flex gap-2 items-center mb-1">
-                <span class="material-symbols-outlined text-2xl text-primary"
-                  style="font-variation-settings: &quot;FILL&quot; 1">
-                  trending_up
-                </span>
-                <h3 class="text-xxl font-bold text-on-surface leading-snug max-w-md">
-                  Pic de production a 12h
-                </h3>
-              </div>
-              <p class="text-on-surface-variant max-w-md text-sm">
-                je prévois une forte production entre 12h et 16h, profitez-en pour lancer la machine a laver, ou lancer
-                les appareils énergivores
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 pt-2">
-            <span class="w-2 h-2 rounded-full bg-primary"></span>
-            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Dernière mise a jour : il y a
-              2h</span>
-          </div>
-        </div>
-        <div class="absolute top-8 right-12 opacity-40">
-          <span class="material-symbols-outlined text-[120px] text-primary" data-icon="wb_sunny"
-            style="font-variation-settings: &quot;wght&quot; 200">wb_sunny</span>
-        </div>
-      </div>
-      <!-- Battery Health Section -->
-      <div
-        class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-[2rem] p-8 border border-outline-variant/10">
-        <div class="flex justify-between items-start mb-8">
+
+    <div class="grid grid-cols-12 gap-8">
+      <!-- Carte 1 : Production & Consommation (Insights clairs et variés) -->
+      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 transition-all">
+        <div class="flex justify-between items-start mb-5">
           <div>
-            <h4 class="text-lg font-bold text-on-surface w-[300px]">
-              Santé et Longévité de la Batterie
-            </h4>
-            <p class="text-sm text-on-surface-variant">
-              État d'optimisation des cellules
-            </p>
+            <h3 class="text-xl font-bold text-on-surface">Production & consommation</h3>
+            <p class="text-sm text-on-surface-variant">Opportunités d'optimisation en temps réel</p>
           </div>
-          <div class="text-right">
-            <span class="text-4xl font-extrabold text-primary tracking-tighter">94%</span>
-            <p class="text-[10px] font-bold text-primary uppercase">
-              Santé Excellente
-            </p>
-          </div>
-        </div>
-        <div class="mb-8 bg-primary py-4 px-2 rounded-2xl">
-          <span
-            class="py-1.5 rounded-full text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-2 w-fit">
-            <span class="material-symbols-outlined text-lg fill-1" data-icon="shield">shield</span>
-            Mode Sauvegarde de Longévité Actif
-          </span>
-          <p class="text-white text-xs">le chargement est plafoné a 80% et le décharge a 20% pour sauvegarder la durée
-            de vie de vos batterie</p>
-          <a href="#" class="text-white text-xs underline">En savoir plus</a>
+          <span class="material-symbols-outlined text-primary text-2xl">bolt</span>
         </div>
         <div class="space-y-4">
-          <p class="text-xs font-bold text-on-surface uppercase tracking-tight">
-            Conseils de longévité
-          </p>
-          <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
-            <span class="material-symbols-outlined text-primary text-lg" data-icon="verified">verified</span>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
-              Évitez les appareils à forte charge pendant la décharge de la
-              batterie pour réduire le stress thermique.
-            </p>
+          <!-- Insight 1 -->
+          <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-primary text-xl fill-1">wb_sunny</span>
+              <h4 class="font-bold text-on-surface">Pic de production solaire 12h → 16h</h4>
+            </div>
+            <p class="text-sm text-on-surface-variant leading-relaxed">Profitez de ce créneau pour lancer le lave-linge, le lave-vaisselle ou recharger votre véhicule électrique.</p>
           </div>
-          <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
-            <span class="material-symbols-outlined text-primary text-lg"
-              data-icon="contact_support">contact_support</span>
-            <p class="text-xs text-on-surface-variant leading-relaxed">
-              Consulter fréquemment les rapports sur votre batterie ou les
-              envoyer à un expert.
-            </p>
+          <!-- Insight 2 -->
+          <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-primary text-xl">battery_charging_full</span>
+              <h4 class="font-bold text-on-surface">Surplus prévu : 2,4 kWh</h4>
+            </div>
+            <p class="text-sm text-on-surface-variant">Stockage recommandé jusqu'à 80% (mode longévité actif). Évitez la décharge profonde.</p>
+          </div>
+          <!-- Insight 3 -->
+          <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-primary text-xl">schedule</span>
+              <h4 class="font-bold text-on-surface">Consommation différée idéale après 20h</h4>
+            </div>
+            <p class="text-sm text-on-surface-variant">Le réseau est moins sollicité. Programmez vos appareils énergivores en soirée.</p>
           </div>
         </div>
-        <div class="mt-8 pt-6 border-t border-outline-variant/10 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-primary"></span>
-            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Dernière mise a jour : il y a
-              2h</span>
-          </div>
+        <div class="flex items-center gap-2 mt-6 pt-2 border-t border-outline-variant/10">
+          <span class="w-2 h-2 rounded-full bg-primary"></span>
+          <span class="text-[10px] font-medium text-on-surface-variant uppercase tracking-wide">Dernière mise à jour : il y a 2h</span>
         </div>
       </div>
-      <!-- Smart Automation Section -->
-      <div class="col-span-12 bg-surface-container-low pt-7 pb-5 px-5 rounded-2xl">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+
+      <!-- Carte 2 : Santé batterie (plus visuelle et lisible) -->
+      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+        <div class="flex justify-between items-start mb-5">
           <div>
-            <h3 class="text-2xl font-bold tracking-tight text-on-surface">
-              Automatisation Intelligente
-            </h3>
-            <p class="text-on-surface-variant mt-1 italic">
-              Les appareils ci-dessous sont gérés automatiquement par l'IA
-              selon le mode sélectionné.
-              <button class="underline text-primary" id="moreOnMode">En savoir plus</button>
-            </p>
-            <p class="p-2 border-l-2 border-primary rounded my-2 hidden" id="moreText">Votre Installation fonctionne
-              actuellement en mode Économie d'energie afin de réduire la consommation sur la source active en
-              désactivant certains appareils,vous pouvez a tout moment changer le mode ou activer individuellement
-              chaque appareil grace au menu ci-dessous </p>
+            <h3 class="text-xl font-bold text-on-surface">État de la batterie</h3>
+            <p class="text-sm text-on-surface-variant">Longévité et performance</p>
           </div>
-          <div class="flex items-center gap-4">
-            <div class="relative inline-block">
-              <select
-                class="appearance-none bg-surface-container-high border-none rounded-xl text-sm font-bold text-on-surface px-4 py-2 pr-10 focus:ring-2 focus:ring-primary/20 cursor-pointer">
-                <option>Mode : Normal</option>
-                <option>Mode : Économie</option>
-                <option>Mode : Ultra Économie</option>
-              </select>
-            </div>
+          <div class="text-right">
+            <span class="text-4xl font-black text-primary tracking-tighter">94%</span>
+            <p class="text-[11px] font-bold text-primary uppercase tracking-wide">Santé excellente</p>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- clim1 -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="ac_unit">ac_unit</span>
-              </div>
-              <button class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute right-1 w-4 h-4 bg-white rounded-full"></span>
-              </button>
-            </div>
-            <h4 class="font-bold text-on-surface mb-4">Climatisation</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
-            </div>
+        <!-- Barre de santé symbolique -->
+        <div class="w-full bg-surface-container-highest rounded-full h-2 mb-5">
+          <div class="bg-primary rounded-full h-2" style="width: 94%"></div>
+        </div>
+        <div class="bg-primary/5 rounded-xl p-4 mb-6 border border-primary/20">
+          <div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-wider mb-1">
+            <span class="material-symbols-outlined text-lg fill-1">shield</span>
+            <span>Mode sauvegarde de longévité actif</span>
           </div>
-          <!-- clim2 -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="ac_unit">ac_unit</span>
+          <p class="text-sm text-on-surface-variant">Charge limitée à 80% & décharge à 20% pour préserver les cycles de vie.</p>
+          <a href="#" class="text-primary text-xs font-semibold mt-2 inline-block hover:underline">En savoir plus →</a>
+        </div>
+        <div class="space-y-3">
+          <p class="text-xs font-bold text-on-surface uppercase tracking-wide">Conseils de longévité</p>
+          <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
+            <span class="material-symbols-outlined text-primary text-base">verified</span>
+            <p class="text-xs text-on-surface-variant leading-relaxed">Évitez les fortes charges pendant la décharge pour réduire le stress thermique.</p>
+          </div>
+          <div class="flex items-start gap-3 p-3 bg-surface-container-low rounded-xl">
+            <span class="material-symbols-outlined text-primary text-base">contact_support</span>
+            <p class="text-xs text-on-surface-variant leading-relaxed">Consultez les rapports mensuels ou envoyez-les à un expert.</p>
+          </div>
+        </div>
+        <div class="mt-5 pt-3 text-right">
+          <span class="text-[10px] font-medium text-on-surface-variant">Dernière analyse : aujourd'hui, 10:23</span>
+        </div>
+      </div>
+
+      <!-- Automatisation intelligente - redesigned plus épuré -->
+      <div class="col-span-12 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 mt-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-7 gap-4">
+          <div>
+            <h3 class="text-2xl font-bold tracking-tight text-on-surface">Automatisation intelligente</h3>
+            <p class="text-on-surface-variant text-sm mt-1 flex flex-wrap items-center gap-1">
+              L'IA gère ces appareils selon le mode sélectionné.
+              <button id="moreOnMode" class="underline text-primary font-medium text-sm">En savoir plus</button>
+            </p>
+            <p id="moreText" class="p-3 bg-surface-container-low rounded-lg text-sm text-on-surface-variant mt-2 hidden border-l-2 border-primary">Votre installation fonctionne actuellement en mode Économie d'énergie. L'IA ajuste la consommation en fonction de la production solaire. Vous pouvez modifier le mode ou piloter chaque appareil manuellement.</p>
+          </div>
+          <div class="relative">
+            <select class="appearance-none bg-surface-container-high border-none rounded-xl text-sm font-semibold text-on-surface px-5 py-2.5 pr-10 focus:ring-2 focus:ring-primary/30 cursor-pointer shadow-sm">
+              <option>Mode : Normal</option>
+              <option selected>Mode : Économie</option>
+              <option>Mode : Ultra Économie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Climatisation salon -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">ac_unit</span>
               </div>
-              <button class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute right-1 w-4 h-4 bg-white rounded-full"></span>
+              <button id="btn-climatisation" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full shadow-sm"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">Climatisation chambre</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Climatisation salon</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Actif depuis 13h</span>
             </div>
           </div>
 
-          <!-- Micro-ondes-->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="light">microwave_gen</span>
+          <!-- Climatisation chambre -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">bedroom_child</span>
               </div>
-              <button class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute right-1 w-4 h-4 bg-white rounded-full"></span>
+              <button id="btn-climatisation-chambre" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">
-              Micro-ondes
-            </h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Climatisation chambre</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Actif depuis 13h</span>
             </div>
           </div>
-          <!-- EV Charger -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface"
-                  data-icon="ev_station">local_laundry_service</span>
+
+          <!-- Micro-ondes -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">microwave</span>
               </div>
-              <button
-                class="w-12 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute left-1 w-4 h-4 bg-white rounded-full shadow-sm"></span>
+              <button id="btn-microondes" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">Machine à laver</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Micro-ondes</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Veille</span>
             </div>
           </div>
-          <!-- chauffe eau douche -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="ev_station">hot_tub</span>
+
+          <!-- Machine à laver -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">local_laundry_service</span>
               </div>
-              <button
-                class="w-12 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute left-1 w-4 h-4 bg-white rounded-full shadow-sm"></span>
+              <button id="btn-machine-laver" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">Chauffe eau de douche</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Machine à laver</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Prêt</span>
             </div>
           </div>
-          <!-- congelateur -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col justify-around">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="ac_unit">ac_unit</span>
+
+          <!-- Chauffe-eau douche -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">water_heater</span>
               </div>
-              <button class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute right-1 w-4 h-4 bg-white rounded-full"></span>
+              <button id="btn-chauffe-eau" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">Congélateur</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Chauffe-eau (douche)</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Optimisé</span>
             </div>
           </div>
-          <!-- Appliances -->
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group">
-            <div class="flex justify-between items-start mb-8">
-              <div
-                class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
-                <span class="material-symbols-outlined text-on-surface" data-icon="kitchen">kitchen</span>
+
+          <!-- Congélateur -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">kitchen</span>
               </div>
-              <button class="w-12 h-6 bg-primary rounded-full relative p-1 flex items-center transition-all">
-                <span class="absolute right-1 w-4 h-4 bg-white rounded-full"></span>
+              <button id="btn-congelateur" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
               </button>
             </div>
-            <h4 class="font-bold text-on-surface mb-4">Refrigérateur</h4>
-            <p class="text-xs text-on-surface-variant  rounded-xl bg-green-300 py-2 px-1 text-center">
-              Appareil est disponible
-            </p>
-            <div class="my-2">
-              <span class="text-sm">Actif depuis 13h</span>
+            <h4 class="font-bold text-on-surface">Congélateur</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Actif</span>
             </div>
           </div>
-          <div
-            class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/10 hover:shadow-lg transition-all group flex flex-col items-center justify-center gap-3">
-            <span
-              class="material-symbols-outlined text-on-primary text-5xl  bg-primary-container rounded-full w-fit">add</span>
-            <h4>Ajouter un appareil</h4>
+
+          <!-- Réfrigérateur -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-10 h-10 rounded-xl bg-primary-container/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary">kitchen</span>
+              </div>
+              <button id="btn-refrigerateur" class="appliance-toggle w-11 h-6 bg-surface-container-highest rounded-full relative p-1 flex items-center transition-all">
+                <span class="absolute left-1 w-4 h-4 bg-white rounded-full"></span>
+              </button>
+            </div>
+            <h4 class="font-bold text-on-surface">Réfrigérateur</h4>
+            <div class="mt-2 flex items-center justify-between">
+              <span class="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">Disponible</span>
+              <span class="text-xs text-on-surface-variant">Actif</span>
+            </div>
+          </div>
+
+          <!-- Ajouter appareil (call to action discret) -->
+          <div class="bg-surface-container-low/40 rounded-xl p-4 border border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-2 hover:bg-surface-container-low transition-all cursor-pointer">
+            <span class="material-symbols-outlined text-on-surface-variant text-3xl bg-surface-container-highest p-2 rounded-full">add</span>
+            <span class="text-sm font-medium text-on-surface-variant">Ajouter un appareil</span>
           </div>
         </div>
       </div>
-      <!-- Maintenance Section (Full Width) -->
-      <div class="col-span-12">
-        <h3 class="text-2xl font-bold tracking-tight text-on-surface mb-6">
-          Maintenance et Réparation
+
+      <!-- Maintenance & Réparation (lisible et épuré) -->
+      <div class="col-span-12 mt-2">
+        <h3 class="text-xl font-bold tracking-tight text-on-surface mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">build</span>
+          Maintenance & réparations
         </h3>
-        <div class="flex flex-col gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <!-- Tip 1 -->
-          <div
-            class="flex-1 bg-surface-container-low p-6 rounded-3xl flex items-center gap-6 hover:bg-surface-container-high transition-colors">
-            <div class="flex-shrink-0 w-16 h-16 rounded-2xl overflow-hidden">
-              <div class="flex-shrink-0 w-16 h-16 rounded-2xl overflow-hidden">
-                <img class="w-full h-[64px]" alt="Intérieur maison"
-                  src="https://st3.depositphotos.com/2793495/31783/i/450/depositphotos_317839786-stock-photo-workman-cleaning-solar-panels.jpg" />
-              </div>
+          <div class="bg-surface-container-low/80 rounded-xl p-5 flex items-center gap-5 hover:bg-surface-container-low transition-all">
+            <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-slate-200">
+              <img class="w-full h-full object-cover" alt="Nettoyage panneaux" src="https://st3.depositphotos.com/2793495/31783/i/450/depositphotos_317839786-stock-photo-workman-cleaning-solar-panels.jpg" />
             </div>
             <div class="flex-1">
-              <h5 class="font-bold text-on-surface">
-                Nettoyage des panneaux
-              </h5>
-              <p class="text-sm text-on-surface-variant">
-                Poussière détectée. Un nettoyage pourrait augmenter le
-                rendement de 8 %.
-              </p>
+              <h5 class="font-bold text-on-surface">Nettoyage des panneaux</h5>
+              <p class="text-sm text-on-surface-variant">Poussière détectée → gain potentiel +8% de rendement.</p>
             </div>
-            <div class="flex flex-col items-end gap-2">
-              <span class="text-xs font-bold text-primary">+18€/mois</span>
-              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface transition-colors"
-                data-icon="more_vert">
-                more_vert
-              </button>
+            <div class="flex flex-col items-end">
+              <span class="text-sm font-extrabold text-primary">+18€/mois</span>
+              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
             </div>
           </div>
           <!-- Tip 2 -->
-          <div
-            class="flex-1 bg-surface-container-low p-6 rounded-3xl flex items-center gap-6 hover:bg-surface-container-high transition-colors">
-            <div class="flex-shrink-0 w-16 h-16 rounded-2xl overflow-hidden">
-              <img alt="Thermostat intelligent"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFCjIpBK9bfevBFHDES4zU04An2DOCqYe0YKvXzcKJx2czx3neoyjKpi9jr1qDg0-lQutf0D1IqikuLZ3OmuNx1Xx3gzPIIGgpyp9eo9omigy1uziEWmoImdPvFuWYWmof8BKoeyO_njGHbkpucE7vkR7AwiLJJSG0OwFvpH3EEUof5KehGctbRO-FlnvMSoJEeV2VX-C_atT4FkpxW-oVNoKwC4jxWpVS_vV6fnNoPewFkrx1nRbit22JnqEhRX4KLH4Uw-pTh63K" />
+          <div class="bg-surface-container-low/80 rounded-xl p-5 flex items-center gap-5 hover:bg-surface-container-low transition-all">
+            <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-slate-200">
+              <img class="w-full h-full object-cover" alt="Fuite énergie veille" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFCjIpBK9bfevBFHDES4zU04An2DOCqYe0YKvXzcKJx2czx3neoyjKpi9jr1qDg0-lQutf0D1IqikuLZ3OmuNx1Xx3gzPIIGgpyp9eo9omigy1uziEWmoImdPvFuWYWmof8BKoeyO_njGHbkpucE7vkR7AwiLJJSG0OwFvpH3EEUof5KehGctbRO-FlnvMSoJEeV2VX-C_atT4FkpxW-oVNoKwC4jxWpVS_vV6fnNoPewFkrx1nRbit22JnqEhRX4KLH4Uw-pTh63K" />
             </div>
             <div class="flex-1">
-              <h5 class="font-bold text-on-surface">
-                Fuite d'énergie en veille
-              </h5>
-              <p class="text-sm text-on-surface-variant">
-                Les périphériques de bureau consomment 15W en veille. Utilisez
-                une multiprise?
-              </p>
+              <h5 class="font-bold text-on-surface">Fuite d'énergie en veille</h5>
+              <p class="text-sm text-on-surface-variant">Périphériques consomment 15W inutilement → multiprise intelligente.</p>
             </div>
-            <div class="flex flex-col items-end gap-2">
-              <span class="text-xs font-bold text-primary">+5€/mois</span>
-              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface transition-colors"
-                data-icon="more_vert">
-                more_vert
-              </button>
+            <div class="flex flex-col items-end">
+              <span class="text-sm font-extrabold text-primary">+5€/mois</span>
+              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </main>
-  <!-- Contextual FAB -->
-  <button
-    class="fixed bottom-10 right-10 w-16 h-16 bg-primary text-on-primary rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-50">
-    <span class="material-symbols-outlined text-3xl" data-icon="add_task">add_task</span>
-  </button>
-</body>
-<script>
-  const moreOnMode = document.getElementById('moreOnMode')
-  moreOnMode.addEventListener("click", (e) => {
-    moreOnMode.textContent = moreOnMode.textContent.includes("En savoir plus") ? "Compris" : "En savoir plus";
-    document.getElementById("moreText").classList.toggle("hidden");
-  })
-</script>
 
+  <!-- FAB -->
+  <button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+    <span class="material-symbols-outlined text-2xl">add_task</span>
+  </button>
+
+  <!-- Modal déverrouillage (inchangé / fonctionnel) -->
+  <div id="unlockModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-surface-container-lowest rounded-3xl p-8 w-full max-w-md shadow-2xl relative">
+      <button id="closeModalBtn" class="absolute top-6 right-6 text-on-surface-variant hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-2xl">close</span>
+      </button>
+      <div class="flex flex-col items-center">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-container to-primary flex items-center justify-center mb-6 shadow-lg">
+          <span class="material-symbols-outlined text-6xl text-on-primary-container" style="font-variation-settings: 'FILL' 1">account_circle</span>
+        </div>
+        <h3 class="text-2xl font-bold text-on-surface mb-2 text-center">Modifications verrouillées</h3>
+        <p class="text-on-surface-variant text-center mb-8">Entrez vos identifiants pour déverrouiller l'automatisation</p>
+        <form id="unlockForm" class="w-full space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-on-surface mb-2">Adresse Email</label>
+            <input type="email" id="emailInput" placeholder="exemple@email.com" class="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant focus:ring-2 focus:ring-primary focus:outline-none transition-all" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-on-surface mb-2">Mot de Passe</label>
+            <input type="password" id="passwordInput" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-surface-container border border-outline-variant focus:ring-2 focus:ring-primary focus:outline-none transition-all" required>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button type="button" id="cancelBtn" class="flex-1 px-4 py-3 rounded-xl bg-surface-container text-on-surface font-semibold hover:bg-surface-container-high transition-colors">Annuler</button>
+            <button type="submit" class="flex-1 px-4 py-3 rounded-xl bg-primary text-on-primary font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+              <span>Connexion</span>
+              <span class="material-symbols-outlined">login</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // MAPPING & TOGGLE LOGIC (identique / intact)
+    const applianceNames = {
+      'btn-climatisation': 'climatisation_salon',
+      'btn-climatisation-chambre': 'climatisation_chambre',
+      'btn-microondes': 'microondes',
+      'btn-machine-laver': 'machine_laver',
+      'btn-chauffe-eau': 'chauffe_eau',
+      'btn-congelateur': 'congelateur',
+      'btn-refrigerateur': 'refrigerateur'
+    };
+    const loadState = {
+      'btn-climatisation': false, 'btn-climatisation-chambre': false, 'btn-microondes': false,
+      'btn-machine-laver': false, 'btn-chauffe-eau': false, 'btn-congelateur': false, 'btn-refrigerateur': false
+    };
+
+    function toggleAppliance(event) {
+      const button = event.currentTarget;
+      const applianceId = button.id;
+      loadState[applianceId] = !loadState[applianceId];
+      const isActive = loadState[applianceId];
+      if (isActive) {
+        button.classList.remove('bg-surface-container-highest');
+        button.classList.add('bg-primary');
+        const circle = button.querySelector('span');
+        circle.classList.remove('left-1');
+        circle.classList.add('right-1');
+      } else {
+        button.classList.remove('bg-primary');
+        button.classList.add('bg-surface-container-highest');
+        const circle = button.querySelector('span');
+        circle.classList.remove('right-1');
+        circle.classList.add('left-1');
+      }
+      const action = isActive ? 'on' : 'off';
+      const appareil = applianceNames[applianceId];
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: "commande_appareil", appareil: appareil, action: action }));
+        console.log('Commande WebSocket:', { appareil, action });
+      } else console.warn('WebSocket non connecté');
+    }
+    document.querySelectorAll('.appliance-toggle').forEach(btn => btn.addEventListener('click', toggleAppliance));
+
+    // Modal logic
+    const modal = document.getElementById('unlockModal'), closeModal = document.getElementById('closeModalBtn'), cancel = document.getElementById('cancelBtn'), form = document.getElementById('unlockForm');
+    function openUnlockModal() { modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    function closeUnlockModal() { modal.classList.add('hidden'); document.body.style.overflow = 'auto'; form.reset(); }
+    closeModal?.addEventListener('click', closeUnlockModal);
+    cancel?.addEventListener('click', closeUnlockModal);
+    modal?.addEventListener('click', (e) => { if (e.target === modal) closeUnlockModal(); });
+    form?.addEventListener('submit', (e) => { e.preventDefault(); console.log('Auth:', document.getElementById('emailInput')?.value, document.getElementById('passwordInput')?.value); closeUnlockModal(); });
+
+    // More on mode
+    const moreBtn = document.getElementById('moreOnMode'), moreText = document.getElementById('moreText');
+    if (moreBtn) moreBtn.addEventListener('click', () => { moreText.classList.toggle('hidden'); moreBtn.textContent = moreText.classList.contains('hidden') ? "En savoir plus" : "Réduire"; });
+
+    // WebSocket connection status
+    function updateConnectionStatus(status, message = "") {
+      const statusEl = document.getElementById("connectionStatus"), indicator = document.getElementById("connectionIndicator");
+      if (statusEl) statusEl.textContent = `${status}${message ? ": " + message : ""}`;
+      if (indicator) {
+        indicator.classList.remove("bg-gray-400","bg-green-500","bg-yellow-500","bg-red-500","animate-pulse");
+        if (status === "Connecté") indicator.classList.add("bg-green-500");
+        else if (status === "Connexion...") indicator.classList.add("bg-yellow-500","animate-pulse");
+        else indicator.classList.add("bg-red-500");
+      }
+    }
+    let ws, reconnectAttempts = 0, maxReconnect = 5;
+    function connectWebSocket() {
+      if (ws && ws.readyState === WebSocket.OPEN) return;
+      ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
+      ws.onopen = () => { console.log("WebSocket connecté"); updateConnectionStatus("Connecté"); reconnectAttempts = 0; };
+      ws.onmessage = (event) => { try { const data = JSON.parse(event.data); console.log("Données reçues", data); } catch(e){} };
+      ws.onerror = (err) => console.error("WebSocket erreur", err);
+      ws.onclose = () => { updateConnectionStatus("Déconnecté"); if (reconnectAttempts < maxReconnect) { reconnectAttempts++; setTimeout(connectWebSocket, 3000); } else updateConnectionStatus("Échec","max tentatives"); };
+    }
+    connectWebSocket();
+  </script>
+</body>
 </html>
