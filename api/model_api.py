@@ -30,7 +30,7 @@ base_path = Path(__file__).resolve().parent.parent
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": "Bearer "
     }
 
 # dossier de fichier statique a servir a  l'interface
