@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "author": "Carmel Fiacre",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "btn1", "top": 40, "left": 460, "attrs": { "color": "green", "label": "Bouton" } },
+    { "type": "wokwi-led", "id": "led_chauffe", "top": -120, "left": -80, "attrs": { "color": "red", "label": "Chauffe-eau" } },
+    { "type": "wokwi-led", "id": "led_clim_ch", "top": -120, "left": -20, "attrs": { "color": "blue", "label": "Clim Ch." } },
+    { "type": "wokwi-led", "id": "led_clim_sal", "top": -120, "left": 40, "attrs": { "color": "blue", "label": "Clim Salon" } },
+    { "type": "wokwi-led", "id": "led_congel", "top": -120, "left": 100, "attrs": { "color": "cyan", "label": "Congélateur" } },
+    { "type": "wokwi-led", "id": "led_mal", "top": -120, "left": 160, "attrs": { "color": "green", "label": "Lave Linge" } },
+    { "type": "wokwi-led", "id": "led_mo", "top": -120, "left": 220, "attrs": { "color": "orange", "label": "Micro-ondes" } },
+    { "type": "wokwi-led", "id": "led_frigo", "top": -120, "left": 280, "attrs": { "color": "cyan", "label": "Frigo" } },
+    
+    { "type": "wokwi-led", "id": "led_solar", "top": 250, "left": -20, "attrs": { "color": "yellow", "label": "Solaire (33)" } },
+    { "type": "wokwi-led", "id": "led_batt", "top": 250, "left": 40, "attrs": { "color": "green", "label": "Batt (32)" } },
+    { "type": "wokwi-led", "id": "led_sbee", "top": 250, "left": 100, "attrs": { "color": "red", "label": "SBEE (27)" } },
+    { "type": "wokwi-led", "id": "led_charge", "top": 250, "left": 220, "attrs": { "color": "magenta", "label": "Charge (2)" } },
+
+    { "type": "wokwi-lcd1602", "id": "lcd", "top": -20, "left": 310, "attrs": { "pins": "parallel" } },
+    { "type": "wokwi-potentiometer", "id": "pot", "top": 140, "left": 360, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    
+    [ "btn1:1a", "esp:22", "green", [] ],
+    [ "btn1:2a", "esp:GND.1", "black", [] ],
+    
+    [ "led_chauffe:A", "esp:4", "red", [] ],
+    [ "led_chauffe:C", "esp:GND.1", "black", [] ],
+    [ "led_clim_ch:A", "esp:26", "blue", [] ],
+    [ "led_clim_ch:C", "esp:GND.1", "black", [] ],
+    [ "led_clim_sal:A", "esp:21", "blue", [] ],
+    [ "led_clim_sal:C", "esp:GND.1", "black", [] ],
+    [ "led_congel:A", "esp:19", "cyan", [] ],
+    [ "led_congel:C", "esp:GND.1", "black", [] ],
+    [ "led_mal:A", "esp:18", "green", [] ],
+    [ "led_mal:C", "esp:GND.2", "black", [] ],
+    [ "led_mo:A", "esp:16", "orange", [] ],
+    [ "led_mo:C", "esp:GND.2", "black", [] ],
+    [ "led_frigo:A", "esp:17", "cyan", [] ],
+    [ "led_frigo:C", "esp:GND.2", "black", [] ],
+    
+    [ "led_solar:A", "esp:33", "yellow", [] ],
+    [ "led_solar:C", "esp:GND.3", "black", [] ],
+    [ "led_batt:A", "esp:32", "green", [] ],
+    [ "led_batt:C", "esp:GND.3", "black", [] ],
+    [ "led_sbee:A", "esp:27", "red", [] ],
+    [ "led_sbee:C", "esp:GND.3", "black", [] ],
+    [ "led_charge:A", "esp:2", "magenta", [] ],
+    [ "led_charge:C", "esp:GND.3", "black", [] ],
+
+    [ "lcd:VSS", "esp:GND.1", "black", [] ],
+    [ "lcd:VDD", "esp:3V3", "red", [] ],
+    [ "lcd:V0", "pot:SIG", "purple", [] ],
+    [ "pot:GND", "esp:GND.1", "black", [] ],
+    [ "pot:VCC", "esp:3V3", "red", [] ],
+    
+    [ "lcd:RS", "esp:13", "orange", [] ],
+    [ "lcd:RW", "esp:GND.1", "black", [] ],
+    [ "lcd:E", "esp:23", "orange", [] ],
+    
+    [ "lcd:D4", "esp:5", "blue", [] ],
+    [ "lcd:D5", "esp:14", "blue", [] ],
+    [ "lcd:D6", "esp:15", "blue", [] ],
+    [ "lcd:D7", "esp:25", "blue", [] ],
+    
+    [ "lcd:A", "esp:3V3", "red", [] ],
+    [ "lcd:K", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}
