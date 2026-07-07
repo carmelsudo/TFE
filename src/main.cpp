@@ -11,11 +11,11 @@
 // ========== CONFIGURATION ==========
 
 // --- Wi-Fi ---
-const char* ssid = "Wokwi-GUEST"; //M022_052F ou Wokwi-GUEST
-const char* password = ""; //33106705
+//const char* ssid = "Wokwi-GUEST"; //M022_052F ou Wokwi-GUEST
+//const char* password = ""; //33106705
 
-//const char* ssid = "M022_052F";
-//const char* password = "33106705"; 
+const char* ssid = "M022_052F";
+const char* password = "33106705"; 
 
 // --- Broker MQTT ---
 const char* mqtt_broker = "broker.hivemq.com";
@@ -132,8 +132,8 @@ int sourceNameToIndex(const String& name) {
 // ------------------------------------------------------------
 // Mise à jour de l'écran LCD (seulement si changement)
 // ------------------------------------------------------------
-void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float cons) {
-  bool changed = false;
+void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float cons,bool change = false) {
+  bool changed = change;
   if (battPercent != lastBattPercent) { lastBattPercent = battPercent; changed = true; }
   if (mode != lastMode) { lastMode = mode; changed = true; }
   if (prod != lastProduction) { lastProduction = prod; changed = true; }
@@ -143,6 +143,7 @@ void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float co
 
   lcd.clear();
   if (displayFirstPage) {
+    Serial.print("Affichage page 1");
     lcd.setCursor(0, 0);
     lcd.print("Batt:");
     lcd.print(battPercent);
@@ -151,6 +152,7 @@ void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float co
     lcd.print("Mode:");
     lcd.print(mode.substring(0, min((int)mode.length(), 10)));
   } else {
+    Serial.print("Affichage page 2");
     lcd.setCursor(0, 0);
     lcd.print("Prod:");
     lcd.print(prod, 1);
@@ -167,21 +169,8 @@ void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float co
 // ------------------------------------------------------------
 void callback(char* topic, byte* payload, unsigned int length) {
   // --- 1. Détection du "ping" ---
-  if (length >= 4 && 
-      payload[0] == 'p' && payload[1] == 'i' && 
-      payload[2] == 'n' && payload[3] == 'g') {
-    Serial.println("📤 Ping reçu (ignoré)");
-    return;
-  }
 
   // --- 2. Affichage du message reçu ---
-  Serial.print("📩 Message reçu (");
-  Serial.print(length);
-  Serial.print(" octets) : ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
 
   // --- 3. Filtre JSON ---
   StaticJsonDocument<200> filter;
@@ -202,8 +191,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
     return;
   }
 
-  Serial.println("✅ JSON parsé avec succès !");
-
   // --- 6. Construire les états souhaités (tous éteints par défaut) ---
   bool newDeviceStates[7] = {false};
   bool newSourceStates[3] = {false};
@@ -214,22 +201,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   if (!activateMode.isNull()) {
     JsonArray onDevice = activateMode["onDevice"];
     if (!onDevice.isNull()) {
-      Serial.println("   📋 Liste 'onDevice' reçue :");
       for (JsonVariant v : onDevice) {
         if (v.is<int>()) {
           int id = v.as<int>();
           if (id >= 0 && id < 7) {
             newDeviceStates[id] = true;
-            Serial.print("   ➡️ Appareil ID : ");
-            Serial.println(id);
           }
         } else {
           String name = v.as<String>();
           int id = deviceNameToId(name);
           if (id >= 0) {
             newDeviceStates[id] = true;
-            Serial.print("   ➡️ Appareil : ");
-            Serial.println(name);
           }
         }
       }
@@ -246,8 +228,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
         int idx = sourceNameToIndex(name);
         if (idx >= 0) {
           newSourceStates[idx] = true;
-          Serial.print("   🔌 Source active : ");
-          Serial.println(name);
         }
       }
     } else {
@@ -255,16 +235,12 @@ void callback(char* topic, byte* payload, unsigned int length) {
       int idx = sourceNameToIndex(name);
       if (idx >= 0) {
         newSourceStates[idx] = true;
-        Serial.print("   🔌 Source active : ");
-        Serial.println(name);
       }
     }
   }
 
   // --- 9. Chargement batterie ---
   newCharging = doc["chargerBatt"] | false;
-  Serial.print("   🔋 chargerBatt = ");
-  Serial.println(newCharging ? "true" : "false");
 
   // --- 10. Appliquer les nouveaux états (uniquement les changements) ---
   for (int i = 0; i < 7; i++) {
@@ -372,7 +348,7 @@ void setup() {
   }
   Serial.println(" ✅ Connecté ! IP : " + WiFi.localIP().toString());
 
-  // Configuration MQTT
+  // ConfigurSerialation MQTT
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
   client.setKeepAlive(60);
@@ -403,21 +379,10 @@ void loop() {
       currentButtonState = reading;
       if (currentButtonState == LOW) {  // Appui détecté
         displayFirstPage = !displayFirstPage;
-        updateLcdIfNeeded(lastBattPercent, lastMode, lastProduction, lastConsumption);
+        updateLcdIfNeeded(lastBattPercent, lastMode, lastProduction, lastConsumption,true);
         Serial.println("🔘 Bouton pressé - page changée");
       }
     }
   }
     lastButtonState = reading;
-
-    // Envoi périodique d'un ping
-  unsigned long now = millis();
-  if (now - lastPublish >= publishInterval) {
-    lastPublish = now;
-    if (client.publish(mqtt_topic, "ping depuis ESP32")) {
-      Serial.println("📤 Ping envoyé");
-    } else {
-      Serial.println("❌ Échec envoi ping");
-    }
-  }
 }
