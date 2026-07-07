@@ -1,37 +1,26 @@
 // ============================================================
-
 // 1. AUGMENTER LA TAILLE MAX DES PAQUETS MQTT (AVANT l'include)
-
 // ============================================================
-
-#define MQTT_MAX_PACKET_SIZE 2048   // 2 Ko (ajustez si besoin)
-
-
+#define MQTT_MAX_PACKET_SIZE 2048   // 2 Ko
 
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
-#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C.h>
 
 // ========== CONFIGURATION ==========
 
-// --- Wi-Fi (modifiez pour votre réseau) ---
+// --- Wi-Fi ---
+const char* ssid = "Wokwi-GUEST"; //M022_052F ou Wokwi-GUEST
+const char* password = ""; //33106705
 
-const char* ssid = "Wokwi-GUEST";    //M022_052F ou "Wokwi-GUEST" sur simulateur
-
-const char* password = "";       //33106705 ou "" sur Wokwi
-
-
+//const char* ssid = "M022_052F";
+//const char* password = "33106705"; 
 
 // --- Broker MQTT ---
-
-const char* mqtt_broker = "broker.hivemq.com"; // ou IP locale
-
+const char* mqtt_broker = "broker.hivemq.com";
 const int mqtt_port = 1883;
-
 const char* mqtt_topic = "esp32tfecarmelfiacre/command";
-
-
 
 // --- Broches des LEDs ---
 const int devicePins[7] = {4, 26, 21, 19, 18, 16, 17};
@@ -40,14 +29,12 @@ const int sourceBattPin = 32;
 const int sourceSbeePin = 27;
 const int chargingLedPin = 2;
 
-// LCD parallèle
-const int lcdRs = 13;
-const int lcdEn = 23;
-const int lcdD4 = 5;
-const int lcdD5 = 14;
-const int lcdD6 = 15;
-const int lcdD7 = 25;
-LiquidCrystal lcd(lcdRs, lcdEn, lcdD4, lcdD5, lcdD6, lcdD7);
+// ============================================================
+// LCD I2C (SDA=GPIO23, SCL=GPIO25)
+// ============================================================
+#define LCD_I2C_ADDR 0x27
+LiquidCrystal_I2C lcd(LCD_I2C_ADDR, 16, 2);
+// ============================================================
 
 // Bouton poussoir
 const int buttonPin = 22;
@@ -56,346 +43,293 @@ unsigned long lastDebounceTime = 0;
 const unsigned long debounceDelay = 50;
 
 bool displayFirstPage = true;
-int battPercentValue = 0;
-String lcdMode = "";
-float lcdProduction = 0.0;
-float lcdConsumption = 0.0;
+
+// ------------------------------------------------------------
+// ÉTATS GLOBAUX (pour éviter les clignotements)
+// ------------------------------------------------------------
+bool deviceStates[7] = {false};    // état des 7 LEDs d'appareils
+bool sourceStates[3] = {false};    // [0]solar, [1]batt, [2]sbee
+bool chargingState = false;
+
+// Dernières valeurs affichées sur le LCD (pour comparaison)
+int lastBattPercent = -1;
+String lastMode = "";
+float lastProduction = -1.0;
+float lastConsumption = -1.0;
 
 // ===================================
-
 WiFiClient espClient;
-
 PubSubClient client(espClient);
 
-
-
 unsigned long lastPublish = 0;
-
-const long publishInterval = 10000; // 10 secondes
-
-
+const long publishInterval = 10000;
 
 // ------------------------------------------------------------
-
-// Fonction pour allumer/éteindre les LEDs selon une liste JSON
-
+// Fonctions de mise à jour sans clignotement
 // ------------------------------------------------------------
 
-void resetAllLeds() {
-  for (int i = 0; i < 7; i++) {
-    digitalWrite(devicePins[i], LOW);
-  }
-  digitalWrite(sourceSolarPin, LOW);
-  digitalWrite(sourceBattPin, LOW);
-  digitalWrite(sourceSbeePin, LOW);
-  digitalWrite(chargingLedPin, LOW);
-}
-
-void setDeviceLedById(int deviceId, bool state) {
-  if (deviceId >= 0 && deviceId < 7) {
-    digitalWrite(devicePins[deviceId], state ? HIGH : LOW);
+// Met à jour une LED d'appareil uniquement si son état change
+void setDeviceState(int id, bool state) {
+  if (id < 0 || id >= 7) return;
+  if (deviceStates[id] != state) {
+    digitalWrite(devicePins[id], state ? HIGH : LOW);
+    deviceStates[id] = state;
   }
 }
 
-void setDeviceLedByName(const String& deviceName, bool state) {
-  String name = deviceName;
-  name.trim();
-  name.toLowerCase();
-
-  if (name == "chauffe-eau") {
-    setDeviceLedById(0, state);
-  } else if (name == "climatisation chambre") {
-    setDeviceLedById(1, state);
-  } else if (name == "climatisation salon") {
-    setDeviceLedById(2, state);
-  } else if (name == "congelateur") {
-    setDeviceLedById(3, state);
-  } else if (name == "machine à laver" || name == "machine a laver") {
-    setDeviceLedById(4, state);
-  } else if (name == "micro-ondes" || name == "micro ondes") {
-    setDeviceLedById(5, state);
-  } else if (name == "réfrigérateur" || name == "refrigerateur") {
-    setDeviceLedById(6, state);
-  }
-}
-
-void setSourceLedByName(const String& sourceName, bool state) {
-  String source = sourceName;
-  source.trim();
-  source.toLowerCase();
-  source.replace(" ", "");
-  source.replace("-", "");
-  source.replace("_", "");
-
-  if (source == "solarpannel" || source == "panneausolaire" || source == "solar") {
-    digitalWrite(sourceSolarPin, state ? HIGH : LOW);
-  } else if (source == "batt" || source == "battery" || source == "batterie") {
-    digitalWrite(sourceBattPin, state ? HIGH : LOW);
-  } else if (source == "sbee" || source == "sourcesecours") {
-    digitalWrite(sourceSbeePin, state ? HIGH : LOW);
-  }
-}
-
-void setDevicesFromList(JsonArray deviceList) {
-  for (JsonVariant v : deviceList) {
-    if (v.is<int>()) {
-      int deviceId = v.as<int>();
-      Serial.print("   ➡️ Appareil ID : ");
-      Serial.println(deviceId);
-      setDeviceLedById(deviceId, true);
-    } else {
-      String device = v.as<String>();
-      Serial.print("   ➡️ Appareil : ");
-      Serial.println(device);
-      setDeviceLedByName(device, true);
+// Met à jour une source uniquement si son état change
+void setSourceState(int idx, bool state) {
+  if (idx < 0 || idx >= 3) return;
+  if (sourceStates[idx] != state) {
+    int pin;
+    switch(idx) {
+      case 0: pin = sourceSolarPin; break;
+      case 1: pin = sourceBattPin; break;
+      case 2: pin = sourceSbeePin; break;
     }
+    digitalWrite(pin, state ? HIGH : LOW);
+    sourceStates[idx] = state;
   }
 }
 
-void setSourcesFromList(JsonArray sourceList) {
-  for (JsonVariant v : sourceList) {
-    String source = v.as<String>();
-    Serial.print("   🔌 Source active : ");
-    Serial.println(source);
-    setSourceLedByName(source, true);
+// Met à jour le voyant de charge uniquement si changement
+void setChargingState(bool state) {
+  if (chargingState != state) {
+    digitalWrite(chargingLedPin, state ? HIGH : LOW);
+    chargingState = state;
   }
 }
 
-void updateLcdDisplay() {
+// Convertit un nom d'appareil en ID (0..6)
+int deviceNameToId(const String& name) {
+  String n = name;
+  n.trim();
+  n.toLowerCase();
+  if (n == "chauffe-eau") return 0;
+  if (n == "climatisation chambre") return 1;
+  if (n == "climatisation salon") return 2;
+  if (n == "congelateur") return 3;
+  if (n == "machine à laver" || n == "machine a laver") return 4;
+  if (n == "micro-ondes" || n == "micro ondes") return 5;
+  if (n == "réfrigérateur" || n == "refrigerateur") return 6;
+  return -1;
+}
+
+// Convertit un nom de source en index (0..2)
+int sourceNameToIndex(const String& name) {
+  String s = name;
+  s.trim();
+  s.toLowerCase();
+  s.replace(" ", "");
+  s.replace("-", "");
+  s.replace("_", "");
+  if (s == "solarpannel" || s == "panneausolaire" || s == "solar") return 0;
+  if (s == "batt" || s == "battery" || s == "batterie") return 1;
+  if (s == "sbee" || s == "sourcesecours") return 2;
+  return -1;
+}
+
+// ------------------------------------------------------------
+// Mise à jour de l'écran LCD (seulement si changement)
+// ------------------------------------------------------------
+void updateLcdIfNeeded(int battPercent, const String& mode, float prod, float cons) {
+  bool changed = false;
+  if (battPercent != lastBattPercent) { lastBattPercent = battPercent; changed = true; }
+  if (mode != lastMode) { lastMode = mode; changed = true; }
+  if (prod != lastProduction) { lastProduction = prod; changed = true; }
+  if (cons != lastConsumption) { lastConsumption = cons; changed = true; }
+
+  if (!changed) return;  // rien de nouveau → on ne rafraîchit pas
+
   lcd.clear();
   if (displayFirstPage) {
     lcd.setCursor(0, 0);
     lcd.print("Batt:");
-    lcd.print(battPercentValue);
+    lcd.print(battPercent);
     lcd.print("%");
     lcd.setCursor(0, 1);
     lcd.print("Mode:");
-    lcd.print(lcdMode.substring(0, min((int)lcdMode.length(), 10)));
+    lcd.print(mode.substring(0, min((int)mode.length(), 10)));
   } else {
     lcd.setCursor(0, 0);
     lcd.print("Prod:");
-    lcd.print(lcdProduction, 1);
+    lcd.print(prod, 1);
     lcd.print("W");
     lcd.setCursor(0, 1);
-    lcd.print("Cons:");
-    lcd.print(lcdConsumption, 1);
+    lcd.print("Conso:");
+    lcd.print(cons, 1);
     lcd.print("W");
   }
 }
 
-void updateLcdFromPayload(JsonVariant lcdValue) {
-  if (lcdValue.isNull()) {
-    return;
-    Serial.println("null");
-  }
-  Serial.println("middle");
-  if (lcdValue.is<JsonArray>()) {
-    Serial.println("lcdValue is a jsonArray");
-    JsonArray lcdArray = lcdValue.as<JsonArray>();
-    if (lcdArray.size() >= 4) {
-      battPercentValue = lcdArray[0] | 0;
-      lcdMode = lcdArray[1].as<String>();
-      lcdProduction = lcdArray[2] | 0.0;
-      lcdConsumption = lcdArray[3] | 0.0;
-    }
-  } else if (lcdValue.is<JsonObject>()) {
-    JsonObject lcdObject = lcdValue.as<JsonObject>();
-    battPercentValue = lcdObject["battPercentage"] | lcdObject["battery"] | 0;
-    lcdMode = lcdObject["mode"].as<String>();
-    lcdProduction = lcdObject["production"] | lcdObject["prod"] | 0.0;
-    lcdConsumption = lcdObject["consumption"] | lcdObject["cons"] | 0.0;
-  }
-
-  updateLcdDisplay();
-  Serial.print("   🖥️ LCD update: ");
-  Serial.print(battPercentValue);
-  Serial.print("%, ");
-  Serial.print(lcdMode);
-  Serial.print(", ");
-  Serial.print(lcdProduction);
-  Serial.print(" W, ");
-  Serial.print(lcdConsumption);
-  Serial.println(" W");
-}
-
-  
-
-
-
-
 // ------------------------------------------------------------
-
-// CALLBACK optimisé (sans String, avec filtre, sans blocage)
-
+// CALLBACK optimisé (sans resetAllLeds)
 // ------------------------------------------------------------
-
 void callback(char* topic, byte* payload, unsigned int length) {
-
-  // --- 1. Détection du "ping" (comparaison directe) ---
-
+  // --- 1. Détection du "ping" ---
   if (length >= 4 && 
-
       payload[0] == 'p' && payload[1] == 'i' && 
-
       payload[2] == 'n' && payload[3] == 'g') {
-
-    // On peut afficher rapidement sans bloquer
-
     Serial.println("📤 Ping reçu (ignoré)");
-
     return;
-
   }
 
-
-
-  // --- 2. Affichage du message reçu (pour déboguer) ---
-
-  // On itère sur le payload pour gérer les caractères nuls éventuels
-
+  // --- 2. Affichage du message reçu ---
   Serial.print("📩 Message reçu (");
-
   Serial.print(length);
-
   Serial.print(" octets) : ");
-
   for (int i = 0; i < length; i++) {
-
     Serial.print((char)payload[i]);
-
   }
-
   Serial.println();
 
-
-
-  // --- 3. Filtre JSON (pour ne garder que l'essentiel) ---
-
-  // Cela réduit considérablement la mémoire nécessaire
-
+  // --- 3. Filtre JSON ---
   StaticJsonDocument<200> filter;
-filter["chargerBatt"] = true;
-filter["activateMode"]["onDevice"] = true;
-filter["activeSource"] = true;
-filter["lcd"] = true;
+  filter["chargerBatt"] = true;
+  filter["activateMode"]["onDevice"] = true;
+  filter["activeSource"] = true;
+  filter["lcd"] = true;
 
-
-  // --- 4. Document JSON avec capacité adaptée ---
-
+  // --- 4. Document JSON ---
   DynamicJsonDocument doc(4096);
 
-
-
-  // --- 5. Parsing direct depuis le payload (sans String) ---
-
+  // --- 5. Parsing ---
   DeserializationError error = deserializeJson(doc, payload, length, DeserializationOption::Filter(filter));
 
-
-
   if (error) {
-
     Serial.print("❌ Erreur de parsing JSON : ");
-
     Serial.println(error.f_str());
     return;
   }
 
-
-
   Serial.println("✅ JSON parsé avec succès !");
 
+  // --- 6. Construire les états souhaités (tous éteints par défaut) ---
+  bool newDeviceStates[7] = {false};
+  bool newSourceStates[3] = {false};
+  bool newCharging = false;
 
-
-  // --- 6. Extraction des données ---
-  resetAllLeds();
-
+  // --- 7. Extraire les appareils ---
   JsonObject activateMode = doc["activateMode"];
   if (!activateMode.isNull()) {
     JsonArray onDevice = activateMode["onDevice"];
     if (!onDevice.isNull()) {
       Serial.println("   📋 Liste 'onDevice' reçue :");
-      setDevicesFromList(onDevice);
+      for (JsonVariant v : onDevice) {
+        if (v.is<int>()) {
+          int id = v.as<int>();
+          if (id >= 0 && id < 7) {
+            newDeviceStates[id] = true;
+            Serial.print("   ➡️ Appareil ID : ");
+            Serial.println(id);
+          }
+        } else {
+          String name = v.as<String>();
+          int id = deviceNameToId(name);
+          if (id >= 0) {
+            newDeviceStates[id] = true;
+            Serial.print("   ➡️ Appareil : ");
+            Serial.println(name);
+          }
+        }
+      }
     }
   }
 
+  // --- 8. Extraire les sources ---
   JsonVariant activeSource = doc["activeSource"];
   if (!activeSource.isNull()) {
     if (activeSource.is<JsonArray>()) {
       JsonArray sources = activeSource.as<JsonArray>();
-      setSourcesFromList(sources);
-    } else {
-      String source = activeSource.as<String>();
-      setSourceLedByName(source, true);
-      Serial.print("   🔌 Source active : ");
-      Serial.println(source);
-    }
-  }
-
-  bool chargerBatt = doc["chargerBatt"] | false;
-  digitalWrite(chargingLedPin, chargerBatt ? HIGH : LOW);
-  Serial.print("   🔋 chargerBatt = ");
-  Serial.println(chargerBatt ? "true" : "false");
-
-  JsonVariant lcdValue = doc["lcd"];
-
-  updateLcdFromPayload(lcdValue);
-
-}
-
-
-
-// ------------------------------------------------------------
-
-// Reconnexion MQTT non bloquante (déjà bonne)
-
-// ------------------------------------------------------------
-
-void reconnectMQTT() {
-
-  while (!client.connected()) {
-
-    Serial.print("🔌 Connexion MQTT...");
-
-    String clientId = "ESP32-" + String(random(0xffff), HEX);
-
-    if (client.connect(clientId.c_str())) {
-
-      Serial.println("✅ Connecté");
-
-      if (client.subscribe(mqtt_topic)) {
-
-        Serial.print("📡 Abonné à ");
-
-        Serial.println(mqtt_topic);
-
+      for (JsonVariant v : sources) {
+        String name = v.as<String>();
+        int idx = sourceNameToIndex(name);
+        if (idx >= 0) {
+          newSourceStates[idx] = true;
+          Serial.print("   🔌 Source active : ");
+          Serial.println(name);
+        }
       }
-
     } else {
-
-      Serial.print("❌ Échec, code ");
-
-      Serial.print(client.state());
-
-      Serial.println(" - nouvel essai dans 5s");
-
-      delay(5000); // Seul délai acceptable (hors loop)
-
+      String name = activeSource.as<String>();
+      int idx = sourceNameToIndex(name);
+      if (idx >= 0) {
+        newSourceStates[idx] = true;
+        Serial.print("   🔌 Source active : ");
+        Serial.println(name);
+      }
     }
-
   }
 
+  // --- 9. Chargement batterie ---
+  newCharging = doc["chargerBatt"] | false;
+  Serial.print("   🔋 chargerBatt = ");
+  Serial.println(newCharging ? "true" : "false");
+
+  // --- 10. Appliquer les nouveaux états (uniquement les changements) ---
+  for (int i = 0; i < 7; i++) {
+    setDeviceState(i, newDeviceStates[i]);
+  }
+  for (int i = 0; i < 3; i++) {
+    setSourceState(i, newSourceStates[i]);
+  }
+  setChargingState(newCharging);
+
+  // --- 11. Mise à jour de l'écran LCD (avec comparaison) ---
+  JsonVariant lcdValue = doc["lcd"];
+  if (!lcdValue.isNull()) {
+    int batt = 0;
+    String mode = "";
+    float prod = 0.0, cons = 0.0;
+
+    if (lcdValue.is<JsonArray>()) {
+      JsonArray arr = lcdValue.as<JsonArray>();
+      if (arr.size() >= 4) {
+        batt = arr[0] | 0;
+        mode = arr[1].as<String>();
+        prod = arr[2] | 0.0;
+        cons = arr[3] | 0.0;
+      }
+    } else if (lcdValue.is<JsonObject>()) {
+      JsonObject obj = lcdValue.as<JsonObject>();
+      batt = obj["battPercentage"] | obj["battery"] | 0;
+      mode = obj["mode"].as<String>();
+      prod = obj["production"] | obj["prod"] | 0.0;
+      cons = obj["consumption"] | obj["cons"] | 0.0;
+    }
+
+    updateLcdIfNeeded(batt, mode, prod, cons);
+  }
 }
 
-
+// ------------------------------------------------------------
+// Reconnexion MQTT
+// ------------------------------------------------------------
+void reconnectMQTT() {
+  while (!client.connected()) {
+    Serial.print("🔌 Connexion MQTT...");
+    String clientId = "ESP32-" + String(random(0xffff), HEX);
+    
+    if (client.connect(clientId.c_str())) {
+      Serial.println("✅ Connecté");
+      if (client.subscribe(mqtt_topic)) {
+        Serial.print("📡 Abonné à ");
+        Serial.println(mqtt_topic);
+      }
+    } else {
+      Serial.print("❌ Échec, code ");
+      Serial.print(client.state());
+      Serial.println(" - nouvel essai dans 5s");
+      delay(5000);
+    }
+  }
+}
 
 // ------------------------------------------------------------
-
 // SETUP
-
 // ------------------------------------------------------------
-
 void setup() {
-  // Initialisation des broches
+  // Initialisation des broches LED
   int pins[] = {devicePins[0], devicePins[1], devicePins[2], devicePins[3],
                 devicePins[4], devicePins[5], devicePins[6], sourceSolarPin,
                 sourceBattPin, sourceSbeePin, chargingLedPin};
@@ -407,71 +341,76 @@ void setup() {
   pinMode(buttonPin, INPUT_PULLUP);
 
   Serial.begin(115200);
-  lcd.begin(16, 2);
-  updateLcdDisplay();
+  
+  // ============================================================
+  // INITIALISATION LCD I2C (SDA=GPIO23, SCL=GPIO25)
+  // ============================================================
+  Wire.begin(23, 25);
+  lcd.init();
+  lcd.backlight();
+  // ============================================================
+  
+  // Initialiser les états globaux
+  for (int i = 0; i < 7; i++) deviceStates[i] = false;
+  for (int i = 0; i < 3; i++) sourceStates[i] = false;
+  chargingState = false;
+  lastBattPercent = -1;
+  lastMode = "";
+  lastProduction = -1.0;
+  lastConsumption = -1.0;
+
+  // Afficher une première page (par défaut)
+  updateLcdIfNeeded(0, "Init", 0.0, 0.0);
   delay(100);
 
-
-
   // Connexion Wi-Fi
-
   Serial.print("📶 Wi-Fi");
-
   WiFi.begin(ssid, password);
-
   while (WiFi.status() != WL_CONNECTED) {
-
     delay(500);
-
     Serial.print(".");
-
   }
-
   Serial.println(" ✅ Connecté ! IP : " + WiFi.localIP().toString());
 
-
-
   // Configuration MQTT
-
   client.setServer(mqtt_broker, mqtt_port);
-
   client.setCallback(callback);
-
   client.setKeepAlive(60);
-
   reconnectMQTT();
-
 }
 
-
-
 // ------------------------------------------------------------
-
-// LOOP (non bloquant)
-
+// LOOP
 // ------------------------------------------------------------
-
 void loop() {
-  // Vérifier et maintenir la connexion MQTT
   if (!client.connected()) {
     reconnectMQTT();
   }
   client.loop();
+  static unsigned long lastDebounceTime = 0;
+  static int lastButtonState = HIGH;
+  static int currentButtonState = HIGH;
 
-  int buttonState = digitalRead(buttonPin);
-  if (buttonState != lastButtonState) {
+  int reading = digitalRead(buttonPin);
+
+  if (reading != lastButtonState) {
     lastDebounceTime = millis();
   }
 
   if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (buttonState == LOW && lastButtonState == HIGH) {
-      displayFirstPage = !displayFirstPage;
-      updateLcdDisplay();
+    // Le signal est stable
+    if (reading != currentButtonState) {
+      currentButtonState = reading;
+      if (currentButtonState == LOW) {  // Appui détecté
+        displayFirstPage = !displayFirstPage;
+        updateLcdIfNeeded(lastBattPercent, lastMode, lastProduction, lastConsumption);
+        Serial.println("🔘 Bouton pressé - page changée");
+      }
     }
   }
-  lastButtonState = buttonState;
+    lastButtonState = reading;
 
-  // Publication périodique d'un ping (non bloquant)
+    // Envoi périodique d'un ping
   unsigned long now = millis();
   if (now - lastPublish >= publishInterval) {
     lastPublish = now;
