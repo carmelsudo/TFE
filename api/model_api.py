@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request,Form,WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request,Form,WebSocket, WebSocketDisconnect, Body
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 import pickle as pkl
@@ -17,9 +17,9 @@ from datetime import datetime, timedelta
 import aiosqlite
 import requests
 from datetime import datetime,date,timedelta
-
+import traceback
 import math
-
+import aiomqtt
 from fastapi import Query
 
 
@@ -30,7 +30,7 @@ base_path = Path(__file__).resolve().parent.parent
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer "
+        "Authorization": "Bearer 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"
     }
 
 # dossier de fichier statique a servir a  l'interface
@@ -42,9 +42,21 @@ templates = Jinja2Templates(directory = base_path/"client/interface")
 # Coordonnées de Lokossa (Bénin)
 latitude = 6.633
 longitude = 1.717
+# custom timestamp pour les test;
 
 tarrif_kwh = 125 # tariff du kwh au benin 
 taxe = 0.18 # TVA
+# broquer mqtt
+# Configuration MQTT
+MQTT_BROKER = "broker.hivemq.com"  # localhost
+MQTT_PORT = 1883                   # Port par défaut Mosquitto
+MQTT_USERNAME = ""                 # Laissez vide si pas d'authentification
+MQTT_PASSWORD = ""
+MQTT_TOPIC_PREFIX = "esp32tfecarmelfiacre"        # Préfixe des topics
+
+# Topic pour les données remontées par l'ESP32
+# pour envoyer la stratégie à l'ESP32
+MQTT_TOPIC_COMMAND = f"{MQTT_TOPIC_PREFIX}/command"
 
 # declaration de variable
 maxProdValue = 250  # Valeur maximale de production trouvée
@@ -55,6 +67,70 @@ weather_url = (
     f"&hourly=windspeed_10m,sunshine_duration,pressure_msl,shortwave_radiation,temperature_2m,relativehumidity_2m,weathercode"
     f"&timezone=auto&forecast_days=1"
 )
+# fonction pour récuperer les données météorologiques d'une date précise
+def getPastWeatherData(target_date):
+    """
+    Récupère les données météo horaires pour une date précise.
+    Utilise l'endpoint ARCHIVE pour les dates trop anciennes pour l'API de prévisions.
+    target_date : objet datetime.date ou chaîne 'YYYY-MM-DD'
+    """
+       # Convertir en objet date
+    if isinstance(target_date, datetime):
+        target_date = target_date.date()
+    elif isinstance(target_date, str):
+        target_date = datetime.strptime(target_date, "%Y-%m-%d").date()
+    # sinon on suppose que c'est déjà un date
+
+    date_str = target_date.isoformat()  # 'YYYY-MM-DD'
+
+    latitude = 6.6515
+    longitude = 1.7203
+
+    # L'API d'archive n'a pas de données pour les jours trop récents (moins de 5-6 jours).
+    # On vérifie donc si la date est trop récente.
+    today = datetime.now().date()
+    if isinstance(target_date, str):
+        target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+    # Si la date est dans les 7 derniers jours, on utilise l'API de prévisions.
+    # Sinon, on utilise l'API d'archive.
+    if (today - target_date).days <= 7:
+        print(f"Utilisation de l'API de prévisions pour la date {date_str}")
+        url = (
+            f"https://api.open-meteo.com/v1/forecast"
+            f"?latitude={latitude}&longitude={longitude}"
+            f"&hourly=windspeed_10m,sunshine_duration,pressure_msl,shortwave_radiation,temperature_2m,relativehumidity_2m,weathercode"
+            f"&timezone=auto"
+            f"&start_date={date_str}&end_date={date_str}"
+        )
+    else:
+        print(f"Utilisation de l'API d'archive pour la date {date_str}")
+        url = (
+            f"https://archive-api.open-meteo.com/v1/archive"
+            f"?latitude={latitude}&longitude={longitude}"
+            f"&hourly=windspeed_10m,sunshine_duration,pressure_msl,shortwave_radiation,temperature_2m,relativehumidity_2m,weathercode"
+            f"&timezone=auto"
+            f"&start_date={date_str}&end_date={date_str}"
+        )
+
+    response = requests.get(url)
+    data = response.json()
+
+    if "error" in data:
+        return {"error": data["reason"]}
+
+    hourly = data["hourly"]
+    return {
+        "WindSpeed": hourly["windspeed_10m"],
+        "Sunshine": [s/60 for s in hourly["sunshine_duration"]],
+        "AirPressure": hourly["pressure_msl"],
+        "Radiation": hourly["shortwave_radiation"],
+        "AirTemperature": hourly["temperature_2m"],
+        "RelativeAirHumidity": hourly["relativehumidity_2m"],
+        "Hour": [datetime.fromisoformat(t).hour for t in hourly["time"]],
+        "Month": [datetime.fromisoformat(t).month for t in hourly["time"]],
+        "weatherCode": hourly["weathercode"]
+    }
 
 # fonction récupérer les données météorologique
 def getWeatherData():
@@ -83,11 +159,12 @@ def getWeatherData():
         } 
 try :
     weatherData =  getWeatherData()
-    # print(weatherData)
-    #weatherData = {'WindSpeed': [4.5, 5.5, 4.8, 4.9, 5.0, 4.4, 4.5, 5.7, 5.0, 6.3, 9.3, 5.8, 5.6, 6.3, 12.2, 7.3, 5.8, 6.1, 12.0, 10.0, 9.6, 7.9, 6.0, 7.4], 'Sunshine': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 57.46783333333334, 0.0, 0.0, 0.0, 0.0], 'AirPressure': [1013.7, 1013.1, 1012.6, 1012.0, 1011.5, 1011.4, 1011.5, 1012.3, 1012.8, 1013.4, 1013.6, 1013.7, 1013.2, 1012.2, 1011.2, 1010.1, 1009.4, 1008.6, 1009.1, 1009.1, 1010.1, 1010.9, 1011.9, 1012.0], 'Radiation': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0, 119.0, 325.0, 539.0, 695.0, 826.0, 886.0, 856.0, 655.0, 592.0, 447.0, 234.0, 60.0, 0.0, 0.0, 0.0, 0.0], 'AirTemperature': [26.1, 26.2, 25.8, 25.6, 25.5, 25.2, 25.1, 25.4, 26.6, 28.2, 29.8, 30.8, 31.5, 32.0, 29.4, 29.5, 30.6, 30.9, 28.9, 27.6, 27.1, 26.8, 26.5, 26.4], 'RelativeAirHumidity': [93, 93, 95, 95, 95, 96, 96, 94, 90, 85, 76, 72, 71, 70, 81, 80, 73, 69, 79, 88, 90, 91, 92, 92], 'Hour': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], 'Month': [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5], 'weatherCode': [2, 1, 2, 3, 3, 3, 3, 0, 0, 0, 1, 0, 95, 95, 80, 80, 51, 51, 51, 51, 2, 1, 0, 1]}
+    #print(weatherData)
+    #weatherData = {'WindSpeed': [4.1, 3.6, 4.5, 5.4, 3.8, 2.9, 5.6, 4.5, 2.7, 5.4, 9.8, 9.5, 8.3, 6.8, 8.3, 10.1, 10.7, 9.2, 6.4, 4.1, 6.3, 1.9, 3.5, 4.0], 'Sunshine': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 3.307166666666667, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 3.355, 60.0, 22.023000000000003, 0.0, 0.0, 0.0, 0.0, 0.0], 'AirPressure': [1015.7, 1015.1, 1014.6, 1014.0, 1014.0, 1014.6, 1014.5, 1015.0, 1015.9, 1016.0, 1016.1, 1016.0, 1015.0, 1014.1, 1013.0, 1011.4, 1011.1, 1011.6, 1012.6, 1013.3, 1014.5, 1015.2, 1015.6, 1014.9], 'Radiation': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 74.0, 277.0, 488.0, 626.0, 763.0, 818.0, 819.0, 695.0, 264.0, 316.0, 161.0, 26.0, 0.0, 0.0, 0.0, 0.0], 'AirTemperature': [24.7, 25.9, 25.3, 25.1, 24.9, 24.8, 24.6, 24.5, 25.3, 26.8, 28.5, 29.6, 30.6, 31.4, 31.5, 29.9, 27.5, 27.7, 25.8, 25.1, 24.1, 23.8, 24.0, 23.8], 'RelativeAirHumidity': [98, 95, 97, 98, 98, 98, 98, 97, 95, 89, 78, 72, 67, 65, 65, 72, 88, 86, 92, 94, 97, 98, 96, 96], 'Hour': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], 'Month': [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6], 'weatherCode': [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 51, 51, 51, 3, 3, 51, 80, 55, 81, 81, 81, 81, 61, 53]}
 except Exception as e: 
     print("error-----------------------------------------")
 
+pastWeatherData = None
 # model de classe
 #model de classe pour la prédiction
 class prod_data(BaseModel):
@@ -202,7 +279,9 @@ class conso_data(BaseModel):
     est_jour_ferie: int #jour férié
     saison_Saison_chaude: int # saison chaude
     saison_Saison_Pluies: int #saison pluvieuse
- 
+
+class DeviceModes(BaseModel):
+    modes: dict
     
 @app.post("/prediction/consommation")
 def getPredConso(data :conso_data):
@@ -579,7 +658,7 @@ async def getTodayGraphicData():
             hour = int(dt.strftime('%H'))
             graphic_data["batt"][hour] = batt_data["data"][i]["battPercentage"]
     return graphic_data
-
+global prediction_consommation,prediction_production
 # mise a jours imédiate des donnée du graphe
 asyncio.create_task(getTodayGraphicData())
 
@@ -660,7 +739,51 @@ async def init_db():
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON consommation(timestamp)")
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON gain(timestamp)")
         await db.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON archive(timestamp)")
+        
+        # table devices (appareils et leurs modes d'autorisation)
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS devices(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT UNIQUE NOT NULL,
+                allowed_normal BOOLEAN DEFAULT 1,
+                allowed_saving BOOLEAN DEFAULT 1,
+                allowed_ultrasaving BOOLEAN DEFAULT 0
+            )
+        """)
         await db.commit()
+
+# Fonction pour initialiser les appareils dans la table devices
+async def init_devices():
+    """Insère les appareils par défaut dans la table devices"""
+    devices_data = [
+        ("Climatisation salon", 1, 1, 0),
+        ("Climatisation chambre", 1, 1, 0),
+        ("Micro-ondes", 1, 1, 0),
+        ("Machine à laver", 1, 0, 0),
+        ("Chauffe-eau", 1, 0, 0),
+        ("Congélateur", 1, 1, 1),
+        ("Réfrigérateur", 1, 1, 1),
+    ]
+    
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            # Vérifier si les appareils existent déjà
+            async with db.execute("SELECT COUNT(*) FROM devices") as cursor:
+                count = await cursor.fetchone()
+                if count[0] == 0:  # Si la table est vide
+                    print("Insertion des appareils par défaut...")
+                    for name, normal, saving, ultrasaving in devices_data:
+                        await db.execute(
+                            """INSERT INTO devices(name, allowed_normal, allowed_saving, allowed_ultrasaving)
+                               VALUES (?, ?, ?, ?)""",
+                            (name, normal, saving, ultrasaving)
+                        )
+                    await db.commit()
+                    print(f"{len(devices_data)} appareils insérés")
+                else:
+                    print(f"Les appareils existent déjà ({count[0]} trouvés)")
+    except Exception as e:
+        print(f"Erreur lors de l'initialisation des appareils: {e}")
 
 start_time = datetime.now()
 # fonction pour choisir un status
@@ -710,7 +833,7 @@ async def cycle1h():
             # Action à faire toutes les heures
             # Récupérer l'heure actuelle pour obtenir l'indice dans les listes
             try:
-                applyStrategy()
+                await applyRealOrTestStrategy(test_data["cts"])
                 # mise a jours des donnée prod et conso
                 hourly_data["consommation_h"],hourly_data["production_h"] = conso_cumul.energie_wh(),prod_cumul.energie_wh()
                 # mise a jours des données graphique 
@@ -809,29 +932,31 @@ def generate_data():
         """Génère des données avec tendances réalistes"""
         now = datetime.now()
         hour = now.hour
-        sunshine = weatherData["Sunshine"][hour]
         # Production solaire avec courbe lisse
         production= break_hourly_average(prediction_production["hourly_predictions"][hour]['prediction_wh'],3600)[now.minute]
         # Consommation avec bruit
         consommation = break_hourly_average(prediction_consommation[hour]["prediction de consommation"])[now.minute]
         return max(0, production), max(0, consommation)
 # mettre a jours les données de capteurs toutes les 5 secondes 
+changement_de_strategie = False
 async def updateSensorData():
+    global changement_de_strategie
     """Mettre à jour les données des capteurs en continu"""
     try:
         while True:
             await asyncio.sleep(5)
             sensor_data["production"],sensor_data["consommation"] = generate_data() 
-            sensor_data["battPercentage"] = 50
-            sensor_data["sbee"] = True
+            sensor_data["battPercentage"] = test_data["battPercentage"]
+            sensor_data["sbee"] = test_data["sbee"]
             # mise a jour des données stratégiques
             predictionData["battPercentage"] = sensor_data["battPercentage"]
             predictionData["sbee"] = sensor_data["sbee"]
             # mettre a jours le time stamp
             sensor_data["timestamp"] = asyncio.get_event_loop().time()
             # vérification de la sbee et lancement d'une nouvelle stratégie
-            if not sensor_data["sbee"]:
-                print("changement de stratégie--------------------------------------- ")
+            if not sensor_data["sbee"] and not changement_de_strategie:
+                changement_de_strategie = True
+                print("=======changement de stratégie================")
                 hourlyStrategy(predictionData)
             # Log des données mises à jour
     except asyncio.CancelledError:
@@ -861,8 +986,11 @@ async def startup_event():
         asyncio.create_task(updateSensorData())
     ]
     await init_db()
+    await init_devices()  # Initialiser les appareils par défaut
     await init_cumuls()  # Initialiser les cumuls avec les données de la BDD
     maxProdValue = await maxProd(0)
+    await mqtt_publisher.connect()
+    #asyncio.create_task(send_mqtt_command({"mode": "saving", "seuil": 500, "charger_batt": True}))
 
 # Event Shutdown - Arrêter proprement les tâches en arrière-plan
 @app.on_event("shutdown")
@@ -878,17 +1006,29 @@ async def shutdown_event():
             except asyncio.CancelledError:
                 pass
     background_tasks.clear()
+    await mqtt_publisher.disconnect()
 
 #donnée instantannée en prod ces donnée doivent provenir de la lecture des capteur du RBP
+test_data = {
+    "battPercentage" : 100,
+    "battCapacity": 3000,
+    "seuil" : 1000,
+    "sbee"  : True,
+    "timestamp": None,
+    "cts" : "null",
+}
+
 sensor_data = {
     "production": 0,
     "consommation": 0,
-    "battPercentage" : 0,
-    "battCapacity": 3000,
-    "activeSource" :"solarPannel",
+    "battPercentage" : test_data["battPercentage"],
+    "battCapacity": test_data["battCapacity"],
+    "activeSource" :["solarPannel"],
     "timestamp": None,
-    "sbee" : True, # en prod, cette data doit provenir de la lecture de capteur, 
+    "sbee" : test_data["sbee"] # en prod, cette data doit provenir de la lecture de capteur, 
 }
+# liste des appareils 
+
 # donnée horaire, sont mise a jours toute les heures dans ccycle1h
 hourly_data={
     "production_h" : 0,
@@ -900,7 +1040,81 @@ hourly_data={
 last_sent_data = None
 
 # Classe MQTT pour récupérer les données
+class PersistentMQTTClient:
+    """Client MQTT persistant avec reconnexion automatique si la connexion est perdue."""
+    def __init__(self):
+        self.client = None
+        self.connected = False
+        self._reconnect_task = None
 
+    async def connect(self):
+        """Établit la connexion MQTT et lance la surveillance de reconnexion."""
+        await self._connect_internal()
+        # Démarrer la tâche de surveillance (reconnexion si perte)
+        self._reconnect_task = asyncio.create_task(self._watch_connection())
+
+    async def _connect_internal(self):
+        try:
+            if self.client:
+                await self.disconnect()
+            self.client = aiomqtt.Client(
+                hostname=MQTT_BROKER,
+                port=MQTT_PORT,
+                username=MQTT_USERNAME if MQTT_USERNAME else None,
+                password=MQTT_PASSWORD if MQTT_PASSWORD else None,
+            )
+            await self.client.__aenter__()
+            self.connected = True
+            print(f"✅ MQTT connecté à {MQTT_BROKER}:{MQTT_PORT}")
+        except Exception as e:
+            self.connected = False
+            print(f"❌ Échec connexion MQTT : {e}")
+
+    async def _watch_connection(self):
+        """Surveille la connexion et tente de reconnecter si elle est perdue."""
+        while True:
+            await asyncio.sleep(10)
+            if not self.connected:
+                print("🔄 MQTT déconnecté, tentative de reconnexion...")
+                await self._connect_internal()
+
+    async def publish(self, topic: str, payload: str, qos: int = 1):
+        """Publie un message sur le topic donné."""
+        if self.client and self.connected:
+            try:
+                await self.client.publish(topic, payload=payload, qos=qos)
+                print(f"📤 MQTT pub [{topic}]: {payload}")
+                return True
+            except Exception as e:
+                print(f"❌ Erreur publication MQTT : {e}")
+                self.connected = False  # déclenchera la reconnexion
+        else:
+            print(f"⚠️ MQTT non connecté, impossible de publier sur {topic}")
+        return False
+
+    async def disconnect(self):
+        """Ferme proprement la connexion MQTT."""
+        if self.client and self.connected:
+            try:
+                await self.client.__aexit__(None, None, None)
+            except:
+                pass
+            self.client = None
+            self.connected = False
+        if self._reconnect_task:
+            self._reconnect_task.cancel()
+            try:
+                await self._reconnect_task
+            except asyncio.CancelledError:
+                pass
+
+# Instance globale du client MQTT (sera initialisée au startup)
+mqtt_publisher = PersistentMQTTClient()
+# fonction pour l'envoie d'une commande au mqtt
+async def send_mqtt_command(command: dict):
+    payload = json.dumps(command)
+    await mqtt_publisher.publish(MQTT_TOPIC_COMMAND, payload)
+    print("commande envoyé")
 # classe pour stocker la production instantanée afin d'obtenir la production et la consommation horaire
 class EnergyCumul:
     def __init__(self, duree_heures=1):
@@ -1051,7 +1265,14 @@ def handle_form(request:Request,windspeed :str  = Form(...)):
         context=context
     )
 
-
+# endpoint pour la page de test 
+@app.get("/test")
+def test_page(request:Request):
+    return templates.TemplateResponse(
+        request = request,
+        name = "test.html",
+    )
+    
 # endpoint pour récuperer les données météorologiques 
 @app.get('/weather')
 async def get_hourly_weather_data():
@@ -1074,6 +1295,84 @@ async def get_hourly_weather_data():
             return {"error": "Impossible de récupérer les données météorologiques"}
     except Exception as e:
         return {"error": f"Erreur: {str(e)}"}
+
+# Endpoint pour récupérer tous les appareils
+@app.get("/devices")
+async def get_devices():
+    """Récupère tous les appareils avec leurs permissions par mode"""
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            db.row_factory = aiosqlite.Row
+            async with db.execute("""
+                SELECT name, allowed_normal, allowed_saving, allowed_ultrasaving
+                FROM devices
+                ORDER BY name ASC
+            """) as cursor:
+                rows = await cursor.fetchall()
+                devices = []
+                for row in rows:
+                    devices.append({
+                        "name": row["name"],
+                        "modes": {
+                            "normal": bool(row["allowed_normal"]),
+                            "saving": bool(row["allowed_saving"]),
+                            "ultraSaving": bool(row["allowed_ultrasaving"])
+                        }
+                    })
+                return {
+                    "devices": devices,
+                    "count": len(devices)
+                }
+    except Exception as e:
+        return {
+            "error": f"Erreur lors de la lecture des appareils: {str(e)}"
+        }
+
+# Endpoint pour mettre à jour les permissions d'un appareil
+@app.put("/devices/{device_name}")
+async def update_device(device_name: str, data: DeviceModes):
+    """Met à jour les permissions d'un appareil"""
+    try:
+        modes = data.modes
+        async with aiosqlite.connect("energy.db") as db:
+            await db.execute(
+                """UPDATE devices 
+                   SET allowed_normal = ?, allowed_saving = ?, allowed_ultrasaving = ?
+                   WHERE name = ?""",
+                (int(modes.get("normal", 0)), int(modes.get("saving", 0)), int(modes.get("ultraSaving", 0)), device_name)
+            )
+            await db.commit()
+            return {"success": True, "message": f"Appareil '{device_name}' mis à jour"}
+    except Exception as e:
+        return {"error": f"Erreur lors de la mise à jour: {str(e)}"}
+
+# Endpoint pour réinitialiser les permissions par défaut
+@app.post("/devices/reset")
+async def reset_devices():
+    """Réinitialise tous les appareils aux permissions par défaut"""
+    devices_defaults = [
+        ("Climatisation salon", 1, 1, 0),
+        ("Climatisation chambre", 1, 1, 0),
+        ("Micro-ondes", 1, 1, 0),
+        ("Machine à laver", 1, 0, 0),
+        ("Chauffe-eau", 1, 0, 0),
+        ("Congélateur", 1, 1, 1),
+        ("Réfrigérateur", 1, 1, 1),
+    ]
+    try:
+        async with aiosqlite.connect("energy.db") as db:
+            for name, normal, saving, ultrasaving in devices_defaults:
+                await db.execute(
+                    """UPDATE devices 
+                       SET allowed_normal = ?, allowed_saving = ?, allowed_ultrasaving = ?
+                       WHERE name = ?""",
+                    (normal, saving, ultrasaving, name)
+                )
+            await db.commit()
+            return {"success": True, "message": "Tous les appareils ont été réinitialisés aux permissions par défaut"}
+    except Exception as e:
+        return {"error": f"Erreur lors de la réinitialisation: {str(e)}"}
+
 # Endpoint pour récupérer les gains du jour
 @app.get("/gain/today")
 async def get_today_gain():
@@ -1223,8 +1522,8 @@ async def get_archive_all_grouped():
 predictionData = {
         "battPercentage" : sensor_data["battPercentage"],
         "sbee" : sensor_data["sbee"],
-        "predProd" : prediction_production ,#getPred(weatherData), 
-        "predConso" : prediction_consommation,#getConso(analyser_lokossa()),
+        "predProd" : prediction_production ,
+        "predConso" : prediction_consommation,
     }
 # fonction de décision!
 def logique(conso, prod,battPercentage,battTotalCapacity,seuil,sbee,index):
@@ -1331,16 +1630,66 @@ def hourlyStrategy(predictionData):
 # variable contenant la stratégie a adopter par le système pour une journée:
 strategie = hourlyStrategy(predictionData) # a envoyer pour interpretation
 
+# commande des appareils autorisé pour chaque mode
+
+def get_device_id(device_name: str) -> int:
+    """
+    Retourne un ID (0 à 6) pour un nom d'appareil donné.
+    
+    Args:
+        device_name (str): Nom de l'appareil (ex: "Chauffe-eau").
+    
+    Returns:
+        int: ID de l'appareil (0 à 6).
+    
+    Raises:
+        ValueError: Si le nom de l'appareil n'est pas reconnu.
+    """
+    mapping = {
+        "Chauffe-eau": 0,
+        "Climatisation chambre": 1,
+        "Climatisation salon": 2,
+        "Congélateur": 3,
+        "Machine à laver": 4,
+        "Micro-ondes": 5,
+        "Réfrigérateur": 6
+    }
+    
+    # Vérifier si l'appareil existe
+    if device_name not in mapping:
+        raise ValueError(f"Appareil inconnu : '{device_name}'. "
+                         f"Choisissez parmi {list(mapping.keys())}")
+    
+    return mapping[device_name]
+
 # fonction pour activer le mode de fonctionnement
-def activateMode(mode):
+async def activateMode(mode):
+    devices =  await get_devices()
+    devicesList = devices.get("devices")
+    onDevices = [] # liste des appareils a allumer pour le mode actif
     if mode == "normal":
-        return "Mode normal Activé. Tout les appareils sont autorisé a fonctionner"
+        for device in devicesList:
+            if device["modes"]["normal"]:
+                onDevices.append(get_device_id(device['name']))
+        print ("Mode normal Activé. Tout les appareils sont autorisé a fonctionner")
     elif mode == "saving":
-        return "Mode Economie Activé, desormains les appareils de forte consommation sont désactiver pour économiser l'énergie"
+        for device in devicesList:
+            if device["modes"]["saving"]:
+                onDevices.append(get_device_id(device['name']))
+        print ("Mode Economie Activé, desormains les appareils de forte consommation sont désactiver pour économiser l'énergie")
     elif mode == "ultraSaving":
-        return "mode ultra économie activé, seul les appareils de premières néccésité sont activé"
+        for device in devicesList:
+            if device["modes"]["ultraSaving"]:
+                onDevices.append(get_device_id(device['name']))
+        print ("mode ultra économie activé, seul les appareils de premières néccésité sont activé")
+    # envoie de la commande finale
+    command = {
+        "onDevice" : onDevices
+    }
+    return command
+
 # fonction pour activer la ou les sources pour alimenter la maison
-def activateSource(asrc):
+#def activateSource(asrc):
     # desactiver toute les sources puis activer ceux qui sont autorisée
     print(" # relais sp eteint")
     print('# relais batt eteint')
@@ -1355,17 +1704,38 @@ def activateSource(asrc):
             print("# activation du relais de la sbee")
 
 # fonction pour application de la strategie:
-def applyStrategy():
-    nowStrategy = strategie[datetime.now().hour]
+async def applyStrategy(cts= False):
+    strategie = hourlyStrategy(predictionData)
+    nowStrategy = strategie[datetime.now().hour if type(cts)== bool else cts]# datetime.now().hour if type(cts)== bool else cts
     print(nowStrategy)
     if nowStrategy["chargerBatt"]:
         # activer le chargement des batterie
         print("chargement des battéries: Autoriser le relais connecté a la batterie ")
-    activateMode(nowStrategy["mode"])
-    activateSource(nowStrategy["sourceActive"])
+        chargerBatt = True
+    else :
+        chargerBatt = False
+    activeMode = await activateMode(nowStrategy["mode"])
+    activeSource =  nowStrategy["sourceActive"]
+    command = {
+        "chargerBatt" : chargerBatt,
+        "activateMode" : activeMode,
+        "activeSource" : activeSource,
+        "lcd" : [sensor_data["battPercentage"],nowStrategy["mode"],math.floor(sensor_data['production']*100)/100, math.floor(round(conso_cumul_24h.energie_wh())*100)/100]
+    }
+    await send_mqtt_command(command)
+    print("================commandes envoyé====================")
 
+# fonction pour appliquer la stratégie en fonction  ou non des données de test
+async def applyRealOrTestStrategy(cts):
+    if not(cts == "null" or cts =="" ):
+       await applyStrategy(cts)
+       print("Test situation")
+    else :
+        await applyStrategy() 
+        print("Real situation")
 # application immediate de la stratégie actuelle
-applyStrategy()
+asyncio.create_task(applyRealOrTestStrategy(test_data["cts"]))
+
 # fonction pour calculer le gain 
 def saving(puissance):
     conso_ER.ajouter(puissance)
@@ -1379,7 +1749,7 @@ async def awaitExactHour():
     # declancher si le retard est supérieur a 10 minutes
     if minutesActuelle>10 :
         await asyncio.sleep(minutesRestante)
-        applyStrategy()
+        await applyRealOrTestStrategy(test_data["cts"])
 # explication de la stratégie par l'ia deepseek
 def getExplanation(strategie):
     # system prompt
@@ -1432,7 +1802,7 @@ def getExplanation(strategie):
             → `sourceActive = ["solarPannel"]`, `chargerBatt = false`, `mode = "ultraSaving"`
         """
     output = strategie
-    exemple = """Tu dois produire dans une liste des json suivant cet exemple: { "index":"l'index que tu recoit","sourceActive": "je prévoit une production de 180 et une consommation de 20, la production etant supérieur a la consommation, je bascule alors l'installation sur les panneaux solaire pour économiser...","chargerBatt": "Le pourcentage des batterie est de 20% pour éviter une décharge profonde j'utilise le surplus de production pour recharger les recharger","mode": "si le mode est normal: en autosuffisance solaire alors tout les appareils sont autorisé a consommé l'énergie disponible. ou si le mode est saving: economie d'energie, les appareils a forte consommation sont desactiver pour augmenter l'autonomie. et si c'est ultrasaving: energie disponible très faible, seul les appareils neccessaires sont activée"}
+    exemple = """Tu dois produire dans une liste des jsons suivant cet exemple: { "index":"l'index que tu recoit","sourceActive": "je prévoit une production de 180w et une consommation de 20w, la production etant supérieur a la consommation, je bascule alors l'installation sur les panneaux solaire pour économiser...","chargerBatt": "Le pourcentage des batterie est de 20% pour éviter une décharge profonde j'utilise le surplus de production pour recharger les recharger","mode": "si le mode est normal: en autosuffisance solaire alors tout les appareils sont autorisé a consommé l'énergie disponible. ou si le mode est saving: economie d'energie, les appareils a forte consommation sont desactivé pour augmenter l'autonomie. et si c'est ultrasaving: energie disponible très faible, seul les appareils neccessaires sont activée"}
     """
     payload ={
         "messages": [
@@ -1463,8 +1833,19 @@ def getExplanation(strategie):
     except Exception as e:
         print(f"Erreur inattendue: {str(e)}")
         return f"Erreur: {str(e)}"
-groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
-#groq_interpretation = [{'index': 0, 'sourceActive': "Je prévois une production de 0 et une consommation de 1696,62, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 1, 'sourceActive': "Je prévois une production de 0 et une consommation de 1675,09, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 2, 'sourceActive': "Je prévois une production de 0 et une consommation de 1680,93, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 3, 'sourceActive': "Je prévois une production de 0 et une consommation de 1707,54, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 4, 'sourceActive': "Je prévois une production de 0 et une consommation de 198,64, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 5, 'sourceActive': "Je prévois une production de 0 et une consommation de 236,71, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 6, 'sourceActive': "Je prévois une production de 0 et une consommation de 189,15, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 7, 'sourceActive': "Je prévois une production de 0 et une consommation de 274,81, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 8, 'sourceActive': "Je prévois une production de 0 et une consommation de 152,34, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 9, 'sourceActive': "Je prévois une production de 801,84 et une consommation de 1065,15, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour alimenter l'installation et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 10, 'sourceActive': "Je prévois une production de 1580,1 et une consommation de 1167,32, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 11, 'sourceActive': "Je prévois une production de 4539,99 et une consommation de 203,74, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 12, 'sourceActive': "Je prévois une production de 5192,19 et une consommation de 374,1, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 13, 'sourceActive': "Je prévois une production de 5482,6 et une consommation de 1751,56, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 14, 'sourceActive': "Je prévois une production de 4163,06 et une consommation de 1754,88, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 15, 'sourceActive': "Je prévois une production de 4421,34 et une consommation de 1718,76, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 16, 'sourceActive': "Je prévois une production de 4657,97 et une consommation de 252,8, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 17, 'sourceActive': "Je prévois une production de 4604,77 et une consommation de 876,57, la production étant supérieure à la consommation, j'utilise les panneaux solaires pour alimenter l'installation et je charge la batterie.", 'chargerBatt': "Puisque la production est supérieure à la consommation, je peux charger la batterie pour préserver l'énergie.", 'mode': "Le mode est normal, l'installation est en autosuffisance solaire."}, {'index': 18, 'sourceActive': "Je prévois une production de 661,85 et une consommation de 752,61, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour alimenter l'installation et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 19, 'sourceActive': "Je prévois une production de 0 et une consommation de 312,7, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 20, 'sourceActive': "Je prévois une production de 0 et une consommation de 188,73, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 21, 'sourceActive': "Je prévois une production de 0 et une consommation de 188,07, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 22, 'sourceActive': "Je prévois une production de 0 et une consommation de 1752,7, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}, {'index': 23, 'sourceActive': "Je prévois une production de 0 et une consommation de 1734,0, la consommation étant supérieure à la production, j'ai besoin d'une source de secours pour alimenter l'installation.", 'chargerBatt': "Puisque la production est insuffisante pour charger la batterie et que le niveau de charge de la batterie est à 0%, la batterie ne peut pas être utilisée pour alimenter l'installation.", 'mode': "Le mode est en économie pour préserver l'énergie disponible."}]
+#groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
+groq_interpretation = [{'index': '0', 'sourceActive': "La consommation est de 1695.4 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '1', 'sourceActive': "La consommation est de 1707.13 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '2', 'sourceActive': "La consommation est de 1710.5 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '3', 'sourceActive': "La consommation est de 1685.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '4', 'sourceActive': "La consommation est de 200.48 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '5', 'sourceActive': "La consommation est de 239.9 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '6', 'sourceActive': "La consommation est de 187.74 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '7', 'sourceActive': "La consommation est de 277.75 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '8', 'sourceActive': "La consommation est de 151.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '9', 'sourceActive': "La consommation est de 149.09 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '10', 'sourceActive': "La consommation est de 151.28 et la production est de 1034.69, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '11', 'sourceActive': "La consommation est de 149.42 et la production est de 2413.33, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '12', 'sourceActive': "La consommation est de 328.03 et la production est de 3184.21, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '13', 'sourceActive': "La consommation est de 197.74 et la production est de 3945.44, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '14', 'sourceActive': "La consommation est de 198.48 et la production est de 3691.04, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '15', 'sourceActive': "La consommation est de 199.82 et la production est de 3057.45, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '16', 'sourceActive': "La consommation est de 201.4 et la production est de 1116.54, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '17', 'sourceActive': "La consommation est de 149.1 et la production est de 1566.9, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '18', 'sourceActive': "La consommation est de 190.35 et la production est de 1837.99, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '19', 'sourceActive': "La consommation est de 313.7 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '20', 'sourceActive': "La consommation est de 188.51 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '21', 'sourceActive': "La consommation est de 189.77 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '22', 'sourceActive': "La consommation est de 1754.21 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '23', 'sourceActive': "La consommation est de 1742.95 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}]
+
+# fonction de test
+def test(date):
+    # recuperer les données météorologiques passées:
+    pastWheaterData =  getPastWeatherData(date)
+    # récuperer les données du jours de la date 
+    dateData =  analyser_lokossa(date)
+    pred_consommation =  getConso(dateData)
+    pred_production = getPred(pastWheaterData)
+    return pred_production,pred_consommation
+
 
 @app.websocket("/ws/energy")
 async def websocket_endpoint(websocket: WebSocket):
@@ -1476,18 +1857,53 @@ async def websocket_endpoint(websocket: WebSocket):
 
     # ========== TÂCHE 1 : ÉCOUTE DES MESSAGES ENTRANTS ==========
     async def receive_messages():
+        global prediction_production, prediction_consommation
         try:
             while not stop_event.is_set():
                 try:
                     data = await asyncio.wait_for(websocket.receive_text(), timeout=1.0)
                     message = json.loads(data)
-                    print(f"Message reçu : {message}")
+                    print(f"\n{'='*60}")
+                    print(f"📨 Message reçu : {message}")
+                    print(f"{'='*60}")
                     msg_type = message.get("type")
-                    if msg_type == "commande_appareil":
+                    
+                    if msg_type == "test_data":
+                        print(f"\n🔹 DONNÉES DU FORMULAIRE TEST 🔹")
+                        print(f"  Timestamp: {message.get('timestamp')}")
+                        print(f"  Pourcentage batterie: {message.get('battPercentage')}%")
+                        print(f"  Capacité batterie: {message.get('battTotalCapacity')} Wh")
+                        print(f"  Seuil: {message.get('seuil')} W")
+                        print(f"  SBEE (réseau disponible): {message.get('sbee')}")
+                        print(f"  CTS: {message.get('cts')}")
+                        print(f"{'='*60}\n")
+                        
+                        # actualisation des variables de predictions
+                        testData = test(datetime.fromisoformat(str(message.get('timestamp'))))
+                        prediction_production,prediction_consommation = testData
+                        test_data["battPercentage"] = message.get('battPercentage')
+                        test_data["battCapacity"] = message.get('battTotalCapacity')
+                        test_data["sbee"] = message.get('sbee')
+                        test_data["cts"] = int(message.get("cts"))
+                        await applyRealOrTestStrategy(test_data["cts"])
+                        # Répondre au client
+                        await websocket.send_text(json.dumps({
+                            "type": "confirmation",
+                            "statut": "ok",
+                            "message": "Données de test reçues et traitées"
+                        }))
+                    
+                    elif msg_type == "commande_appareil":
                         appareil = message.get("appareil")
                         action = message.get("action")
                         print(f"Commande : {action} sur {appareil}")
                         # Traitement (MQTT, GPIO, etc.)
+                        await send_mqtt_command(
+                            {
+                                "appareil" : appareil,
+                                "action" : action
+                            }
+                        )
                         await websocket.send_text(json.dumps({
                             "type": "confirmation",
                             "statut": "ok",
@@ -1502,6 +1918,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     stop_event.set()
                     break
         except Exception as e:
+            traceback.print_exc() 
             print(f"Erreur dans receive_messages: {e}")
             stop_event.set()
 
@@ -1525,6 +1942,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 conso_cumul_24h.ajouter(sensor_data['consommation'])
                 # récuperer la stratégie
                 strategie = hourlyStrategy(predictionData)
+                #strategie = logique()
                 # calculer l'epargne
                 if 'batt' in  sensor_data["activeSource"] or 'solarPannel' in sensor_data["activeSource"]:
                     saving(sensor_data['consommation']) # cumule pour une heure
@@ -1549,13 +1967,17 @@ async def websocket_endpoint(websocket: WebSocket):
                     "graphicData" : graphic_data,
                     "analyse":{
                         "interpretation": groq_interpretation,
-                    }
+                    },
+                    "autorizedDevices" :await get_devices(),
+                    "cts" : test_data["cts"],
                     
                 }
                 # Éviter d'envoyer si les données n'ont pas changé
                 if current_data != last_sent_data:
                     await manager.broadcast(json.dumps(current_data))
                     last_sent_data = current_data.copy()
+                # publication périodique des données sur mosquitto
+                await applyRealOrTestStrategy(test_data["cts"])
             except WebSocketDisconnect:
                 print("Client déconnecté (envoi périodique)")
                 stop_event.set()
