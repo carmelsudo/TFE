@@ -30,7 +30,7 @@ base_path = Path(__file__).resolve().parent.parent
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
+        "Authorization": "Bearer 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"
     }
 
 # dossier de fichier statique a servir a  l'interface
@@ -753,37 +753,6 @@ async def init_db():
         await db.commit()
 
 # Fonction pour initialiser les appareils dans la table devices
-async def init_devices():
-    """Insère les appareils par défaut dans la table devices"""
-    devices_data = [
-        ("Climatisation salon", 1, 1, 0),
-        ("Climatisation chambre", 1, 1, 0),
-        ("Micro-ondes", 1, 1, 0),
-        ("Machine à laver", 1, 0, 0),
-        ("Chauffe-eau", 1, 0, 0),
-        ("Congélateur", 1, 1, 1),
-        ("Réfrigérateur", 1, 1, 1),
-    ]
-    
-    try:
-        async with aiosqlite.connect("energy.db") as db:
-            # Vérifier si les appareils existent déjà
-            async with db.execute("SELECT COUNT(*) FROM devices") as cursor:
-                count = await cursor.fetchone()
-                if count[0] == 0:  # Si la table est vide
-                    print("Insertion des appareils par défaut...")
-                    for name, normal, saving, ultrasaving in devices_data:
-                        await db.execute(
-                            """INSERT INTO devices(name, allowed_normal, allowed_saving, allowed_ultrasaving)
-                               VALUES (?, ?, ?, ?)""",
-                            (name, normal, saving, ultrasaving)
-                        )
-                    await db.commit()
-                    print(f"{len(devices_data)} appareils insérés")
-                else:
-                    print(f"Les appareils existent déjà ({count[0]} trouvés)")
-    except Exception as e:
-        print(f"Erreur lors de l'initialisation des appareils: {e}")
 
 start_time = datetime.now()
 # fonction pour choisir un status
@@ -940,7 +909,7 @@ def generate_data():
 # mettre a jours les données de capteurs toutes les 5 secondes 
 changement_de_strategie = False
 async def updateSensorData():
-    global changement_de_strategie
+    global changement_de_strategie,strategie
     """Mettre à jour les données des capteurs en continu"""
     try:
         while True:
@@ -957,7 +926,6 @@ async def updateSensorData():
             if not sensor_data["sbee"] and not changement_de_strategie:
                 changement_de_strategie = True
                 print("=======changement de stratégie================")
-                hourlyStrategy(predictionData)
             # Log des données mises à jour
     except asyncio.CancelledError:
         print("Tâche updateSensorData annulée")
@@ -986,7 +954,6 @@ async def startup_event():
         asyncio.create_task(updateSensorData())
     ]
     await init_db()
-    await init_devices()  # Initialiser les appareils par défaut
     await init_cumuls()  # Initialiser les cumuls avec les données de la BDD
     maxProdValue = await maxProd(0)
     await mqtt_publisher.connect()
@@ -1083,7 +1050,6 @@ class PersistentMQTTClient:
         if self.client and self.connected:
             try:
                 await self.client.publish(topic, payload=payload, qos=qos)
-                print(f"📤 MQTT pub [{topic}]: {payload}")
                 return True
             except Exception as e:
                 print(f"❌ Erreur publication MQTT : {e}")
@@ -1114,7 +1080,6 @@ mqtt_publisher = PersistentMQTTClient()
 async def send_mqtt_command(command: dict):
     payload = json.dumps(command)
     await mqtt_publisher.publish(MQTT_TOPIC_COMMAND, payload)
-    print("commande envoyé")
 # classe pour stocker la production instantanée afin d'obtenir la production et la consommation horaire
 class EnergyCumul:
     def __init__(self, duree_heures=1):
@@ -1519,12 +1484,18 @@ async def get_archive_all_grouped():
         return {"error": f"Erreur lors du regroupement des archives : {str(e)}"}
 
 # analyse de la journée et extraction des donnée de prédiciton de la consommation
-predictionData = {
-        "battPercentage" : sensor_data["battPercentage"],
-        "sbee" : sensor_data["sbee"],
-        "predProd" : prediction_production ,
-        "predConso" : prediction_consommation,
+def build_prediction_context():
+    use_test_values = not (str(test_data.get("cts", "null")).strip().lower() in {"", "null", "none"})
+    return {
+        "battPercentage": test_data["battPercentage"] if use_test_values else sensor_data["battPercentage"],
+        "battCapacity": test_data["battCapacity"] if use_test_values else sensor_data["battCapacity"],
+        "seuil": test_data["seuil"] if use_test_values else 1000,
+        "sbee": test_data["sbee"] if use_test_values else sensor_data["sbee"],
+        "predProd": prediction_production,
+        "predConso": prediction_consommation,
     }
+
+predictionData = build_prediction_context()
 # fonction de décision!
 def logique(conso, prod,battPercentage,battTotalCapacity,seuil,sbee,index):
     # production supérieure a la consommmation
@@ -1622,13 +1593,32 @@ def hourlyStrategy(predictionData):
     strategy =[]
     hourly_prod = predictionData["predProd"]["hourly_predictions"]
     hourly_conso = predictionData["predConso"]
+    batt_total_capacity = predictionData.get("battCapacity", 3000)
+    seuil = predictionData.get("seuil", 1000)
     for i in range(24):
-        lo = logique(hourly_conso[i]['prediction de consommation'],hourly_prod[i]['prediction_wh'],predictionData["battPercentage"],3000,1000,predictionData["sbee"],i)
+        lo = logique(
+            hourly_conso[i]['prediction de consommation'],
+            hourly_prod[i]['prediction_wh'],
+            predictionData["battPercentage"],
+            batt_total_capacity,
+            seuil,
+            predictionData["sbee"],
+            i
+        )
         strategy.append(lo)
     return strategy
 
+
+def refresh_strategy():
+    global predictionData, strategie
+    predictionData = build_prediction_context()
+    strategie = hourlyStrategy(predictionData)
+    return strategie
+
 # variable contenant la stratégie a adopter par le système pour une journée:
-strategie = hourlyStrategy(predictionData) # a envoyer pour interpretation
+strategie = refresh_strategy() # a envoyer pour interpretation
+print("================strat 1 =======================")
+print(strategie[1])
 
 # commande des appareils autorisé pour chaque mode
 
@@ -1705,7 +1695,8 @@ async def activateMode(mode):
 
 # fonction pour application de la strategie:
 async def applyStrategy(cts= False):
-    strategie = hourlyStrategy(predictionData)
+    global strategie
+    refresh_strategy()
     nowStrategy = strategie[datetime.now().hour if type(cts)== bool else cts]# datetime.now().hour if type(cts)== bool else cts
     print(nowStrategy)
     if nowStrategy["chargerBatt"]:
@@ -1727,11 +1718,22 @@ async def applyStrategy(cts= False):
 
 # fonction pour appliquer la stratégie en fonction  ou non des données de test
 async def applyRealOrTestStrategy(cts):
-    if not(cts == "null" or cts =="" ):
-       await applyStrategy(cts)
-       print("Test situation")
-    else :
-        await applyStrategy() 
+    normalized_cts = cts
+    if isinstance(cts, str):
+        normalized_cts = cts.strip()
+        if normalized_cts.lower() in {"", "null", "none"}:
+            normalized_cts = False
+        else:
+            try:
+                normalized_cts = int(normalized_cts)
+            except ValueError:
+                normalized_cts = False
+
+    if isinstance(normalized_cts, (int, float)) and not isinstance(normalized_cts, bool):
+        await applyStrategy(normalized_cts)
+        print("Test situation")
+    else:
+        await applyStrategy()
         print("Real situation")
 # application immediate de la stratégie actuelle
 asyncio.create_task(applyRealOrTestStrategy(test_data["cts"]))
@@ -1752,6 +1754,7 @@ async def awaitExactHour():
         await applyRealOrTestStrategy(test_data["cts"])
 # explication de la stratégie par l'ia deepseek
 def getExplanation(strategie):
+    print("=================================Relancement de groq============================")
     # system prompt
     explication = """
         Un script python prend 7 paramètres : 
@@ -1808,7 +1811,7 @@ def getExplanation(strategie):
         "messages": [
             {
                 "role": "user",
-                "content": f"{explication} ton role est d'expliquer chaciune de ces sorties {output} avec leurs paramètres en te basant sur cet exemple {exemple} tu es libre de reformuler, aucun commentaire ni explication avant et apres le json n'est néccessaire en dehors de l'interpretation, comporte toi comme une api qui retourne une liste  json valide et incrémentable"
+                "content": f"{explication} ton role est d'expliquer chacune de ces sorties {output} avec leurs paramètres en te basant sur cet exemple {exemple} tu es libre de reformuler, aucun commentaire ni explication avant et apres le json n'est néccessaire en dehors de l'interpretation, comporte toi comme une api qui retourne une liste  json valide et incrémentable"
             }
         ],
         "model": "llama-3.3-70b-versatile"
@@ -1833,8 +1836,8 @@ def getExplanation(strategie):
     except Exception as e:
         print(f"Erreur inattendue: {str(e)}")
         return f"Erreur: {str(e)}"
-#groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
-groq_interpretation = [{'index': '0', 'sourceActive': "La consommation est de 1695.4 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '1', 'sourceActive': "La consommation est de 1707.13 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '2', 'sourceActive': "La consommation est de 1710.5 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '3', 'sourceActive': "La consommation est de 1685.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '4', 'sourceActive': "La consommation est de 200.48 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '5', 'sourceActive': "La consommation est de 239.9 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '6', 'sourceActive': "La consommation est de 187.74 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '7', 'sourceActive': "La consommation est de 277.75 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '8', 'sourceActive': "La consommation est de 151.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '9', 'sourceActive': "La consommation est de 149.09 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '10', 'sourceActive': "La consommation est de 151.28 et la production est de 1034.69, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '11', 'sourceActive': "La consommation est de 149.42 et la production est de 2413.33, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '12', 'sourceActive': "La consommation est de 328.03 et la production est de 3184.21, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '13', 'sourceActive': "La consommation est de 197.74 et la production est de 3945.44, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '14', 'sourceActive': "La consommation est de 198.48 et la production est de 3691.04, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '15', 'sourceActive': "La consommation est de 199.82 et la production est de 3057.45, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '16', 'sourceActive': "La consommation est de 201.4 et la production est de 1116.54, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '17', 'sourceActive': "La consommation est de 149.1 et la production est de 1566.9, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '18', 'sourceActive': "La consommation est de 190.35 et la production est de 1837.99, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '19', 'sourceActive': "La consommation est de 313.7 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '20', 'sourceActive': "La consommation est de 188.51 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '21', 'sourceActive': "La consommation est de 189.77 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '22', 'sourceActive': "La consommation est de 1754.21 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '23', 'sourceActive': "La consommation est de 1742.95 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}]
+groq_interpretation = getExplanation(strategie) # interpretation des différentes décisions
+#groq_interpretation = [{'index': '0', 'sourceActive': "La consommation est de 1695.4 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '1', 'sourceActive': "La consommation est de 1707.13 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '2', 'sourceActive': "La consommation est de 1710.5 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '3', 'sourceActive': "La consommation est de 1685.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '4', 'sourceActive': "La consommation est de 200.48 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '5', 'sourceActive': "La consommation est de 239.9 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '6', 'sourceActive': "La consommation est de 187.74 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '7', 'sourceActive': "La consommation est de 277.75 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '8', 'sourceActive': "La consommation est de 151.6 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '9', 'sourceActive': "La consommation est de 149.09 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '10', 'sourceActive': "La consommation est de 151.28 et la production est de 1034.69, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '11', 'sourceActive': "La consommation est de 149.42 et la production est de 2413.33, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '12', 'sourceActive': "La consommation est de 328.03 et la production est de 3184.21, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '13', 'sourceActive': "La consommation est de 197.74 et la production est de 3945.44, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '14', 'sourceActive': "La consommation est de 198.48 et la production est de 3691.04, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '15', 'sourceActive': "La consommation est de 199.82 et la production est de 3057.45, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '16', 'sourceActive': "La consommation est de 201.4 et la production est de 1116.54, la production solaire est supérieure à la consommation, mais la batterie est à 0%, l'installation utilise donc la source de secours pour recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '17', 'sourceActive': "La consommation est de 149.1 et la production est de 1566.9, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '18', 'sourceActive': "La consommation est de 190.35 et la production est de 1837.99, la production solaire est supérieure à la consommation et la batterie est à 0%, l'installation utilise donc les panneaux solaires pour fonctionner et recharger la batterie.", 'chargerBatt': 'La batterie est à 0% et la production solaire est supérieure au seuil de recharge, la batterie peut être rechargée.', 'mode': "Le mode est normal, l'installation fonctionne en autosuffisance solaire et tous les appareils peuvent consommer l'énergie disponible."}, {'index': '19', 'sourceActive': "La consommation est de 313.7 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '20', 'sourceActive': "La consommation est de 188.51 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '21', 'sourceActive': "La consommation est de 189.77 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '22', 'sourceActive': "La consommation est de 1754.21 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}, {'index': '23', 'sourceActive': "La consommation est de 1742.95 et la production est de 0, aucune énergie solaire disponible, l'installation utilise donc la source de secours pour fonctionner.", 'chargerBatt': "La batterie est à 0% et il n'y a pas de production solaire, la batterie ne peut pas être rechargée.", 'mode': "Le mode est en économie d'énergie, les appareils à forte consommation sont désactivés pour augmenter l'autonomie."}]
 
 # fonction de test
 def test(date):
@@ -1857,7 +1860,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
     # ========== TÂCHE 1 : ÉCOUTE DES MESSAGES ENTRANTS ==========
     async def receive_messages():
-        global prediction_production, prediction_consommation
+        global prediction_production, prediction_consommation, groq_interpretation
         try:
             while not stop_event.is_set():
                 try:
@@ -1883,16 +1886,25 @@ async def websocket_endpoint(websocket: WebSocket):
                         prediction_production,prediction_consommation = testData
                         test_data["battPercentage"] = message.get('battPercentage')
                         test_data["battCapacity"] = message.get('battTotalCapacity')
+                        test_data["seuil"] = message.get('seuil')
                         test_data["sbee"] = message.get('sbee')
-                        test_data["cts"] = int(message.get("cts"))
-                        await applyRealOrTestStrategy(test_data["cts"])
+                        try:
+                            cts_value = message.get("cts")
+                            test_data["cts"] = int(cts_value) if str(cts_value).strip().lower() not in {"", "null", "none"} else "null"
+                        except (TypeError, ValueError):
+                            test_data["cts"] = "null"
+                        strategie = refresh_strategy()
+                        print(strategie)
                         # Répondre au client
                         await websocket.send_text(json.dumps({
                             "type": "confirmation",
                             "statut": "ok",
                             "message": "Données de test reçues et traitées"
                         }))
-                    
+                        await applyRealOrTestStrategy(test_data["cts"])
+                        groq_interpretation = getExplanation(strategie)# interpretation des différentes décisions
+                        print("-----------------------------")
+                        print(groq_interpretation[1])
                     elif msg_type == "commande_appareil":
                         appareil = message.get("appareil")
                         action = message.get("action")
@@ -1941,7 +1953,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 prod_cumul_24h.ajouter(sensor_data['production'])
                 conso_cumul_24h.ajouter(sensor_data['consommation'])
                 # récuperer la stratégie
-                strategie = hourlyStrategy(predictionData)
+                refresh_strategy()
                 #strategie = logique()
                 # calculer l'epargne
                 if 'batt' in  sensor_data["activeSource"] or 'solarPannel' in sensor_data["activeSource"]:
