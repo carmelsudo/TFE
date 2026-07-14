@@ -7,12 +7,8 @@
   <link href="../../static/styles.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -143,12 +139,16 @@
       border-color: #0d631b;
       border-width: 2px;
     }
+    .admin-lock-modal {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+    }
   </style>
 </head>
 <body class="text-on-surface bg-background dark:bg-slate-900">
 
   <!-- Sidebar -->
-  <aside class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+  <aside id="sidebar" class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
     <div class="px-6 py-8">
       <div class="flex items-center gap-3 mb-10">
         <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
@@ -165,9 +165,8 @@
         </div>
       </div>
       <nav class="space-y-1">
-        <!-- Overview is Active -->
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 dark:bg-slate-800"
-          href="#">
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
+          href="/">
           <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1">dashboard</span>
           <span>Acceuil</span>
         </a>
@@ -189,8 +188,8 @@
       </nav>
     </div>
     <div class="mt-auto px-6 py-8 space-y-1">
-      <a class="bg-slate-300 font-bold border-r-4 border-primary text-primary flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-        href="#">
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight font-bold text-green-900 dark:text-green-400 border-r-4 border-green-700 bg-slate-100 dark:bg-slate-800 transition-colors"
+        href="/settings">
         <span class="material-symbols-outlined">settings</span>
         <span>Paramètre</span>
       </a>
@@ -199,15 +198,22 @@
         <span class="material-symbols-outlined">help_outline</span>
         <span>Aide</span>
       </a>
-
     </div>
   </aside>
 
+  <!-- Overlay for mobile sidebar -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
   <!-- Main content -->
-  <main class="ml-64 min-h-screen">
-    <header class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-700">
-      <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400">Paramètres</h2>
-      <div class="flex items-center gap-6">
+  <main class="ml-0 lg:ml-64 min-h-screen">
+    <header class="flex justify-between items-center w-full px-4 md:px-8 py-4 sticky top-0 z-30 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm transition-all">
+      <div class="flex items-center gap-4">
+        <button id="menuToggle" class="lg:hidden p-2 rounded-md hover:bg-slate-200/50">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h2 class="font-manrope text-lg md:text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">Luminous AI</h2>
+      </div>
+      <div class="flex items-center gap-4 md:gap-6">
         <button class="hover:opacity-80 transition-all" id="themeToggleBtn">
           <span class="material-symbols-outlined">dark_mode</span>
         </button>
@@ -217,21 +223,24 @@
       </div>
     </header>
 
-    <div class="p-8 max-w-6xl mx-auto flex gap-8">
+    <div class="p-4 md:p-8 max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8">
       <!-- Settings sidebar -->
-      <aside class="w-64">
-        <div class="settings-card sticky top-24 p-2">
-          <nav class="space-y-1">
-            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors sidebar-active" data-section="account">
+      <aside class="w-full lg:w-64 shrink-0">
+        <div class="settings-card lg:sticky lg:top-24 p-2">
+          <nav class="flex lg:flex-col gap-2 overflow-x-auto whitespace-nowrap lg:whitespace-normal p-1">
+            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors sidebar-active shrink-0" data-section="devices">
+              <div class="flex items-center gap-3"><span class="material-symbols-outlined">devices</span><span>Appareils</span></div>
+            </button>
+            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors shrink-0" data-section="account">
               <div class="flex items-center gap-3"><span class="material-symbols-outlined">person</span><span>Compte</span></div>
             </button>
-            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors" data-section="password">
+            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors shrink-0" data-section="password">
               <div class="flex items-center gap-3"><span class="material-symbols-outlined">lock</span><span>Mot de passe</span></div>
             </button>
-            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors" data-section="theme">
+            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors shrink-0" data-section="theme">
               <div class="flex items-center gap-3"><span class="material-symbols-outlined">palette</span><span>Thème</span></div>
             </button>
-            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors" data-section="data">
+            <button class="settings-section-btn w-full text-left px-4 py-3 rounded-lg transition-colors shrink-0" data-section="data">
               <div class="flex items-center gap-3"><span class="material-symbols-outlined">download</span><span>Données</span></div>
             </button>
           </nav>
@@ -239,12 +248,44 @@
       </aside>
 
       <!-- Settings content -->
-      <div class="flex-1 space-y-8">
+      <div class="flex-1 space-y-6 md:space-y-8 w-full">
+        <!-- Appareils (Premier onglet pré-sélectionné) -->
+        <section id="devices-section" class="settings-section">
+          <div class="settings-card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-bold font-manrope mb-6">Gestion des appareils</h3>
+            <p class="text-on-surface-variant mb-4 text-sm md:text-base">Configurez les modes d'autorisation pour chaque appareil</p>
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[600px]">
+                <thead>
+                  <tr class="border-b-2 border-slate-200 dark:border-slate-700">
+                    <th class="text-left px-4 py-3 font-semibold text-on-surface">Appareil</th>
+                    <th class="text-center px-4 py-3 font-semibold text-on-surface">Mode Normal</th>
+                    <th class="text-center px-4 py-3 font-semibold text-on-surface">Mode Économie</th>
+                    <th class="text-center px-4 py-3 font-semibold text-on-surface">Mode Ultra-Économie</th>
+                  </tr>
+                </thead>
+                <tbody id="devicesTableBody" class="divide-y divide-slate-200 dark:divide-slate-700">
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td colspan="4" class="text-center py-8 text-on-surface-variant">
+                      <span class="material-symbols-outlined animate-spin inline-block mr-2">refresh</span>
+                      Chargement des appareils...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+              <button id="saveDevicesBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Enregistrer les modifications</button>
+              <button id="resetDevicesBtn" class="btn-secondary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">refresh</span> Réinitialiser</button>
+            </div>
+          </div>
+        </section>
+
         <!-- Compte -->
-        <section id="account-section" class="settings-section">
-          <div class="settings-card p-6">
-            <h3 class="text-2xl font-bold font-manrope mb-6">Profil</h3>
-            <div class="flex items-start gap-8 pb-8 border-b border-slate-200 dark:border-slate-700">
+        <section id="account-section" class="settings-section hidden">
+          <div class="settings-card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-bold font-manrope mb-6">Profil</h3>
+            <div class="flex flex-col md:flex-row items-start gap-6 md:gap-8 pb-8 border-b border-slate-200 dark:border-slate-700">
               <div class="relative">
                 <div id="profileImage" class="w-24 h-24 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
                   <span class="material-symbols-outlined text-5xl text-on-primary-container" style="font-variation-settings: 'FILL' 1">person</span>
@@ -254,7 +295,7 @@
                 </button>
                 <input type="file" id="photoInput" class="hidden" accept="image/*" />
               </div>
-              <div class="flex-1 space-y-4">
+              <div class="flex-1 w-full space-y-4">
                 <div>
                   <label class="block text-sm font-semibold text-on-surface-variant mb-1">Nom d'utilisateur</label>
                   <input type="text" id="usernameInput" class="settings-input w-full px-4 py-2 rounded-lg" placeholder="utilisateur" />
@@ -265,17 +306,17 @@
                 </div>
               </div>
             </div>
-            <div class="pt-6 flex gap-4">
-              <button id="saveProfileBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Enregistrer</button>
-              <button id="resetProfileBtn" class="btn-secondary px-6 py-2 rounded-lg font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-sm">refresh</span> Réinitialiser</button>
+            <div class="pt-6 flex flex-col sm:flex-row gap-4">
+              <button id="saveProfileBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Enregistrer</button>
+              <button id="resetProfileBtn" class="btn-secondary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">refresh</span> Réinitialiser</button>
             </div>
           </div>
         </section>
 
         <!-- Mot de passe -->
         <section id="password-section" class="settings-section hidden">
-          <div class="settings-card p-6">
-            <h3 class="text-2xl font-bold font-manrope mb-6">Sécurité</h3>
+          <div class="settings-card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-bold font-manrope mb-6">Sécurité</h3>
             <div class="space-y-6">
               <div>
                 <label class="block text-sm font-semibold mb-1">Mot de passe actuel</label>
@@ -293,9 +334,9 @@
                 <label class="block text-sm font-semibold mb-1">Confirmation</label>
                 <input type="password" id="confirmPassword" class="settings-input w-full px-4 py-2 rounded-lg" />
               </div>
-              <div class="flex gap-4">
-                <button id="changePasswordBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Changer</button>
-                <button id="resetPasswordFieldsBtn" class="btn-secondary px-6 py-2 rounded-lg font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-sm">clear</span> Effacer</button>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <button id="changePasswordBtn" class="btn-primary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Changer</button>
+                <button id="resetPasswordFieldsBtn" class="btn-secondary px-6 py-2 rounded-lg font-semibold flex items-center justify-center gap-2"><span class="material-symbols-outlined text-sm">clear</span> Effacer</button>
               </div>
               <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
                 <p class="text-sm text-on-surface-variant">Mot de passe oublié ? <button id="forgotPasswordBtn" class="text-primary underline">Cliquez ici</button></p>
@@ -306,8 +347,8 @@
 
         <!-- Thème -->
         <section id="theme-section" class="settings-section hidden">
-          <div class="settings-card p-6">
-            <h3 class="text-2xl font-bold font-manrope mb-6">Apparence</h3>
+          <div class="settings-card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-bold font-manrope mb-6">Apparence</h3>
             <div class="grid grid-cols-2 gap-4 mb-4">
               <button class="theme-option flex flex-col items-center p-4 rounded-xl border-2 border-transparent hover:border-primary transition-all" data-theme="light">
                 <span class="material-symbols-outlined text-3xl">light_mode</span>
@@ -323,19 +364,19 @@
 
         <!-- Données -->
         <section id="data-section" class="settings-section hidden">
-          <div class="settings-card p-6">
-            <h3 class="text-2xl font-bold font-manrope mb-6">Export et gestion</h3>
+          <div class="settings-card p-6 md:p-8">
+            <h3 class="text-xl md:text-2xl font-bold font-manrope mb-6">Export et gestion</h3>
             <div class="space-y-6">
               <div>
                 <h4 class="font-semibold mb-2">Exporter en PDF</h4>
-                <div class="grid grid-cols-2 gap-4 mb-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
                   <input type="date" id="exportFromDate" class="settings-input px-3 py-2 rounded-lg" />
                   <input type="date" id="exportToDate" class="settings-input px-3 py-2 rounded-lg" />
                 </div>
-                <button id="exportPdfBtn" class="btn-primary px-6 py-2 rounded-lg flex items-center gap-2"><span class="material-symbols-outlined text-sm">picture_as_pdf</span> Générer PDF</button>
+                <button id="exportPdfBtn" class="btn-primary px-6 py-2 rounded-lg flex items-center gap-2 w-full md:w-auto justify-center"><span class="material-symbols-outlined text-sm">picture_as_pdf</span> Générer PDF</button>
               </div>
               <div class="border-t pt-6">
-                <button id="downloadDataBtn" class="w-full btn-secondary py-2 rounded-lg flex items-center justify-center gap-2"><span class="material-symbols-outlined">cloud_download</span> Télécharger mes données (CSV)</button>
+                <button id="downloadDataBtn" class="w-full btn-secondary py-2 rounded-lg flex items-center justify-center gap-2 mb-3"><span class="material-symbols-outlined">cloud_download</span> Télécharger mes données (CSV)</button>
                 <button id="deleteDataBtn" class="w-full mt-3 btn-danger py-2 rounded-lg flex items-center justify-center gap-2"><span class="material-symbols-outlined">delete_forever</span> Supprimer toutes mes données</button>
               </div>
             </div>
@@ -349,6 +390,26 @@
   <div id="toast" class="toast">
     <span class="material-symbols-outlined text-primary">check_circle</span>
     <span id="toastMessage"></span>
+  </div>
+
+  <div id="adminLockModal" class="admin-lock-modal fixed inset-0 hidden items-center justify-center z-[1200] px-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-md p-6 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-300 flex items-center justify-center">
+          <span class="material-symbols-outlined">lock</span>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg text-on-surface">Modifications verrouillées</h3>
+          <p class="text-sm text-on-surface-variant">Les réglages des appareils sont protégés par l’administrateur.</p>
+        </div>
+      </div>
+      <label for="adminPasswordInput" class="block text-sm font-semibold mb-2">Mot de passe administrateur</label>
+      <input id="adminPasswordInput" type="password" class="settings-input w-full px-4 py-2 rounded-lg mb-4" placeholder="Entrez le mot de passe" />
+      <div class="flex justify-end gap-3">
+        <button id="cancelAdminUnlockBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold">Annuler</button>
+        <button id="confirmAdminUnlockBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold">Valider</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -407,6 +468,18 @@
       }
     }
     loadProfile();
+    // Récupérer le mot de passe administrateur depuis l'API et le stocker en localStorage
+    (async function loadAdminPassword() {
+      try {
+        const res = await fetch('/settings/password');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.password) localStorage.setItem('password', data.password);
+        }
+      } catch (e) {
+        console.warn('Impossible de récupérer le mot de passe depuis l API', e);
+      }
+    })();
     document.getElementById('changePhotoBtn').addEventListener('click', () => document.getElementById('photoInput').click());
     document.getElementById('photoInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -451,18 +524,32 @@
       strengthBar.style.width = `${(strength / 3) * 100}%`;
       strengthBar.style.backgroundColor = colors[strength];
     });
-    document.getElementById('changePasswordBtn').addEventListener('click', () => {
+    document.getElementById('changePasswordBtn').addEventListener('click', async () => {
       const current = document.getElementById('currentPassword').value;
       const newP = newPass.value;
       const confirm = document.getElementById('confirmPassword').value;
       if (!current || !newP || !confirm) { showToast('Tous les champs sont requis', true); return; }
       if (newP !== confirm) { showToast('Les mots de passe ne correspondent pas', true); return; }
-      // Simulation de vérification de l'ancien mot de passe (stocké en localStorage)
-      const storedPass = localStorage.getItem('password') || 'motdepasse123';
-      if (current !== storedPass) { showToast('Mot de passe actuel incorrect', true); return; }
-      localStorage.setItem('password', newP);
-      showToast('Mot de passe modifié');
-      document.getElementById('resetPasswordFieldsBtn').click();
+
+      try {
+        const resp = await fetch('/settings/password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ current_password: current, new_password: newP })
+        });
+        const result = await resp.json();
+        if (!resp.ok || result.error) {
+          showToast(result.error || 'Erreur lors de la modification', true);
+          return;
+        }
+        // Mettre à jour le mot de passe en localStorage pour la logique client
+        localStorage.setItem('password', newP);
+        showToast('Mot de passe modifié');
+        document.getElementById('resetPasswordFieldsBtn').click();
+      } catch (e) {
+        console.error(e);
+        showToast('Erreur lors de la modification', true);
+      }
     });
     document.getElementById('resetPasswordFieldsBtn').addEventListener('click', () => {
       document.getElementById('currentPassword').value = '';
@@ -516,6 +603,223 @@
 
     // Optionnel : initialiser thème actif
     applyTheme(localStorage.getItem('theme') || 'light');
+
+    // --- Appareils ---
+    let devicesData = [];
+    let originalDevicesData = [];
+    const devicesTableBody = document.getElementById('devicesTableBody');
+    const adminLockModal = document.getElementById('adminLockModal');
+    const adminPasswordInput = document.getElementById('adminPasswordInput');
+    const confirmAdminUnlockBtn = document.getElementById('confirmAdminUnlockBtn');
+    const cancelAdminUnlockBtn = document.getElementById('cancelAdminUnlockBtn');
+    // adminPassword lu dynamiquement depuis localStorage lors du déverrouillage
+    let deviceEditingUnlocked = false;
+    let pendingDeviceChange = null;
+    let pendingDeviceAction = null;
+
+    function openAdminLockModal(action = null, payload = null) {
+      pendingDeviceAction = action;
+      pendingDeviceChange = payload;
+      adminPasswordInput.value = '';
+      adminLockModal.classList.remove('hidden');
+      adminLockModal.classList.add('flex');
+      adminPasswordInput.focus();
+    }
+
+    function closeAdminLockModal() {
+      adminLockModal.classList.add('hidden');
+      adminLockModal.classList.remove('flex');
+      adminPasswordInput.value = '';
+    }
+
+    function unlockDeviceEditing() {
+      const enteredPassword = adminPasswordInput.value;
+      const adminPassword = localStorage.getItem('password') || 'motdepasse123';
+      if (enteredPassword !== adminPassword) {
+        showToast('Mot de passe administrateur incorrect', true);
+        return;
+      }
+
+      deviceEditingUnlocked = true;
+      closeAdminLockModal();
+
+      if (pendingDeviceChange) {
+        const { index, mode, value } = pendingDeviceChange;
+        devicesData[index].modes[mode] = value;
+        renderDevicesTable();
+        showToast('Modification autorisée');
+        pendingDeviceChange = null;
+      } else if (pendingDeviceAction === 'save') {
+        pendingDeviceAction = null;
+        saveDevices();
+      } else if (pendingDeviceAction === 'reset') {
+        pendingDeviceAction = null;
+        resetDevices();
+      }
+    }
+
+    confirmAdminUnlockBtn?.addEventListener('click', unlockDeviceEditing);
+    cancelAdminUnlockBtn?.addEventListener('click', () => {
+      pendingDeviceChange = null;
+      pendingDeviceAction = null;
+      closeAdminLockModal();
+    });
+
+    adminPasswordInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlockDeviceEditing();
+    });
+
+    async function loadDevices() {
+      try {
+        const response = await fetch('/devices');
+        if (!response.ok) throw new Error('Erreur lors du chargement des appareils');
+        const data = await response.json();
+        devicesData = JSON.parse(JSON.stringify(data.devices || [])); // Deep copy
+        originalDevicesData = JSON.parse(JSON.stringify(data.devices || [])); // Garder l'original
+        renderDevicesTable();
+      } catch (error) {
+        console.error('Erreur:', error);
+        devicesTableBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-8 text-red-500">
+              ⚠️ Erreur lors du chargement des appareils
+            </td>
+          </tr>
+        `;
+        showToast('Erreur lors du chargement des appareils', true);
+      }
+    }
+
+    function renderDevicesTable() {
+      if (devicesData.length === 0) {
+        devicesTableBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-8 text-on-surface-variant">
+              Aucun appareil trouvé
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      devicesTableBody.innerHTML = devicesData.map((device, index) => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+          <td class="px-4 py-4 font-medium text-on-surface">${device.name}</td>
+          <td class="text-center px-4 py-4">
+            <input type="checkbox" class="device-checkbox" data-device-index="${index}" data-mode="normal" 
+              ${device.modes.normal ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;" />
+          </td>
+          <td class="text-center px-4 py-4">
+            <input type="checkbox" class="device-checkbox" data-device-index="${index}" data-mode="saving"
+              ${device.modes.saving ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;" />
+          </td>
+          <td class="text-center px-4 py-4">
+            <input type="checkbox" class="device-checkbox" data-device-index="${index}" data-mode="ultraSaving"
+              ${device.modes.ultraSaving ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer;" />
+          </td>
+        </tr>
+      `).join('');
+
+      document.querySelectorAll('.device-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+          if (!deviceEditingUnlocked) {
+            const index = parseInt(e.target.dataset.deviceIndex);
+            const mode = e.target.dataset.mode;
+            const nextValue = e.target.checked;
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.checked = !nextValue;
+            openAdminLockModal('change', { index, mode, value: nextValue });
+            return;
+          }
+
+          const index = parseInt(e.target.dataset.deviceIndex);
+          const mode = e.target.dataset.mode;
+          devicesData[index].modes[mode] = e.target.checked;
+        });
+      });
+    }
+
+    async function saveDevices() {
+      try {
+        for (let i = 0; i < devicesData.length; i++) {
+          const response = await fetch(`/devices/${encodeURIComponent(devicesData[i].name)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ modes: devicesData[i].modes })
+          });
+          if (!response.ok) {
+            throw new Error(`Erreur lors de la mise à jour de ${devicesData[i].name}`);
+          }
+        }
+        originalDevicesData = JSON.parse(JSON.stringify(devicesData));
+        showToast('Configuration des appareils enregistrée avec succès');
+      } catch (error) {
+        console.error('Erreur:', error);
+        showToast('Erreur lors de l\'enregistrement', true);
+      }
+    }
+
+    async function resetDevices() {
+      try {
+        const response = await fetch('/devices/reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        if (!response.ok) throw new Error('Erreur lors de la réinitialisation');
+        await loadDevices();
+        showToast('Configuration réinitialisée aux permissions par défaut');
+      } catch (error) {
+        console.error('Erreur:', error);
+        showToast('Erreur lors de la réinitialisation', true);
+      }
+    }
+
+    document.getElementById('saveDevicesBtn')?.addEventListener('click', async () => {
+      if (!deviceEditingUnlocked) {
+        openAdminLockModal('save');
+        return;
+      }
+      await saveDevices();
+    });
+
+    document.getElementById('resetDevicesBtn')?.addEventListener('click', async () => {
+      if (!deviceEditingUnlocked) {
+        openAdminLockModal('reset');
+        return;
+      }
+      await resetDevices();
+    });
+
+    // Charger les appareils au chargement de la page
+    loadDevices();
+
+    // --- NOUVEAU CODE POUR LE MENU MOBILE (Responsive) ---
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      sidebarOverlay.classList.toggle('hidden');
+    }
+
+    if(menuToggle) {
+      menuToggle.addEventListener('click', toggleSidebar);
+    }
+    
+    if(sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', toggleSidebar);
+    }
+    
+    // Fermer le menu quand on clique sur un lien sur mobile
+    document.querySelectorAll('#sidebar nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if(window.innerWidth < 1024) {
+          toggleSidebar();
+        }
+      });
+    });
   </script>
 </body>
 </html>

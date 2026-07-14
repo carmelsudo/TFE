@@ -92,8 +92,8 @@
   </style>
 </head>
 <body class="bg-background text-on-surface antialiased">
-  <!-- SideNavBar (unchanged but crisp) -->
-  <aside class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50">
+  <!-- SideNavBar -->
+  <aside id="sidebar" class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
     <div class="px-6 py-8">
       <div class="flex items-center gap-3 mb-10">
         <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
@@ -135,18 +135,25 @@
     </div>
   </aside>
 
-  <!-- TopNavBar Shell (clean) -->
-  <header class="pl-80 flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm transition-all">
+  <!-- Overlay for mobile sidebar -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+  <!-- TopNavBar Shell -->
+  <header class="flex justify-between items-center w-full px-4 md:px-8 py-4 sticky top-0 z-30 lg:ml-64 max-w-full lg:max-w-[calc(100%-16rem)] bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl shadow-sm transition-all">
     <div class="flex items-center gap-4">
-      <h2 class="font-manrope text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">Luminous AI</h2>
-      <div class="flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-sm">
+      <!-- Mobile menu button -->
+      <button id="menuToggle" class="lg:hidden p-2 rounded-md hover:bg-slate-200/50">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <h2 class="font-manrope text-lg md:text-xl font-bold text-green-800 dark:text-green-400 tracking-tight">Luminous AI</h2>
+      <div class="hidden sm:flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-sm">
         <div class="w-2 h-2 rounded-full bg-gray-500" id="connectionIndicator"></div>
         <span class="text-xs font-medium text-gray-600" id="connectionStatus">...</span>
       </div>
     </div>
-    <div class="flex items-center gap-6">
-      <div class="relative group">
-        <input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body placeholder:text-on-surface-variant/70" placeholder="Rechercher..." type="text">
+    <div class="flex items-center gap-4 md:gap-6">
+      <div class="relative group hidden md:block">
+        <input class="bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm w-48 lg:w-64 focus:ring-2 focus:ring-primary/20 transition-all font-body placeholder:text-on-surface-variant/70" placeholder="Rechercher..." type="text">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
       </div>
       <div class="flex items-center gap-4 text-on-surface-variant">
@@ -161,25 +168,25 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT: épuré, lisible, aéré -->
-  <main class="ml-64 p-8 min-h-screen">
-    <!-- Hero intro simplifiée -->
-    <div class="mb-10">
+  <!-- MAIN CONTENT -->
+  <main class="ml-0 lg:ml-64 p-4 md:p-8 min-h-screen">
+    <!-- Hero intro -->
+    <div class="mb-8 md:mb-10">
       <span class="text-primary font-bold tracking-widest text-[10px] uppercase mb-2 block">Rapport d'intelligence</span>
-      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface leading-tight">
+      <h2 class="text-2xl md:text-4xl font-extrabold tracking-tight text-on-surface leading-tight">
         Tableau de bord d'<span class="text-primary-container">optimisation</span>
       </h2>
-      <p class="text-on-surface-variant mt-3 text-base max-w-2xl">
+      <p class="text-on-surface-variant mt-3 text-sm md:text-base max-w-2xl">
         Recommandations IA pour maximiser votre autoconsommation et la durée de vie de votre système énergétique.
       </p>
     </div>
 
-    <div class="grid grid-cols-12 gap-8">
-      <!-- Carte 1 : Production & Consommation (Insights clairs et variés) -->
-      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 transition-all">
+    <div class="grid grid-cols-12 gap-6 md:gap-8">
+      <!-- Carte 1 : Production & Consommation -->
+      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-5 md:p-6 shadow-sm border border-outline-variant/20 transition-all">
         <div class="flex justify-between items-start mb-5">
           <div>
-            <h3 class="text-xl font-bold text-on-surface">Production & consommation</h3>
+            <h3 class="text-lg md:text-xl font-bold text-on-surface">Production & consommation</h3>
             <p class="text-sm text-on-surface-variant">Opportunités d'optimisation en temps réel</p>
           </div>
           <span class="material-symbols-outlined text-primary text-2xl">bolt</span>
@@ -189,7 +196,7 @@
           <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
             <div class="flex items-center gap-2 mb-1">
               <span class="material-symbols-outlined text-primary text-xl fill-1">wb_sunny</span>
-              <h4 class="font-bold text-on-surface">Pic de production solaire 12h → 16h</h4>
+              <h4 class="font-bold text-on-surface text-sm md:text-base">Pic de production solaire 12h → 16h</h4>
             </div>
             <p class="text-sm text-on-surface-variant leading-relaxed">Profitez de ce créneau pour lancer le lave-linge, le lave-vaisselle ou recharger votre véhicule électrique.</p>
           </div>
@@ -197,7 +204,7 @@
           <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
             <div class="flex items-center gap-2 mb-1">
               <span class="material-symbols-outlined text-primary text-xl">battery_charging_full</span>
-              <h4 class="font-bold text-on-surface">Surplus prévu : 2,4 kWh</h4>
+              <h4 class="font-bold text-on-surface text-sm md:text-base">Surplus prévu : 2,4 kWh</h4>
             </div>
             <p class="text-sm text-on-surface-variant">Stockage recommandé jusqu'à 80% (mode longévité actif). Évitez la décharge profonde.</p>
           </div>
@@ -205,7 +212,7 @@
           <div class="bg-surface-container-low/60 rounded-xl p-4 border-l-4 border-primary">
             <div class="flex items-center gap-2 mb-1">
               <span class="material-symbols-outlined text-primary text-xl">schedule</span>
-              <h4 class="font-bold text-on-surface">Consommation différée idéale après 20h</h4>
+              <h4 class="font-bold text-on-surface text-sm md:text-base">Consommation différée idéale après 20h</h4>
             </div>
             <p class="text-sm text-on-surface-variant">Le réseau est moins sollicité. Programmez vos appareils énergivores en soirée.</p>
           </div>
@@ -216,19 +223,19 @@
         </div>
       </div>
 
-      <!-- Carte 2 : Santé batterie (plus visuelle et lisible) -->
-      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+      <!-- Carte 2 : Santé batterie -->
+      <div class="col-span-12 lg:col-span-6 bg-surface-container-lowest rounded-2xl p-5 md:p-6 shadow-sm border border-outline-variant/20">
         <div class="flex justify-between items-start mb-5">
           <div>
-            <h3 class="text-xl font-bold text-on-surface">État de la batterie</h3>
+            <h3 class="text-lg md:text-xl font-bold text-on-surface">État de la batterie</h3>
             <p class="text-sm text-on-surface-variant">Longévité et performance</p>
           </div>
           <div class="text-right">
-            <span class="text-4xl font-black text-primary tracking-tighter">94%</span>
+            <span class="text-3xl md:text-4xl font-black text-primary tracking-tighter">94%</span>
             <p class="text-[11px] font-bold text-primary uppercase tracking-wide">Santé excellente</p>
           </div>
         </div>
-        <!-- Barre de santé symbolique -->
+        <!-- Barre de santé -->
         <div class="w-full bg-surface-container-highest rounded-full h-2 mb-5">
           <div class="bg-primary rounded-full h-2" style="width: 94%"></div>
         </div>
@@ -256,27 +263,25 @@
         </div>
       </div>
 
-      <!-- Automatisation intelligente - redesigned plus épuré -->
-      <div class="col-span-12 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 mt-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-7 gap-4">
+      <!-- Automatisation intelligente -->
+      <div class="col-span-12 bg-surface-container-lowest rounded-2xl p-5 md:p-6 shadow-sm border border-outline-variant/20 mt-2 md:mt-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-5 md:mb-7 gap-4">
           <div>
-            <h3 class="text-2xl font-bold tracking-tight text-on-surface">Automatisation intelligente</h3>
+            <h3 class="text-xl md:text-2xl font-bold tracking-tight text-on-surface">Automatisation intelligente</h3>
             <p class="text-on-surface-variant text-sm mt-1 flex flex-wrap items-center gap-1">
               L'IA gère ces appareils selon le mode sélectionné.
               <button id="moreOnMode" class="underline text-primary font-medium text-sm">En savoir plus</button>
             </p>
             <p id="moreText" class="p-3 bg-surface-container-low rounded-lg text-sm text-on-surface-variant mt-2 hidden border-l-2 border-primary">Votre installation fonctionne actuellement en mode Économie d'énergie. L'IA ajuste la consommation en fonction de la production solaire. Vous pouvez modifier le mode ou piloter chaque appareil manuellement.</p>
           </div>
-          <div class="relative">
-            <select class="appearance-none bg-surface-container-high border-none rounded-xl text-sm font-semibold text-on-surface px-5 py-2.5 pr-10 focus:ring-2 focus:ring-primary/30 cursor-pointer shadow-sm">
-              <option>Mode : Normal</option>
-              <option selected>Mode : Économie</option>
-              <option>Mode : Ultra Économie</option>
-            </select>
+          <div class="relative flex md:block justify-end">
+           <p class="bg-primary-fixed text-on-primary-fixed font-bold rounded-full p-2 text-center w-fit" id="normal_mode_indicator">Normal</p>
+           <p class="bg-orange-200 text-orange-700 font-bold rounded-full p-2 hidden text-center w-fit" id="saving_mode_indicator">Economie d'energie</p>
+           <p class="bg-red-200 text-red-700 font-bold rounded-full p-2 hidden text-center w-fit" id="ultra_saving_mode_indicator"> Ultra economie</p>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
           <!-- Climatisation salon -->
           <div class="bg-surface-container-low/40 rounded-xl p-4 border border-outline-variant/10 hover:shadow-md transition-all">
             <div class="flex justify-between items-start mb-4">
@@ -396,47 +401,45 @@
             </div>
           </div>
 
-          <!-- Ajouter appareil (call to action discret) -->
+          <!-- Ajouter appareil -->
           <div class="bg-surface-container-low/40 rounded-xl p-4 border border-dashed border-outline-variant/30 flex flex-col items-center justify-center gap-2 hover:bg-surface-container-low transition-all cursor-pointer">
             <span class="material-symbols-outlined text-on-surface-variant text-3xl bg-surface-container-highest p-2 rounded-full">add</span>
-            <span class="text-sm font-medium text-on-surface-variant">Ajouter un appareil</span>
+            <span class="text-sm font-medium text-on-surface-variant text-center">Ajouter un appareil</span>
           </div>
         </div>
       </div>
 
-      <!-- Maintenance & Réparation (lisible et épuré) -->
+      <!-- Maintenance & Réparation -->
       <div class="col-span-12 mt-2">
-        <h3 class="text-xl font-bold tracking-tight text-on-surface mb-4 flex items-center gap-2">
+        <h3 class="text-lg md:text-xl font-bold tracking-tight text-on-surface mb-4 flex items-center gap-2">
           <span class="material-symbols-outlined text-primary">build</span>
           Maintenance & réparations
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <!-- Tip 1 -->
-          <div class="bg-surface-container-low/80 rounded-xl p-5 flex items-center gap-5 hover:bg-surface-container-low transition-all">
-            <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-slate-200">
+          <div class="bg-surface-container-low/80 rounded-xl p-4 md:p-5 flex items-center gap-4 md:gap-5 hover:bg-surface-container-low transition-all">
+            <div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-200">
               <img class="w-full h-full object-cover" alt="Nettoyage panneaux" src="https://st3.depositphotos.com/2793495/31783/i/450/depositphotos_317839786-stock-photo-workman-cleaning-solar-panels.jpg" />
             </div>
-            <div class="flex-1">
-              <h5 class="font-bold text-on-surface">Nettoyage des panneaux</h5>
-              <p class="text-sm text-on-surface-variant">Poussière détectée → gain potentiel +8% de rendement.</p>
+            <div class="flex-1 min-w-0">
+              <h5 class="font-bold text-on-surface text-sm md:text-base">Nettoyage des panneaux</h5>
+              <p class="text-xs md:text-sm text-on-surface-variant">Poussière détectée → gain potentiel +8% de rendement.</p>
             </div>
-            <div class="flex flex-col items-end">
-              <span class="text-sm font-extrabold text-primary">+18€/mois</span>
-              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+            <div class="flex flex-col items-end shrink-0">
+              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface text-lg">more_vert</button>
             </div>
           </div>
           <!-- Tip 2 -->
-          <div class="bg-surface-container-low/80 rounded-xl p-5 flex items-center gap-5 hover:bg-surface-container-low transition-all">
-            <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-slate-200">
+          <div class="bg-surface-container-low/80 rounded-xl p-4 md:p-5 flex items-center gap-4 md:gap-5 hover:bg-surface-container-low transition-all">
+            <div class="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden bg-slate-200">
               <img class="w-full h-full object-cover" alt="Fuite énergie veille" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFCjIpBK9bfevBFHDES4zU04An2DOCqYe0YKvXzcKJx2czx3neoyjKpi9jr1qDg0-lQutf0D1IqikuLZ3OmuNx1Xx3gzPIIGgpyp9eo9omigy1uziEWmoImdPvFuWYWmof8BKoeyO_njGHbkpucE7vkR7AwiLJJSG0OwFvpH3EEUof5KehGctbRO-FlnvMSoJEeV2VX-C_atT4FkpxW-oVNoKwC4jxWpVS_vV6fnNoPewFkrx1nRbit22JnqEhRX4KLH4Uw-pTh63K" />
             </div>
-            <div class="flex-1">
-              <h5 class="font-bold text-on-surface">Fuite d'énergie en veille</h5>
-              <p class="text-sm text-on-surface-variant">Périphériques consomment 15W inutilement → multiprise intelligente.</p>
+            <div class="flex-1 min-w-0">
+              <h5 class="font-bold text-on-surface text-sm md:text-base">Fuite d'énergie en veille</h5>
+              <p class="text-xs md:text-sm text-on-surface-variant">Périphériques consomment 15W inutilement → multiprise intelligente.</p>
             </div>
-            <div class="flex flex-col items-end">
-              <span class="text-sm font-extrabold text-primary">+5€/mois</span>
-              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface">more_vert</button>
+            <div class="flex flex-col items-end shrink-0">
+              <button class="material-symbols-outlined text-slate-400 hover:text-on-surface text-lg">more_vert</button>
             </div>
           </div>
         </div>
@@ -444,23 +447,18 @@
     </div>
   </main>
 
-  <!-- FAB -->
-  <button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
-    <span class="material-symbols-outlined text-2xl">add_task</span>
-  </button>
-
-  <!-- Modal déverrouillage (inchangé / fonctionnel) -->
-  <div id="unlockModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-    <div class="bg-surface-container-lowest rounded-3xl p-8 w-full max-w-md shadow-2xl relative">
+  <!-- Modal déverrouillage -->
+  <div id="unlockModal" class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4">
+    <div class="bg-surface-container-lowest rounded-3xl p-6 md:p-8 w-full max-w-md shadow-2xl relative">
       <button id="closeModalBtn" class="absolute top-6 right-6 text-on-surface-variant hover:text-on-surface transition-colors">
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
       <div class="flex flex-col items-center">
-        <div class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-container to-primary flex items-center justify-center mb-6 shadow-lg">
-          <span class="material-symbols-outlined text-6xl text-on-primary-container" style="font-variation-settings: 'FILL' 1">account_circle</span>
+        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-primary-container to-primary flex items-center justify-center mb-6 shadow-lg">
+          <span class="material-symbols-outlined text-5xl md:text-6xl text-on-primary-container" style="font-variation-settings: 'FILL' 1">account_circle</span>
         </div>
-        <h3 class="text-2xl font-bold text-on-surface mb-2 text-center">Modifications verrouillées</h3>
-        <p class="text-on-surface-variant text-center mb-8">Entrez vos identifiants pour déverrouiller l'automatisation</p>
+        <h3 class="text-xl md:text-2xl font-bold text-on-surface mb-2 text-center">Modifications verrouillées</h3>
+        <p class="text-on-surface-variant text-center mb-8 text-sm">Entrez vos identifiants pour déverrouiller l'automatisation</p>
         <form id="unlockForm" class="w-full space-y-4">
           <div>
             <label class="block text-sm font-medium text-on-surface mb-2">Adresse Email</label>
@@ -483,7 +481,7 @@
   </div>
 
   <script>
-    // MAPPING & TOGGLE LOGIC (identique / intact)
+    // MAPPING & TOGGLE LOGIC
     const applianceNames = {
       'btn-climatisation': 'climatisation_salon',
       'btn-climatisation-chambre': 'climatisation_chambre',
@@ -493,6 +491,9 @@
       'btn-congelateur': 'congelateur',
       'btn-refrigerateur': 'refrigerateur'
     };
+    const normal_mode_indicator = document.getElementById("normal_mode_indicator");
+    const saving_mode_indicator = document.getElementById("saving_mode_indicator");
+    const ultra_saving_mode_indicator = document.getElementById("ultra_saving_mode_indicator");
     const loadState = {
       'btn-climatisation': false, 'btn-climatisation-chambre': false, 'btn-microondes': false,
       'btn-machine-laver': false, 'btn-chauffe-eau': false, 'btn-congelateur': false, 'btn-refrigerateur': false
@@ -550,15 +551,184 @@
       }
     }
     let ws, reconnectAttempts = 0, maxReconnect = 5;
+
+    // Mapping des noms d'appareils BD vers les boutons UI
+    const deviceNameToButtonId = {
+      'Climatisation salon': 'btn-climatisation',
+      'Climatisation chambre': 'btn-climatisation-chambre',
+      'Micro-ondes': 'btn-microondes',
+      'Machine à laver': 'btn-machine-laver',
+      'Chauffe-eau': 'btn-chauffe-eau',
+      'Congélateur': 'btn-congelateur',
+      'Réfrigérateur': 'btn-refrigerateur'
+    };
+
+    // Fonction pour activer/désactiver un appareil via son nom
+    async function toggleDevice(deviceName, shouldEnable) {
+      const buttonId = deviceNameToButtonId[deviceName];
+      if (!buttonId) {
+        console.warn(`Appareil "${deviceName}" non trouvé`);
+        return;
+      }
+
+      const button = document.getElementById(buttonId);
+      if (!button) {
+        console.warn(`Bouton "${buttonId}" non trouvé`);
+        return;
+      }
+
+      // Mettre à jour l'état local
+      loadState[buttonId] = shouldEnable;
+
+      // Mettre à jour l'UI
+      if (shouldEnable) {
+        button.classList.remove('bg-surface-container-highest');
+        button.classList.add('bg-primary');
+        const circle = button.querySelector('span');
+        circle.classList.remove('left-1');
+        circle.classList.add('right-1');
+      } else {
+        button.classList.remove('bg-primary');
+        button.classList.add('bg-surface-container-highest');
+        const circle = button.querySelector('span');
+        circle.classList.remove('right-1');
+        circle.classList.add('left-1');
+      }
+    }
+
+    // Fonction pour récupérer les appareils autorisés pour un mode donné
+    function getAuthorizedDevices(mode,deviceList) {
+      try {
+        data = deviceList;
+        console.log(data);
+        // Filtrer les appareils autorisés pour le mode sélectionné
+        const authorizedDevice = data.filter(device => {
+          if (mode === 'normal') return device.modes.normal;
+          if (mode === 'saving') return device.modes.saving;
+          if (mode === 'ultraSaving') return device.modes.ultraSaving;
+          return false;
+        });
+
+        console.log(`Appareils autorisés en mode "${mode}":`, authorizedDevice);
+        return authorizedDevice;
+      } catch (error) {
+        console.error('Erreur lors de la récupération des appareils:', error);
+        return [];
+      }
+    }
+
+    // Fonction pour appliquer automatiquement le mode
+    async function applyModeAutomatically(mode,deviceList) {
+      console.log(`Application du mode: ${mode}`);
+      
+      // Récupérer les appareils autorisés pour ce mode
+      const authorizedDevices = getAuthorizedDevices(mode,deviceList);
+
+      // Désactiver tous les appareils d'abord
+      Object.keys(deviceNameToButtonId).forEach(deviceName => {
+        if (!authorizedDevices.some(d => d.name === deviceName)) { 
+          toggleDevice(deviceName, false);
+        }
+      });
+
+      // Activer les appareils autorisés
+      for (const device of authorizedDevices) {
+        await toggleDevice(device.name, true);
+      }
+    }
+    function toggleActiveModeIndicator(mode){
+      if(mode === "normal"){
+        normal_mode_indicator.classList.remove("hidden");
+        saving_mode_indicator.classList.add("hidden");
+        ultra_saving_mode_indicator.classList.add("hidden");
+      }
+      else if(mode === "saving"){
+        normal_mode_indicator.classList.add("hidden");
+        saving_mode_indicator.classList.remove("hidden");
+        ultra_saving_mode_indicator.classList.add("hidden");
+      }
+      else{
+        normal_mode_indicator.classList.add("hidden");
+        saving_mode_indicator.classList.add("hidden");
+        ultra_saving_mode_indicator.classList.remove("hidden");
+      }
+    }
+    // fonction pour retourner soit l'heure actuelle ou l'heure de test
+    function currentOrTestTime(cts){
+      if(cts === "null" || cts === undefined){
+        let now = new Date();
+        return now.getHours();
+      }
+      else{
+        return cts;
+      }
+    } 
+    let cts = "null";
     function connectWebSocket() {
       if (ws && ws.readyState === WebSocket.OPEN) return;
-      ws = new WebSocket("ws://127.0.0.1:8000/ws/energy");
-      ws.onopen = () => { console.log("WebSocket connecté"); updateConnectionStatus("Connecté"); reconnectAttempts = 0; };
-      ws.onmessage = (event) => { try { const data = JSON.parse(event.data); console.log("Données reçues", data); } catch(e){} };
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${protocol}//${window.location.host}/ws/energy`);
+      ws.onopen = () => { 
+        console.log("WebSocket connecté"); 
+        updateConnectionStatus("Connecté"); reconnectAttempts = 0; 
+      };
+      ws.onmessage = async (event) => {
+        try { 
+          const data = JSON.parse(event.data);
+          cts = data.cts;
+          console.log("Données reçues", data);
+          let deviceList= data.autorizedDevices.devices
+            if(data.strategie !== undefined){
+              const current_mode =  data.strategie[currentOrTestTime(cts)].mode;
+              // Appliquer le mode automatiquement
+              toggleActiveModeIndicator(current_mode);
+              if (current_mode === "normal") {
+                await applyModeAutomatically("normal",deviceList);
+              } else if (current_mode === "saving" || current_mode === "économie") {
+                await applyModeAutomatically("saving",deviceList);
+
+              } else if (current_mode === "ultraSaving" || current_mode === "ultra-économie" || current_mode === "ultra economie") {
+                await applyModeAutomatically("ultraSaving",deviceList);
+              }
+
+              console.log(`Mode sélectionné: ${current_mode}`);
+            }
+          } 
+        catch(e) {
+          console.error('Erreur de traitement des données WebSocket:', e);
+        } 
+      };
       ws.onerror = (err) => console.error("WebSocket erreur", err);
       ws.onclose = () => { updateConnectionStatus("Déconnecté"); if (reconnectAttempts < maxReconnect) { reconnectAttempts++; setTimeout(connectWebSocket, 3000); } else updateConnectionStatus("Échec","max tentatives"); };
     }
     connectWebSocket();
+
+    // --- NOUVEAU CODE POUR LE MENU MOBILE (Responsive) ---
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('-translate-x-full');
+      sidebarOverlay.classList.toggle('hidden');
+    }
+
+    if(menuToggle) {
+      menuToggle.addEventListener('click', toggleSidebar);
+    }
+    
+    if(sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', toggleSidebar);
+    }
+    
+    // Fermer le menu quand on clique sur un lien sur mobile
+    document.querySelectorAll('#sidebar nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if(window.innerWidth < 1024) {
+          toggleSidebar();
+        }
+      });
+    });
   </script>
 </body>
 </html>

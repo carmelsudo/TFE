@@ -90,4 +90,10 @@ def analyser_lokossa(date_heure=None):
     # 5. Saisons pour Lokossa
     sc, sp = _get_saisons_lokossa(maintenant)
     
-    return [est_weekend,est_jour_ferie,sc,sp]
+    return [est_weekend,est_jour_ferie,sp,sc]
+
+# test d'analyse d'une date quelconque : 
+
+print(analyser_lokossa(datetime.fromisoformat("2025-06-05T14:02:00.000Z"))) 
+
+#

@@ -399,6 +399,83 @@ async def get_production_by_date_range(start_date: str, end_date: str):
             "error": f"Erreur lors de la lecture de la base de données: {str(e)}"
         }
 
+
+# === Endpoints pour la gestion du mot de passe administrateur ===
+class PasswordUpdate(BaseModel):
+    current_password: str | None = None
+    new_password: str
+
+
+async def _ensure_settings_table():
+    async with aiosqlite.connect("energy.db") as db:
+        await db.execute(
+            """
+            CREATE TABLE IF NOT EXISTS settings (
+                key TEXT PRIMARY KEY,
+                value TEXT
+            )
+            """
+        )
+        await db.commit()
+
+
+async def _get_setting(key: str):
+    await _ensure_settings_table()
+    async with aiosqlite.connect("energy.db") as db:
+        db.row_factory = aiosqlite.Row
+        async with db.execute("SELECT value FROM settings WHERE key = ?", (key,)) as cursor:
+            row = await cursor.fetchone()
+            return row[0] if row else None
+
+
+async def _set_setting(key: str, value: str):
+    await _ensure_settings_table()
+    async with aiosqlite.connect("energy.db") as db:
+        await db.execute(
+            "INSERT INTO settings(key, value) VALUES(?, ?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+            (key, value)
+        )
+        await db.commit()
+
+
+@app.get('/settings/password')
+async def api_get_password():
+    """Récupère le mot de passe administrateur depuis la base de données.
+    ATTENTION: renvoyer un mot de passe en clair au client est généralement
+    une mauvaise pratique. Ici on suit la demande explicite du client.
+    """
+    try:
+        pwd = await _get_setting('admin_password')
+        if pwd is None:
+            # Valeur par défaut si absente
+            pwd = 'motdepasse123'
+            await _set_setting('admin_password', pwd)
+        return {"password": pwd}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.put('/settings/password')
+async def api_update_password(payload: PasswordUpdate = Body(...)):
+    """Met à jour le mot de passe administrateur en base.
+    Body: { current_password: str|null, new_password: str }
+    """
+    try:
+        stored = await _get_setting('admin_password')
+        if stored is None:
+            stored = 'motdepasse123'
+            await _set_setting('admin_password', stored)
+
+        # Si un mot de passe courant est fourni, on le vérifie
+        if payload.current_password is not None and payload.current_password != stored:
+            return {"error": "Mot de passe actuel incorrect"}
+
+        await _set_setting('admin_password', payload.new_password)
+        return {"ok": True}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 # Endpoint pour obtenir les statistiques de production
 @app.get("/production/statistics")
 async def get_production_statistics():

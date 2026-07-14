@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html class="light" lang="en">
 
 <head>
@@ -82,24 +81,24 @@
         }
     </script>
     <style>
-              .hour-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
-}
-.hour-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-.hour-scroll::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 10px;
-}
-.hour-scroll::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-.hour-scroll::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
+        .hour-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+        .hour-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+        .hour-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .hour-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .hour-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
@@ -113,99 +112,71 @@
 </head>
 
 <body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
-    <aside
-      class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50"
-    >
+    <!-- SideNavBar -->
+    <aside id="sidebar" class="flex flex-col fixed left-0 top-0 h-screen w-64 border-r-0 bg-slate-50 dark:bg-slate-900 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
       <div class="px-6 py-8">
         <div class="flex items-center gap-3 mb-10">
-          <div
-            class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center"
-          >
-            <span
-              class="material-symbols-outlined text-on-primary-container"
-              style="font-variation-settings: &quot;FILL&quot; 1"
-              >wb_sunny</span
-            >
+          <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: &quot;FILL&quot; 1">wb_sunny</span>
           </div>
           <div>
-            <h1
-              class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope"
-            >
+            <h1 class="text-2xl font-bold tracking-tighter text-green-900 dark:text-green-500 font-manrope">
               Luminous
             </h1>
-            <p
-              class="text-[10px] uppercase tracking-widest text-slate-400 font-bold"
-            >
+            <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
               Gestion intelligente de l'energie
             </p>
           </div>
         </div>
         <nav class="space-y-1">
-          <!-- Overview is Active -->
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="/"
-          >
-            <span
-              class="material-symbols-outlined"
-              style="font-variation-settings: &quot;FILL&quot; 1"
-              >dashboard</span
-            >
+          <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="/">
+            <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1">dashboard</span>
             <span>Acceuil</span>
           </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="/analyse_ia"
-          >
+          <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="/analyse_ia">
             <span class="material-symbols-outlined">psychology</span>
             <span>Analise IA</span>
           </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-            href="/optimisation"
-          >
+          <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="/optimisation">
             <span class="material-symbols-outlined">lightbulb</span>
             <span>Optimisation</span>
           </a>
-          <a
-            class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-100 dark:bg-slate-800"
-            href="#"
-          >
+          <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-green-900 dark:text-green-400 font-bold border-r-4 border-green-700 bg-slate-100 dark:bg-slate-800" href="#">
             <span class="material-symbols-outlined">wb_sunny</span>
             <span>Météo</span>
           </a>
         </nav>
       </div>
       <div class="mt-auto px-6 py-8 space-y-1">
-        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-        href="/settings">
-        <span class="material-symbols-outlined">settings</span>
-        <span>Parametre</span>
-      </a>
-        <a
-          class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
-          href="#"
-        >
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="/settings">
+          <span class="material-symbols-outlined">settings</span>
+          <span>Parametre</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-xl duration-200 ease-in-out font-manrope text-sm tracking-tight text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors" href="#">
           <span class="material-symbols-outlined">help_outline</span>
           <span>Support</span>
         </a>
-
       </div>
     </aside>
-    <header
-        class="flex justify-between items-center w-full px-8 py-4 sticky top-0 z-40 ml-64 max-w-[calc(100%-16rem)] bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl transition-all shadow-sm shadow-slate-200/50 dark:shadow-none font-manrope text-base">
-        <div class="flex items-center gap-2">
-            <span class="text-on-surface-variant font-medium">Prévisions Météo</span>
-            <span class="text-outline-variant">/</span>
-            <span class="text-primary font-bold">Rendement Atmosphérique</span>
+    
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <header class="flex justify-between items-center w-full px-4 md:px-8 py-4 sticky top-0 z-30 ml-0 lg:ml-64 max-w-full lg:max-w-[calc(100%-16rem)] bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl transition-all shadow-sm shadow-slate-200/50 dark:shadow-none font-manrope text-base">
+        <!-- Mobile menu button -->
+        <button id="menuToggle" class="lg:hidden p-2 rounded-md hover:bg-slate-200/50 mr-2">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+            <span class="text-on-surface-variant font-medium text-sm md:text-base hidden sm:inline">Prévisions Météo</span>
+            <span class="text-outline-variant hidden sm:inline">/</span>
+            <span class="text-primary font-bold text-sm md:text-base truncate">Rendement Atmosphérique</span>
         </div>
-        <div class="flex items-center gap-6">
-            <div class="relative">
-                <input
-                    class="bg-surface-container-high rounded-full px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-64 border-none"
-                    placeholder="Rechercher des informations..." type="text" />
-                <span
-                    class="material-symbols-outlined absolute right-3 top-2 text-on-surface-variant text-lg">search</span>
+        <div class="flex items-center gap-4 md:gap-6">
+            <div class="relative hidden md:block">
+                <input class="bg-surface-container-high rounded-full px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-48 lg:w-64 border-none" placeholder="Rechercher des informations..." type="text" />
+                <span class="material-symbols-outlined absolute right-3 top-2 text-on-surface-variant text-lg">search</span>
             </div>
             <div class="flex items-center gap-4 text-green-800 dark:text-green-400">
                 <span class="material-symbols-outlined cursor-pointer hover:opacity-80">notifications</span>
@@ -213,14 +184,15 @@
             </div>
         </div>
     </header>
-    <main class="ml-64 p-10 space-y-12 max-w-[1440px]">
+    
+    <main class="ml-0 lg:ml-64 p-4 md:p-10 space-y-8 md:space-y-12 max-w-7xl">
         <!-- Hero: The Atmospheric Status -->
-        <section class="grid grid-cols-12 gap-8">
-            <div class="col-span-12 rounded-3xl p-8 relative overflow-hidden group bg-white/10 backdrop-blur-md border border-white/20"
+        <section class="grid grid-cols-12 gap-6 md:gap-8">
+            <div class="col-span-12 rounded-3xl p-6 md:p-8 relative overflow-hidden group bg-white/10 backdrop-blur-md border border-white/20"
                 style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAvg3_VvrXsYkJjnJbe5FyKEvXrLhUbyeoXP83tr4blxrx3fRC32rVjJSY9_ESEQiZQVaZBav-qzSX6RLGeW3TbtRHtAei0DG2IUFLp5AyslYkXEDUspcB4z9lKJuBadfDCJb0hP7hacjWmhwxW58FS4xhQX5CnZWgu3BQSPENDS90_aeN7tmvAU9Ss2vmEGqvyRHs0sZDK62Rog1R3EYaUGSNVYXyD9g6kN5C574fuU7mEXOhovnoEL9r8MK_yTvYBWQMsLpIV4f8F'); background-size: cover; background-position: center;">
-                <div class="relative z-10 space-y-8">
-                    <div class="flex justify-between items-start">
-                        <div class="flex flex-col gap-6 bg- p-3 rounded-xl">
+                <div class="relative z-10 space-y-6 md:space-y-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-4">
+                        <div class="flex flex-col gap-6 p-3 rounded-xl">
                             <div class="flex items-center gap-4">
                                 <div class="flex flex-col text-white">
                                     <div class="flex items-center gap-1 text-on-surface font-bold text-lg">
@@ -228,236 +200,66 @@
                                         <span class="text-white">Lokossa, BENIN</span>
                                     </div>
                                     <div class="flex flex-col items-center gap-4 mt-1">
-                                        <span class="text-8xl font-headline font-extrabold text-white">31 <span>C</span></span>
-                                        <span class="text-4xl font-light  text-white">14:45:05</span>
+                                        <span id="heroTemperature" class="text-6xl md:text-8xl font-headline font-extrabold text-white">-- <span>°C</span></span>
+                                        <span id="heroTime" class="text-2xl md:text-4xl font-light text-white">--:--:--</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div
-                            class="bg-secondary-container/80 backdrop-blur-sm text-on-secondary-container px-6 py-3 rounded-full flex items-center gap-2 font-bold shadow-lg border border-white/20">
-                            <span class="material-symbols-outlined">wb_sunny</span>Haut Rendement Prévu
+                        <div id="heroBadge" class="bg-secondary-container/80 backdrop-blur-sm text-on-secondary-container px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 font-bold shadow-lg border border-white/20">
+                            <span class="material-symbols-outlined">wb_sunny</span><span id="heroStatus">Chargement...</span>
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-10">
                         <div class="space-y-2">
-                            <span
-                                class="text-label-sm text-white uppercase tracking-widest font-semibold">INDICE
-                                UV</span>
+                            <span class="text-label-sm text-white uppercase tracking-widest font-semibold">INDICE UV</span>
                             <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-headline font-bold text-white">8.2</span>
-                                <span class="text-sm text-white">Ciel Dégagé</span>
+                                <span id="heroUvValue" class="text-3xl md:text-4xl font-headline font-bold text-white">--</span>
+                                <span id="heroUvLabel" class="text-sm text-white">Chargement...</span>
                             </div>
                             <div class="w-full h-1.5 bg-transparent border rounded-full overflow-hidden">
-                                <div class="bg-white h-full" style="width: 82%"></div>
+                                <div id="heroUvBar" class="bg-white h-full" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <span
-                                class="text-label-sm text-white uppercase tracking-widest font-semibold">COUVERTURE
-                                NUAGEUSE</span>
+                            <span class="text-label-sm text-white uppercase tracking-widest font-semibold">COUVERTURE NUAGEUSE</span>
                             <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-headline font-bold text-white">12%</span>
-                                <span class="text-sm text-white">Ciel Dégagé</span>
+                                <span id="heroCloudValue" class="text-3xl md:text-4xl font-headline font-bold text-white">--%</span>
+                                <span id="heroCloudLabel" class="text-sm text-white">Chargement...</span>
                             </div>
                             <div class="w-full h-1.5 bg-transparent border rounded-full overflow-hidden">
-                                <div class="bg-white h-full" style="width: 12%"></div>
+                                <div id="heroCloudBar" class="bg-white h-full" style="width: 0%"></div>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <span
-                                class="text-label-sm text-white uppercase tracking-widest font-semibold">DURÉE
-                                DU JOUR</span>
+                            <span class="text-label-sm text-white uppercase tracking-widest font-semibold">DURÉE DU JOUR</span>
                             <div class="flex items-baseline gap-2">
-                                <span class="text-4xl font-headline font-bold text-white">14h 22m</span>
+                                <span id="heroDayLength" class="text-3xl md:text-4xl font-headline font-bold text-white">--</span>
                             </div>
                             <div class="w-full h-1.5 bg-transparent border rounded-full overflow-hidden">
-                                <div class="bg-white" style="width: 75%"></div>
+                                <div id="heroDayBar" class="bg-white" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Kinetic Glass Widget: Battery Impact -->
         </section>
+        
         <!-- 5-Day Asymmetric Forecast -->
         <section class="space-y-6">
-            <div class="flex justify-between items-end">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
-                    <h2 class="text-headline-sm font-headline font-bold text-on-surface-variant">Prévisions Cinétiques
-                    </h2>
-                    <p class="text-on-surface-variant">Variations atmosphériques anticipées et impact sur la génération
-                    </p>
-                </div>
-                <div class="flex gap-4">
-                    <button
-                        class="px-5 py-2 rounded-full bg-surface-container-highest text-on-surface text-sm font-semibold hover:bg-surface-variant transition-colors">Vue
-                        Détaillée</button>
-                    <button
-                        class="px-5 py-2 rounded-full bg-on-surface text-white text-sm font-semibold flex items-center gap-2"><span
-                            class="material-symbols-outlined text-sm">download</span>Exporter les Données</button>
+                    <h2 class="text-headline-sm font-headline font-bold text-on-surface-variant">Prévisions Cinétiques</h2>
+                    <p class="text-on-surface-variant">Variations atmosphériques anticipées et impact sur la génération</p>
                 </div>
             </div>
-            <div class="hour-scroll flex gap-6 overflow-x-auto overflow-y-hidden pb-4">
-                <!-- Day 1: Large/Anchor -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">LUNDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-secondary-fixed-dim"
-                            style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">28°</span>
-                            <span class="text-lg text-outline">/18°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-primary font-bold">100%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-full"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Day 2 -->
-                <div
-                    class="flex-shrink-0 w-50 hour-scroll bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">MARDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-slate-400">partly_cloudy_day</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">24°</span>
-                            <span class="text-lg text-outline">/16°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-primary font-bold">72%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-[72%]"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Day 3 -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">MERCREDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-tertiary"
-                            style="font-variation-settings: 'FILL' 1;">rainy</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">19°</span>
-                            <span class="text-lg text-outline">/14°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-error font-bold">18%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-error h-full w-[18%]"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Day 4 -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">JEUDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-on-surface-variant">cloud</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">21°</span>
-                            <span class="text-lg text-outline">/15°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-secondary font-bold">45%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-secondary h-full w-[45%]"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Day 5 -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">VENDREDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-secondary-fixed-dim"
-                            style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">26°</span>
-                            <span class="text-lg text-outline">/17°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-primary font-bold">92%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-[92%]"></div>
-                        </div>
-                    </div>
-                </div>
-                                <!-- Day 1: Large/Anchor -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">SAMEDI</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-secondary-fixed-dim"
-                            style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">28°</span>
-                            <span class="text-lg text-outline">/18°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-primary font-bold">100%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-full"></div>
-                        </div>
-                    </div>
-                </div>
-                                <!-- Day 1: Large/Anchor -->
-                <div
-                    class="flex-shrink-0 w-50 bg-surface-container-lowest p-8 rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
-                    <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">DIMANCHE</span>
-                    <div class="text-center py-6">
-                        <span class="material-symbols-outlined text-6xl text-secondary-fixed-dim"
-                            style="font-variation-settings: 'FILL' 1;">wb_sunny</span>
-                        <div class="mt-4">
-                            <span class="text-4xl font-headline font-extrabold text-on-surface">28°</span>
-                            <span class="text-lg text-outline">/18°</span>
-                        </div>
-                    </div>
-                    <div class="w-full space-y-3">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
-                            <span class="text-primary font-bold">100%</span>
-                        </div>
-                        <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
-                            <div class="bg-primary h-full w-full"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="forecastCards" class="hour-scroll flex gap-4 md:gap-6 overflow-x-auto overflow-y-hidden pb-4"></div>
         </section>
+        
         <!-- Yield Prediction Analysis -->
-        <section class="grid grid-cols-12 gap-8">
-                <!-- Simplified Visual Graph Area -->
-                <div class="col-span-12 lg:col-span-6 flex flex-col gap-8">
-                <div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm flex-1">
+        <section class="grid grid-cols-12 gap-6 md:gap-8">
+            <div class="col-span-12 lg:col-span-6 flex flex-col gap-6 md:gap-8">
+                <div class="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-sm flex-1">
                     <h4 class="font-headline font-bold text-lg mb-6 items-center gap-2">
                         <span class="material-symbols-outlined text-primary">trending_up</span>
                         Stimulateur de Rendement
@@ -466,8 +268,7 @@
                     <div class="space-y-6">
                         <div class="flex items-center justify-between group">
                             <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
+                                <div class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
                                     <span class="material-symbols-outlined text-outline">clear_day</span>
                                 </div>
                                 <div>
@@ -475,26 +276,23 @@
                                     <p class="text-xs text-on-surface-variant">Quantité de soleil reçu</p>
                                 </div>
                             </div>
-                            <span class="text-error font-bold">-4.2%</span>
+                            <span class="text-greend font-bold">+4.2%</span>
                         </div>
                         <div class="flex items-center justify-between group">
                             <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
+                                <div class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
                                     <span class="material-symbols-outlined text-outline">device_thermostat</span>
                                 </div>
                                 <div>
                                     <p class="font-bold text-sm">Temperature de l'air</p>
-                                    <p class="text-xs text-on-surface-variant">Gain d'efficacité thermique des panneaux
-                                    </p>
+                                    <p class="text-xs text-on-surface-variant">Gain d'efficacité thermique des panneaux</p>
                                 </div>
                             </div>
-                            <span class="text-error font-bold">-1.8%</span>
+                            <span class="text-green font-bold">+1.8%</span>
                         </div>
                         <div class="flex items-center justify-between group">
                             <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
+                                <div class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
                                     <span class="material-symbols-outlined text-outline">air</span>
                                 </div>
                                 <div>
@@ -507,34 +305,30 @@
                     </div>
                 </div>
             </div>
-            <div class="col-span-12 lg:col-span-6 flex flex-col gap-8">
-                <div class="bg-surface-container-lowest rounded-3xl p-8 shadow-sm flex-1">
+            <div class="col-span-12 lg:col-span-6 flex flex-col gap-6 md:gap-8">
+                <div class="bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-sm flex-1">
                     <h4 class="font-headline font-bold text-lg mb-6 gap-2">
                         <span class="material-symbols-outlined text-error">trending_down</span>
                         Inhibiteur de Rendement
                         <br> <span class="text-sm font-light">les paramètres météorologiques suivants impactent negativement le rendement de vos panneaux solaires</span>
                     </h4>
                     <div class="space-y-6">
-                        <div class="flex items-center justify-between group">
-                        </div>
+                        <div class="flex items-center justify-between group"></div>
                         <div class="flex items-center justify-between group">
                             <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
+                                <div class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
                                     <span class="material-symbols-outlined text-outline">thermostat_arrow_up</span>
                                 </div>
                                 <div>
                                     <p class="font-bold text-sm">Température de l'air </p>
-                                    <p class="text-xs text-on-surface-variant">Perte d'efficacité thermique des panneaux
-                                    </p>
+                                    <p class="text-xs text-on-surface-variant">Perte d'efficacité thermique des panneaux</p>
                                 </div>
                             </div>
                             <span class="text-error font-bold">-1.8%</span>
                         </div>
                         <div class="flex items-center justify-between group">
                             <div class="flex items-center gap-4">
-                                <div
-                                    class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
+                                <div class="w-12 h-12 bg-surface-container rounded-2xl flex items-center justify-center">
                                     <span class="material-symbols-outlined text-outline">blur_on</span>
                                 </div>
                                 <div>
@@ -542,13 +336,182 @@
                                     <p class="text-xs text-on-surface-variant">Diffraction de la vapeur d'eau</p>
                                 </div>
                             </div>
-                            <span class="text-primary font-bold">-1.8</span>
+                            <span class="text-error font-bold">-1.8</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        if(menuToggle) {
+            menuToggle.addEventListener('click', toggleSidebar);
+        }
+
+        if(sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+        }
+
+        document.querySelectorAll('#sidebar nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if(window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast?latitude=6.633&longitude=1.717&current=temperature_2m,weathercode,relative_humidity_2m,cloud_cover,uv_index,is_day&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,sunshine_duration&timezone=auto&forecast_days=7';
+
+        function getWeatherMeta(code, useEmoji = true) {
+            const map = {
+                0: { emoji: 'wb_sunny', desc: 'Ciel dégagé', color: 'text-secondary-fixed-dim' },
+                1: { emoji: 'wb_sunny', desc: 'Peu nuageux', color: 'text-secondary-fixed-dim' },
+                2: { emoji: 'partly_cloudy_day', desc: 'Partiellement nuageux', color: 'text-slate-400' },
+                3: { emoji: 'cloud', desc: 'Couvert', color: 'text-slate-500' },
+                45: { emoji: 'foggy', desc: 'Brouillard', color: 'text-slate-500' },
+                48: { emoji: 'foggy', desc: 'Brouillard givrant', color: 'text-slate-500' },
+                51: { emoji: 'rainy', desc: 'Bruine légère', color: 'text-tertiary' },
+                53: { emoji: 'rainy', desc: 'Bruine modérée', color: 'text-tertiary' },
+                55: { emoji: 'rainy', desc: 'Bruine forte', color: 'text-tertiary' },
+                61: { emoji: 'rainy', desc: 'Pluie légère', color: 'text-tertiary' },
+                63: { emoji: 'rainy', desc: 'Pluie modérée', color: 'text-tertiary' },
+                65: { emoji: 'rainy', desc: 'Pluie forte', color: 'text-tertiary' },
+                71: { emoji: 'ac_unit', desc: 'Neige légère', color: 'text-slate-400' },
+                73: { emoji: 'ac_unit', desc: 'Neige modérée', color: 'text-slate-400' },
+                75: { emoji: 'ac_unit', desc: 'Neige forte', color: 'text-slate-400' },
+                80: { emoji: 'thunderstorm', desc: 'Orages', color: 'text-error' },
+                81: { emoji: 'thunderstorm', desc: 'Orages', color: 'text-error' },
+                82: { emoji: 'thunderstorm', desc: 'Orages', color: 'text-error' },
+            };
+            const fallback = { emoji: 'wb_sunny', desc: 'Conditions variables', color: 'text-secondary-fixed-dim' };
+            const entry = map[code] || fallback;
+            return useEmoji ? entry.emoji : entry.desc;
+        }
+
+        function formatDayLabel(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', { weekday: 'long' }).toUpperCase();
+        }
+
+        function formatDayLength(sunrise, sunset) {
+            if (!sunrise || !sunset) return 'N/A';
+            const start = new Date(sunrise);
+            const end = new Date(sunset);
+            const diffMin = Math.round((end - start) / 60000);
+            const hours = Math.floor(diffMin / 60);
+            const minutes = diffMin % 60;
+            return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+        }
+
+        function updateHero(data) {
+            const current = data.current;
+            const daily = data.daily;
+            const weatherCode = current?.weathercode;
+            const weatherInfo = getWeatherMeta(weatherCode, true);
+            const temp = Math.round(current?.temperature_2m ?? 0);
+            const humidity = current?.relative_humidity_2m ?? 0;
+            const cloud = current?.cloud_cover ?? 0;
+            const uv = current?.uv_index ?? 0;
+            const dayLength = formatDayLength(daily?.sunrise?.[0], daily?.sunset?.[0]);
+
+            document.getElementById('heroTemperature').innerHTML = `${temp} <span>°C</span>`;
+            document.getElementById('heroTime').textContent = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('heroStatus').textContent = weatherInfo === 'wb_sunny' ? 'Haut rendement prévu' : 'Conditions variables';
+            document.getElementById('heroBadge').className = `px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 font-bold shadow-lg border border-white/20 ${weatherInfo === 'wb_sunny' ? 'bg-secondary-container/80 text-on-secondary-container' : 'bg-white/70 text-slate-800'}`;
+            document.getElementById('heroUvValue').textContent = uv.toFixed(1);
+            document.getElementById('heroUvLabel').textContent = uv > 6 ? 'Soleil intense' : uv > 3 ? 'Soleil modéré' : 'Faible ensoleillement';
+            document.getElementById('heroUvBar').style.width = `${Math.min(100, uv * 10)}%`;
+            document.getElementById('heroCloudValue').textContent = `${Math.round(cloud)}%`;
+            document.getElementById('heroCloudLabel').textContent = cloud > 70 ? 'Ciel très couvert' : cloud > 35 ? 'Nuages intermittents' : 'Ciel dégagé';
+            document.getElementById('heroCloudBar').style.width = `${Math.min(100, cloud)}%`;
+            document.getElementById('heroDayLength').textContent = dayLength;
+            document.getElementById('heroDayBar').style.width = `${Math.min(100, (diffMinutesBetweenSunriseAndSunset(daily?.sunrise?.[0], daily?.sunset?.[0]) / 720) * 100)}%`;
+
+            const heroIcon = document.getElementById('heroMainIcon');
+            if (heroIcon) {
+                heroIcon.className = `material-symbols-outlined text-6xl md:text-8xl ${weatherInfo === 'wb_sunny' ? 'text-secondary-fixed-dim' : 'text-white'}`;
+                heroIcon.style.fontVariationSettings = 'FILL 1';
+                heroIcon.textContent = weatherInfo;
+            }
+
+            const heroDescription = document.getElementById('heroDescription');
+            if (heroDescription) {
+                heroDescription.textContent = `${weatherInfo} · ${Math.round(humidity)}% d'humidité`;
+            }
+        }
+
+        function diffMinutesBetweenSunriseAndSunset(sunrise, sunset) {
+            if (!sunrise || !sunset) return 0;
+            return Math.round((new Date(sunset) - new Date(sunrise)) / 60000);
+        }
+
+        function renderForecastCards(data) {
+            const container = document.getElementById('forecastCards');
+            if (!container || !data?.daily) return;
+
+            const days = data.daily.time.slice(0, 7);
+            const tempsMax = data.daily.temperature_2m_max.slice(0, 7);
+            const tempsMin = data.daily.temperature_2m_min.slice(0, 7);
+            const codes = data.daily.weathercode.slice(0, 7);
+            const sunshine = data.daily.sunshine_duration.slice(0, 7);
+
+            container.innerHTML = days.map((day, index) => {
+                const code = codes[index];
+                const icon = getWeatherMeta(code, true);
+                const yieldPercent = Math.max(10, Math.min(100, Math.round((sunshine[index] / 60) * 100)));
+                const colorClass = yieldPercent >= 80 ? 'bg-primary' : yieldPercent >= 50 ? 'bg-secondary' : 'bg-error';
+                const textClass = yieldPercent >= 80 ? 'text-primary' : yieldPercent >= 50 ? 'text-secondary' : 'text-error';
+                return `
+                    <div class="flex-shrink-0 w-44 md:w-52 bg-surface-container-lowest p-6 md:p-8 rounded-[30px] md:rounded-[40px] flex flex-col items-center justify-between transition-transform hover:-translate-y-2 cursor-pointer shadow-sm">
+                        <span class="text-label-sm font-bold tracking-widest text-on-surface-variant uppercase">${formatDayLabel(day).split(' ')[0]}</span>
+                        <div class="text-center py-6">
+                            <span class="material-symbols-outlined text-5xl md:text-6xl ${icon === 'wb_sunny' ? 'text-secondary-fixed-dim' : icon === 'cloud' ? 'text-slate-500' : icon === 'rainy' ? 'text-tertiary' : 'text-slate-400'}" style="font-variation-settings: 'FILL' 1;">${icon}</span>
+                            <div class="mt-4">
+                                <span class="text-4xl font-headline font-extrabold text-on-surface">${Math.round(tempsMax[index])}°</span>
+                                <span class="text-lg text-outline">/${Math.round(tempsMin[index])}°</span>
+                            </div>
+                        </div>
+                        <div class="w-full space-y-3">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-on-surface-variant font-medium">Rendement Solaire</span>
+                                <span class="${textClass} font-bold">${yieldPercent}%</span>
+                            </div>
+                            <div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+                                <div class="${colorClass} h-full" style="width:${yieldPercent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadWeather() {
+            try {
+                const response = await fetch(OPEN_METEO_URL);
+                if (!response.ok) throw new Error('Erreur réseau');
+                const data = await response.json();
+                updateHero(data);
+                renderForecastCards(data);
+            } catch (error) {
+                document.getElementById('heroStatus').textContent = 'Données indisponibles';
+                document.getElementById('heroTemperature').innerHTML = '-- <span>°C</span>';
+                document.getElementById('forecastCards').innerHTML = '<p class="text-sm text-slate-500">Impossible de charger les prévisions Open-Meteo.</p>';
+            }
+        }
+
+        loadWeather();
+        setInterval(loadWeather, 3600000);
+    </script>
 </body>
 
 </html>
