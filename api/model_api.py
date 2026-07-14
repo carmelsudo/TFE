@@ -30,7 +30,6 @@ base_path = Path(__file__).resolve().parent.parent
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
     }
 
 # dossier de fichier statique a servir a  l'interface
@@ -448,7 +447,7 @@ async def api_get_password():
         pwd = await _get_setting('admin_password')
         if pwd is None:
             # Valeur par défaut si absente
-            pwd = 'motdepasse123'
+            pwd = ' '
             await _set_setting('admin_password', pwd)
         return {"password": pwd}
     except Exception as e:
